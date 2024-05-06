@@ -1,0 +1,214 @@
+only-player-command: "&cThis command can be only executed by a player!"
+
+command-usage: "&cUsage: /%command%"
+
+no-perm: "&cYou don't have a permission to execute this command!"
+
+update-available: "&6[Duels] &aAn update &6%newversion% &afor the Duels plugin is now available. Download it from &bhttps://www.spigotmc.org/resources/114685/"
+admin:
+  reload:
+    all-config-reloaded: "&aArenas, Language and default config has been reloaded!"
+  help:
+    - "&aDuel Admin Commands:"
+    - "&e/dueladmin &7- &bDisplays this message."
+    - "&e/dueladmin setspawn &7- &bSet the spawn location where players will be TPed after match."
+    - "&e/dueladmin createarena <arenaName> &7- &bCreate arena with specific name."
+    - "&e/dueladmin setarenapos <arenaName> pos<1/2> &7- &bSet the arena's spawn points (where players spawn)."
+    - "&e/dueladmin deletearena &7- &bDelete arena with the specific name."
+    - "&e/dueladmin reload &7- &bReload the configuration."
+  arena-list:
+    list: "&aList of the arenas:"
+    meaning: "&aGreen &7- &2Active &f| &4RED &7- &cInactive"
+  set-pos:
+    success: "&b%pos% &asuccessfully set!"
+    arena-loaded: "&aYou have successfully completed the arena setup. &6Arena has been loaded."
+    wrong-arena: "&cThe arena with that name doesn't exist. Please create one with &6/dueladmin createarena <name>"
+    wrong-pos: "&cWrong position in the command. You need to type pos1 or pos2. (pos1 for one player's position, pos2 for second player's position)"
+  create-arena:
+    already-exists: "&cThe arena with that name already exists. If you want to modify it's positions type &6/dueladmin setarenapos&c. If you want to create new arena type &6/dueladmin createarena <name>&c."
+    success: "&aArena &b%arena%&a has been successfully created! To set it's positions try &6/dueladmin setarenapos"
+  delete-arena:
+    doesnt-exists: "&cArena with that name doesn't exist."
+    success: "&aArena &6%arena%&a has been successfully deleted!"
+  set-spawn:
+    success: "&aSpawn location has been set successfully!"
+duel:
+  target-is-offline: "&cGiven player is offline."
+  no-arenas-available: "&cCurrently, there are no arenas available."
+  no-request-sent: "&cYou haven't sent duel request to &b%player%."
+  no-commands-in-duel: "&cYou cannot use commands while you are in duel."
+  commands:
+    duel:
+      request-sent: "$<green>You have sent duel request to</green> <aqua>%player%</aqua><green>!</green> <red><b><hover:show_text:'<green>Click to cancel this request!</green>'><click:run_command:'/cancelduel %player%'>Cancel</click></hover></b></red>"
+      click: "$<green>Click</green> <red><b><hover:show_text:'<red>Click to deny this request!</red>'><click:run_command:'/denyduel %player%'>DENY</click></hover></b></red>/<green><b><hover:show_text:'<green>Click to accept this request!</green>'><click:run_command:'/acceptduel %player%'>ACCEPT</click></hover></b></green>"
+      request-received: "&b%player% &ais sending you a duel request."
+      target-already-in-duel: "&b%player% &cis already in duel."
+      cant-duel-yourself: "&cYou can't duel yourself!"
+      request-already-sent: "&cYou have already sent the duel request to &b%player%"
+    accept:
+      you-accepted-request: "&aYou have accepted a duel request of &b%player%"
+      request-accepted: "&b%player% &ahas accepted your duel request."
+      already-in-duel: "&cYou can't accept a duel while playing one."
+      target-hasnt-sent-request: "&cGiven player haven't sent you any request."
+    deny:
+      you-denied-request: "&aYou have denied duel request of &b%player%"
+      someone-denied-your-request: "&b%player% &chas denied your duel request."
+      target-hasnt-sent-request: "&cGiven player haven't sent you any request."
+    cancel:
+      request-cancelled: "&aYour duel request has been cancelled."
+      someone-cancelled-request: "&b%player% &ahas cancelled his request to you."
+    ignore:
+      player-is-ignoring-requests: "&cGiven player is ignoring your duel requests!"
+      ignoring-on-player-enable: "&aYou are now ignoring duel requests of &b%player%"
+      ignoring-on-player-disable: "&aYou are no longer ignoring duel requests of &b%player%"
+    spectate:
+      is-not-in-duel: "&b%player% &cis not in duel!"
+      success: "&6Spectating &b%player%"
+      is-spectating: "&b%player% &6is now spectating."
+      already-spectating: "&cYou are already in spectator mode. Please leave the spectating mode first with /endspectating"
+      not-in-spectator: "&cYou are not in the spectator mode."
+      spectate-end-success: "&aYou have left the spectator mode."
+  spectating:
+    cannot-damage-in-duel: "&cYou can't damage players when they are in duel."
+    no-commands: "&cYou cannot use that command in the Spectating mode!"
+  restrictions:
+    restrictions: "&6Restrictions:"
+    enabled-restrictions: " &aEnabled: &b"
+    disabled-restrictions: " &aDisabled: &b"
+    deny-message:
+      arrow: "&cThe use of arrows is not allowed in this duel."
+      potion: "&cUsage of potions is disabled in this duel."
+      golden-apple: "&cUsage of golden apples is disabled in this duel."
+      enchanted-golden-apple: "&cUsage of enchanted golden apples is disabled in this duel."
+      elytra: "&cUsage of elytra is disabled in this duel."
+      ender-pearl: "&cUsage of ender pearl is disabled in this duel."
+  game:
+    duel-started: "&aDuel started. Get ready your weapons and your luck!"
+    duel-countdown: "&aDuel is starting in %color+countdown%s&a."
+
+    ran-out-of-time: "&cYou ran out of time so you have teleported to the spawn."
+
+    won-duel: "&aYou won the duel! You will be teleported to spawn in &b%number% &aseconds. Pick up their items."
+    lost-duel: "&cYou lost the duel."
+duel-GUI:
+  size: 27
+  title: "&8Customize Your Duel Restrictions"
+  restriction-enabled: "&a(Enabled)"
+  restriction-disabled: "&c(Disabled)"
+
+  toggle-bow:
+    item: BOW
+    slot: 0
+    glowing: true
+    display-name: "&aToggle Bow %toggled%"
+    lore:
+      - "&7Toggle Bow usage in the duel."
+      - "&7Disabling this will prevent both"
+      - "&7players from shooting arrows."
+      - ""
+      - "&eClick to toggle!"
+  toggle-totem:
+    slot: 1
+    item: TOTEM_OF_UNDYING
+    glowing: false
+    display-name: "&aToggle Totem %toggled%"
+    lore:
+      - "&7Toggle Totem usage in the duel."
+      - "&7Disabling this will prevent both"
+      - "&7players from using Totem."
+      - ""
+      - "&eClick to toggle!"
+  toggle-golden-apple:
+    slot: 2
+    item: GOLDEN_APPLE
+    glowing: false
+    display-name: "&aToggle Golden Apple %toggled%"
+    lore:
+      - "&7Toggle Golden Apple usage in the duel."
+      - "&7Disabling this will prevent both"
+      - "&7players from using Golden Apple."
+      - ""
+      - "&eClick to toggle!"
+  toggle-enchanted-golden-apple:
+    slot: 3
+    item: ENCHANTED_GOLDEN_APPLE
+    display-name: "&aToggle Enchanted Golden Apple %toggled%"
+    lore:
+      - "&7Toggle Enchanted Golden Apple usage in the duel."
+      - "&7Disabling this will prevent both players"
+      - "&7from using Enchanted Golden Apple."
+      - ""
+      - "&eClick to toggle!"
+  toggle-potions:
+    slot: 4
+    item: POTION
+    glowing: false
+    display-name: "&bToggle Potions %toggled%"
+    lore:
+      - "&7Toggle Potions usage in the duel."
+      - "&7Disabling this will prevent both"
+      - "&7players from using Potions."
+      - ""
+      - "&eClick to toggle!"
+  toggle-shields:
+    slot: 5
+    item: SHIELD
+    glowing: false
+    display-name: "&bToggle Shields %toggled%"
+    lore:
+      - "&7Toggle Shields usage in the duel."
+      - "&7Disabling this will prevent both"
+      - "&7players from using Shields."
+      - ""
+      - "&eClick to toggle!"
+  toggle-elytra:
+    slot: 6
+    item: ELYTRA
+    glowing: true
+    display-name: "&aToggle Elytra %toggled%"
+    lore:
+      - "&7Toggle Elytra usage in the duel."
+      - "&7Disabling this will prevent both"
+      - "&7players from gliding."
+      - ""
+      - "&eClick to toggle!"
+  toggle-ender-pearl:
+    slot: 7
+    item: ENDER_PEARL
+    glowing: true
+    display-name: "&aToggle Ender Pearl %toggled%"
+    lore:
+      - "&7Toggle Ender Pearl usage in the duel."
+      - "&7Disabling this will prevent both"
+      - "&7players from using Ender Pearl."
+      - ""
+      - "&eClick to toggle!"
+  toggle-keep-inventory:
+    slot: 25
+    item: ENDER_CHEST
+    glowing: false
+    display-name: "&6Keep Inventory & EXP %toggled%"
+    lore:
+      - "&7Toggle Keep Inventory in the duel."
+      - "&7Enabling this will prevent both"
+      - "&7players from losing their items."
+      - ""
+      - "&eClick to toggle!"
+  cancel:
+    slot: 18
+    item: BARRIER
+    glowing: false
+    display-name: "&cCancel"
+    lore:
+      - "&7Cancel duel request."
+      - ""
+      - "&eClick to cancel!"
+  start:
+    slot: 26
+    item: LIME_DYE
+    glowing: false
+    display-name: "&aStart"
+    lore:
+      - "&7Start duel with &b%player%&7."
+      - ""
+      - "&eClick to start!"

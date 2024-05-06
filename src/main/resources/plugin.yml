@@ -2,3 +2,74 @@ name: Duel
 version: '${version}'
 main: net.multylands.duels.Duels
 api-version: '1.20'
+authors: [ GreenedDev ]
+softdepend:
+  - Multiverse-Core
+  - PlaceholderAPI
+description:
+  this is a duels plugin created for minecraft server Multylands. it was created due to the fact that managing duels required a lot of work. for example server helper needed to moderate 1v1 players to not use restricted PvP abilities.
+website: https://www.spigotmc.org/resources/114685/
+commands:
+  duel:
+    aliases:
+      - pri
+      - 1v1
+    description: Simply invite player to a duel with restrictions
+  cancelduel:
+    aliases:
+      - duelcancel
+      - removeduel
+      - duelremove
+      - pricancel
+      - removepri
+      - priremove
+    description: Cancel your duel request
+  acceptduel:
+    aliases:
+      - duelaccept
+      - confirmduel
+      - duelconfirm
+      - priaccept
+      - confirmpri
+      - priconfirm
+    description: Accept someone's duel request. Requires player argument
+  ignoreduel:
+    aliases:
+      - ignoreduels
+      - duelsignore
+      - duelignore
+      - ignorepris
+      - ignorepri
+      - prisignore
+      - priignore
+    description: Ignore someone's duel requests
+  denyduel:
+    aliases:
+      - dueldeny
+      - duelno
+      - prideny
+      - prino
+      - nopri
+      - denypri
+    description: Deny someone's duel request
+  dueladmin:
+    aliases:
+      - adminduel
+    description: Various admin commands.
+  spectate:
+    aliases:
+      - watchduel
+      - duelwatch
+      - spectateduel
+      - duelspectate
+    description: Spectate someone's Duel match
+  stopspectate:
+    aliases:
+      - stopwatchduel
+      - stopwatchingduel
+      - duelwatchstop
+      - duelspectatestop
+      - endspectate
+      - spectateend
+      - spectatestop
+    description: Stop spectate mode.

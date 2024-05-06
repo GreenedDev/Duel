@@ -1,0 +1,62 @@
+spawn_location:
+  ==: org.bukkit.Location
+  world: world
+  x: 0.0
+  y: 0.0
+  z: 0.0
+  pitch: 0.0
+  yaw: 0.0
+game:
+  commands:
+    #list of commands that will be executed (from console) when duel starts. You can use %player1%
+    #and %player2% placeholders here. for more info %player1% is the player who sent the duel request to %player2%
+    start:
+      - someblablacommand %player1% %player2%
+    #list of commands that will be executed (from console) when duel starts. You can use %winner%
+    #and %loser% placeholders here.
+    end:
+      - givetokensblabla %winner% 2
+      - removetokensblabla %loser% 3
+  #Inventory Saving feature. when request receiver accepts the duel if this is enabled both players items will be
+  #taken away and stored. whenever duel ends we give them their items back. You can use this if you want to give
+  #players some kits in game.commands.start
+  inventory-saving: false
+  # you can set both ones above like end: [] or start: [] to disable them.
+  #Max duel time in minutes. After this time goes both players will be teleported to the spawn.
+  max_duel_time: 10
+  #After the duel ends how many SECONDS should we give the
+  #winner to pick up the loser's item before teleporting them to the spawn
+  time_to_pick_up_items: 10
+
+#Delay in ticks. We use this after the duel ends to reset player's shield blocking delay. Don't touch if you don't know what this does.
+default-shield-blocking-delay: 5
+
+#Request time out time (in seconds)
+request-timeout: 300
+
+spectator:
+  commands:
+    #set to true if you want the commands below to be allowed only.
+    #set to false if you want to block the commands below in spectator.
+    mode: true
+    commands:
+      - spawn
+      - leavespectator
+placeholders:
+  time:
+    hours: "hours"
+    minutes: "minutes"
+    seconds: "seconds"
+#here you can toggle which modules will be enabled/disabled in the server.
+#if you turn off any, it will not show up in the duels GUI, so players
+#won't be able to turn on/off that restriction.
+restriction-modules:
+  bow: true
+  totem: true
+  golden-apple: true
+  enchanted-golden-apple: true
+  potions: true
+  shields: true
+  elytra: true
+  ender-pearl: true
+  keep-inventory: true
