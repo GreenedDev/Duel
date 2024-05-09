@@ -26,7 +26,7 @@ public class GUIManager {
 
     public void openInventory(Player sender, Player target) {
         sender.closeInventory();
-        DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, false, false);
+        DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, false, false, false);
         DuelRequest request = new DuelRequest(sender.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin);
         DuelInventoryHolder inventoryHolder = new DuelInventoryHolder(plugin, plugin.duelInventorySize, request);
         Inventory inventory = inventoryHolder.getInventory();

@@ -2,29 +2,22 @@ package net.multylands.duels.object;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.GameUtils;
 import net.multylands.duels.utils.SavingItems;
-import net.multylands.duels.utils.SpectatorUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
 public class Game {
     UUID senderUUID;
     UUID targetUUID;
 
-    HashMap<Integer, ItemStack> senderInvItems = new HashMap<>();
-    HashMap<Integer, ItemStack> targetInvItems = new HashMap<>();
-
     UUID winnerUUID;
-    DuelRestrictions duelRestrictions;
+    DuelRestrictions restrictions;
     boolean isInGame;
     int taskAssignedIDInTheList;
     boolean isAboutToBeTeleportedToSpawn = false;
@@ -41,7 +34,7 @@ public class Game {
         this.targetUUID = target;
         this.request = request;
         this.isStartingIn5Seconds = isStartingIn5Seconds;
-        this.duelRestrictions = duelRestrictions;
+        this.restrictions = duelRestrictions;
         this.isInGame = isInGame;
         this.plugin = plugin;
     }
@@ -79,7 +72,7 @@ public class Game {
     }
 
     public DuelRestrictions getRestrictions() {
-        return duelRestrictions;
+        return restrictions;
     }
 
     public void setSender(UUID player) {
@@ -98,8 +91,8 @@ public class Game {
         this.isStartingIn5Seconds = YesOrNot;
     }
 
-    public void setDuelRestrictions(DuelRestrictions duelRestrictions) {
-        this.duelRestrictions = duelRestrictions;
+    public void setRestrictions(DuelRestrictions restrictions) {
+        this.restrictions = restrictions;
     }
 
     public void addSpectator(UUID uuid) {
@@ -123,8 +116,8 @@ public class Game {
         Player senderPlayer = Bukkit.getPlayer(senderUUID);
         Player targetPlayer = Bukkit.getPlayer(targetUUID);
 
-        SavingItems.saveAndClearInventoryIfEnabled(plugin, senderPlayer);
-        SavingItems.saveAndClearInventoryIfEnabled(plugin, targetPlayer);
+        GameUtils.applyInventorySavingIfEnabled(restrictions, senderPlayer);
+        GameUtils.applyInventorySavingIfEnabled(restrictions, targetPlayer);
 
         targetPlayer.teleport(arena.getFirstLocation(plugin));
         senderPlayer.teleport(arena.getSecondLocation(plugin));
@@ -133,56 +126,56 @@ public class Game {
 //        requestsThatWereAlreadyThere.add(request);
 //        Duels.requestsReceiverToSenders.put(senderUUID, requestsThatWereAlreadyThere);
 
-        disableFlying(senderPlayer, targetPlayer);
-        removeEffectsIfDisabled(senderPlayer, targetPlayer);
-        disableShieldsIfDisabled(senderPlayer, targetPlayer);
+        GameUtils.disableFlying(senderPlayer, targetPlayer);
+        GameUtils.removeEffectsIfDisabled(restrictions, senderPlayer, targetPlayer);
+        GameUtils.disableShieldsIfDisabled(plugin, restrictions, senderPlayer, targetPlayer);
         saveAndRunRanOutOfTimeTask();
-        executeStartCommands(senderPlayer, targetPlayer);
-        startCounting(senderPlayer, targetPlayer);
+        GameUtils.executeStartCommands( plugin, restrictions, senderPlayer, targetPlayer);
+        GameUtils.startCounting(plugin, this, senderPlayer, targetPlayer);
 
         request.storeRequest(true);
     }
 
     public void endGameRanOutOfTime() {
-        removeSpectatorsFromGame();
+        GameUtils.removeSpectatorsFromGame(plugin, spectators);
         Player sender = Bukkit.getPlayer(senderUUID);
         Player target = Bukkit.getPlayer(targetUUID);
-        resetShieldsDelay(sender);
-        resetShieldsDelay(target);
+        GameUtils.resetShieldsDelay(plugin, restrictions, sender);
+        GameUtils.resetShieldsDelay(plugin, restrictions, target);
 
 
         Chat.messagePlayers(sender, target, plugin.languageConfig.getString("duel.game.ran-out-of-time"));
-        teleportToSpawn(sender);
-        teleportToSpawn(target);
+        GameUtils.teleportToSpawn(plugin, sender);
+        GameUtils.teleportToSpawn(plugin, target);
         request.removeStoreRequest(true);
-        SavingItems.clearInvAndGiveItemsBackIfEnabled(plugin, sender);
-        SavingItems.clearInvAndGiveItemsBackIfEnabled(plugin, target);
+        GameUtils.reverseInventorySavingIfEnabled(restrictions, sender);
+        GameUtils.reverseInventorySavingIfEnabled(restrictions, target);
     }
 
     public void endGameRestart() {
-        removeSpectatorsFromGame();
+        GameUtils.removeSpectatorsFromGame(plugin, spectators);
         Player sender = Bukkit.getPlayer(senderUUID);
         Player target = Bukkit.getPlayer(targetUUID);
-        resetShieldsDelay(sender);
-        resetShieldsDelay(target);
+        GameUtils.resetShieldsDelay(plugin, restrictions, sender);
+        GameUtils.resetShieldsDelay(plugin, restrictions, target);
 
 
         Bukkit.getScheduler().cancelTask(Duels.tasksToCancel.get(senderUUID));
         Duels.tasksToCancel.remove(senderUUID);
 
-        teleportToSpawn(sender);
-        teleportToSpawn(target);
+        GameUtils.teleportToSpawn(plugin, sender);
+        GameUtils.teleportToSpawn(plugin, target);
         request.removeStoreRequest(true);
-        SavingItems.clearInvAndGiveItemsBackIfEnabled(plugin, sender);
-        SavingItems.clearInvAndGiveItemsBackIfEnabled(plugin, target);
+        GameUtils.reverseInventorySavingIfEnabled(restrictions, sender);
+        GameUtils.reverseInventorySavingIfEnabled(restrictions, target);
     }
 
     public void endGame(UUID winnerUUIDFromMethod) {
-        removeSpectatorsFromGame();
+        GameUtils.removeSpectatorsFromGame(plugin, spectators);
         Player sender = Bukkit.getPlayer(senderUUID);
         Player target = Bukkit.getPlayer(targetUUID);
-        resetShieldsDelay(sender);
-        resetShieldsDelay(target);
+        GameUtils.resetShieldsDelay(plugin, restrictions, sender);
+        GameUtils.resetShieldsDelay(plugin, restrictions, target);
 
         setIsInGame(false);
         setIsAboutToTeleportedToSpawn(true);
@@ -204,12 +197,12 @@ public class Game {
         }
         Chat.sendMessage(winner, plugin.languageConfig.getString("duel.game.won-duel").replace("%number%", plugin.getConfig().getInt("game.time_to_pick_up_items") + ""));
         Duels.scheduler.runTaskLater(plugin, () -> {
-            teleportToSpawn(winner);
+            GameUtils.teleportToSpawn(plugin, winner);
             arena.setAvailable(true);
-            SavingItems.clearInvAndGiveItemsBackIfEnabled(plugin, winner);
+            GameUtils.reverseInventorySavingIfEnabled(restrictions, winner);
             request.removeStoreRequest(true);
         }, 20L * plugin.getConfig().getInt("game.time_to_pick_up_items"));
-        executeEndCommands(winner, loser);
+        GameUtils.executeEndCommands(plugin, winner, loser);
     }
 
     public UUID getOpponent(UUID someone) {
@@ -251,86 +244,4 @@ public class Game {
         Instant timeWhenDuelRunsOutOfTime = Instant.now().plus(max_duel_time_minutes, ChronoUnit.MINUTES);
         setRunOutOfTimeInstant(timeWhenDuelRunsOutOfTime);
     }
-
-    public void disableShieldsIfDisabled(Player sender, Player target) {
-        if (duelRestrictions.isShieldsAllowed()) {
-            return;
-        }
-        int maxDuelTimeInTicks = plugin.getConfig().getInt("game.max_duel_time") * 60 * 20;
-        sender.setShieldBlockingDelay(maxDuelTimeInTicks);
-        target.setShieldBlockingDelay(maxDuelTimeInTicks);
-    }
-
-    public void resetShieldsDelay(Player player) {
-        if (player == null) {
-            return;
-        }
-        if (duelRestrictions.isShieldsAllowed()) {
-            return;
-        }
-        player.setShieldBlockingDelay(plugin.getConfig().getInt("default-shield-blocking-delay"));
-    }
-
-    public void removeEffectsIfDisabled(Player sender, Player target) {
-        if (duelRestrictions.isPotionsAllowed()) {
-            return;
-        }
-        for (PotionEffect effect : sender.getActivePotionEffects()) {
-            sender.removePotionEffect(effect.getType());
-        }
-        for (PotionEffect effect : target.getActivePotionEffects()) {
-            target.removePotionEffect(effect.getType());
-        }
-    }
-
-    public void disableFlying(Player sender, Player target) {
-        sender.setFlying(false);
-        sender.setAllowFlight(false);
-        target.setFlying(false);
-        target.setAllowFlight(false);
-    }
-
-    public void executeEndCommands(Player winner, Player loser) {
-        for (String commandFromTheLoop : plugin.getConfig().getStringList("game.commands.end")) {
-            String command = commandFromTheLoop.replace("%winner%", winner.getName())
-                    .replace("%loser%", loser.getName());
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-        }
-    }
-
-    public void executeStartCommands(Player senderPlayer, Player targetPlayer) {
-        for (String commandFromTheLoop : plugin.getConfig().getStringList("game.commands.start")) {
-            String command = commandFromTheLoop.replace("%player1%", senderPlayer.getName())
-                    .replace("%player2%", targetPlayer.getName());
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-        }
-    }
-
-    public void startCounting(Player senderPlayer, Player targetPlayer) {
-        AtomicInteger countdown = new AtomicInteger(6);
-        Duels.scheduler.runTaskTimer(plugin, task -> {
-            String color = Chat.getColorForNumber(countdown);
-            countdown.getAndDecrement();
-            if (countdown.get() == 0) {
-                setIsStartingIn5Seconds(false);
-                task.cancel();
-                Chat.messagePlayers(senderPlayer, targetPlayer, plugin.languageConfig.getString("duel.game.duel-started"));
-            } else {
-                Chat.messagePlayers(senderPlayer, targetPlayer, plugin.languageConfig.getString("duel.game.duel-countdown").replace("%color+countdown%", color + countdown));
-            }
-        }, 0, 20);
-    }
-
-    public void removeSpectatorsFromGame() {
-        for (UUID spectatorUUID : spectators) {
-            SpectatorUtils.endSpectatingForEndGame(Bukkit.getPlayer(spectatorUUID), plugin);
-        }
-        spectators.clear();
-    }
-
-    public void teleportToSpawn(Player player) {
-        Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
-        player.teleport(spawnLoc);
-    }
-
 }

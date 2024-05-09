@@ -91,7 +91,7 @@ public class Game implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getGame().getRestrictions().isKeepInventoryAllowed()) {
+        if (request.getGame().getRestrictions().isKeepInventoryEnabled()) {
             event.setKeepInventory(true);
             event.getDrops().clear();
             event.setKeepLevel(true);
@@ -120,6 +120,6 @@ public class Game implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-        SavingItems.clearInvAndGiveItemsBackIfEnabled(plugin, player);
+        SavingItems.giveItemsBackIfAvailable(player);
     }
 }

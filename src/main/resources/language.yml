@@ -139,7 +139,7 @@ duel-GUI:
       - "&7from using Enchanted Golden Apple."
       - ""
       - "&eClick to toggle!"
-  toggle-potions:
+  toggle-potion:
     slot: 4
     item: POTION
     glowing: false
@@ -150,7 +150,7 @@ duel-GUI:
       - "&7players from using Potions."
       - ""
       - "&eClick to toggle!"
-  toggle-shields:
+  toggle-shield:
     slot: 5
     item: SHIELD
     glowing: false
@@ -192,6 +192,17 @@ duel-GUI:
       - "&7Toggle Keep Inventory in the duel."
       - "&7Enabling this will prevent both"
       - "&7players from losing their items."
+      - ""
+      - "&eClick to toggle!"
+  toggle-inventory-saving:
+    slot: 24
+    item: RESPAWN_ANCHOR
+    glowing: true
+    display-name: "&dInventory Saving %toggled%"
+    lore:
+      - "&7Toggle Inventory Saving in the duel."
+      - "&7With this you can set whether or not your"
+      - "&7you will go to the duel with your items."
       - ""
       - "&eClick to toggle!"
   cancel:

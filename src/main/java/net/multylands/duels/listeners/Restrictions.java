@@ -79,7 +79,7 @@ public class Restrictions implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getGame().getRestrictions().isTotemsAllowed()) {
+        if (request.getGame().getRestrictions().isTotemAllowed()) {
             return;
         }
         UUID winner = request.getOpponent(playerWhoUsedTotemUUID);
@@ -139,7 +139,7 @@ public class Restrictions implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getGame().getRestrictions().isPotionsAllowed()) {
+        if (request.getGame().getRestrictions().isPotionAllowed()) {
             return;
         }
         Chat.sendMessage(player, plugin.languageConfig.getString("duel.restrictions.deny-message.potion"));
@@ -157,7 +157,7 @@ public class Restrictions implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getGame().getRestrictions().isPotionsAllowed()) {
+        if (request.getGame().getRestrictions().isPotionAllowed()) {
             return;
         }
         player.getWorld().dropItem(player.getLocation(), event.getPotion().getItem());
