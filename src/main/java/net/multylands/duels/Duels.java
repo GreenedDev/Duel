@@ -1,6 +1,5 @@
 package net.multylands.duels;
 
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.multylands.duels.gui.GUIManager;
 import net.multylands.duels.object.Arena;
@@ -53,14 +52,12 @@ public class Duels extends JavaPlugin {
     public FileConfiguration languageConfig;
     public static BukkitScheduler scheduler = Bukkit.getScheduler();
     public GUIManager manager;
-    public static BukkitAudiences adventure;
     public static HashMap<String, CommandExecutor> commandExecutors = new HashMap<>();
 
     @Override
     public void onEnable() {
-        this.adventure = BukkitAudiences.create(this);
         miniMessage = MiniMessage.miniMessage();
-        if (!ServerUtils.isPaper(this)) {
+        if (!ServerUtils.isPaper()) {
             getLogger().info("Server isn't running the PAPER software which means " +
                     "i can't use it's API to deal with shield restrictions. Please switch to " +
                     "paper otherwise Shield restriction will be disabled.");
@@ -84,10 +81,6 @@ public class Duels extends JavaPlugin {
                 }
                 request.getGame().endGameRestart();
             }
-        }
-        if (this.adventure != null) {
-            this.adventure.close();
-            this.adventure = null;
         }
     }
 

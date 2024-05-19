@@ -69,12 +69,10 @@ public class DuelInventoryHolder implements InventoryHolder {
     public void addItemIfEnabled(String name, Inventory inventory, boolean toggled, Module module) {
         if (module == Module.RESTRICTION) {
             if (!plugin.getConfig().getBoolean("modules.restrictions." + name)) {
-                System.out.println("sxds");
                 return;
             }
         } else {
             if (!(plugin.getConfig().getBoolean("modules." + name))) {
-                System.out.println("sxdsasd");
                 return;
             }
         }

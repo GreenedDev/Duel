@@ -4,6 +4,7 @@ package net.multylands.duels.commands;
 import net.multylands.duels.Duels;
 import net.multylands.duels.gui.GUIManager;
 import net.multylands.duels.object.DuelRequest;
+import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.utils.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -76,7 +77,16 @@ public class DuelCommand implements CommandExecutor {
                 return false;
             }
         }
-        guiManager.openInventory(player, target);
+        if (plugin.getConfig().getBoolean("modules.GUI")) {
+            guiManager.openInventory(player, target);
+        } else {
+            DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, true, false, false);
+            DuelRequest request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin);
+            request.storeRequest(false);
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.request-sent").replace("%player%", target.getName()));
+            Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.duel.request-received").replace("%player%", player.getName()));
+            Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.duel.click").replace("%player%", player.getName()));
+        }
         return false;
     }
 }

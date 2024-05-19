@@ -1,6 +1,5 @@
 package net.multylands.duels.utils;
 
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.multylands.duels.Duels;
 import net.multylands.duels.commands.DuelAdminCommand;
@@ -53,7 +52,7 @@ public class ServerUtils {
         Duels.commandExecutors.put("help", new DuelAdminCommand(plugin));
     }
 
-    public static boolean isPaper(Duels plugin) {
+    public static boolean isPaper() {
         boolean isPaper = false;
         try {
             // Any other works, just the shortest I could find.
@@ -85,12 +84,5 @@ public class ServerUtils {
             throw new IllegalStateException("miniMessage is null when getting it from the main class");
         }
         return Duels.miniMessage;
-    }
-
-    public static BukkitAudiences adventure() {
-        if (Duels.adventure == null) {
-            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
-        }
-        return Duels.adventure;
     }
 }

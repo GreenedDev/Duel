@@ -59,7 +59,29 @@ public class Game implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        Chat.sendMessage(player, plugin.languageConfig.getString("duel.no-commands-in-duel"));
+        String command = event.getMessage();
+        boolean ifMatchesAny = false;
+        for (String whitelisted_or_blacklisted_Command : plugin.getConfig().getStringList("game.commands.blocked-or-allowed-commands.commands")) {
+            if (command.equalsIgnoreCase(whitelisted_or_blacklisted_Command)) {
+                ifMatchesAny = true;
+                break;
+            }
+        }
+        String blockMessage = plugin.languageConfig.getString("duel.this-command-blocked");
+        if (plugin.getConfig().getBoolean("game.commands.blocked-or-allowed-commands.mode")) {
+            //then this command is whitelisted
+            if (ifMatchesAny) {
+                return;
+            }
+            Chat.sendMessage(player, blockMessage);
+            event.setCancelled(true);
+            return;
+        }
+        //then this command is not in the blacklist
+        if (!ifMatchesAny) {
+            return;
+        }
+        Chat.sendMessage(player, blockMessage);
         event.setCancelled(true);
     }
 

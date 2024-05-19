@@ -5,8 +5,8 @@
 plugins {
     `java-library`
     `maven-publish`
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("xyz.jpenilla.run-paper") version "2.2.3"
+    id("io.github.goooler.shadow") version "8.1.7"
+    id("xyz.jpenilla.run-paper") version "2.3.0"
 }
 
 repositories {
@@ -27,15 +27,15 @@ repositories {
 dependencies {
     implementation("org.bstats:bstats-bukkit:2.2.1")
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
-    implementation("net.kyori:adventure-platform-bukkit:4.3.2")
+    implementation("net.kyori:adventure-api:4.17.0")
     compileOnly("me.clip:placeholderapi:2.11.5")
     compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.2.3")
 }
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 group = "net.multylands.duels"
-version = "v1.35"
+version = "1.36"
 description = "Duels"
 
 publishing {
@@ -68,16 +68,9 @@ tasks.processResources {
 }
 tasks {
     runServer {
-        downloadPlugins {
-            modrinth("simple-fly", "nIB1yFFr")
-            modrinth("miniplaceholders", "J2guR3GH")
-            url("https://github.com/MiniPlaceholders/Player-Expansion/releases/download/1.2.0/MiniPlaceholders-Player-Expansion-1.2.0.jar")
-            url("https://hangarcdn.papermc.io/plugins/HelpChat/PlaceholderAPI/versions/2.11.5/PAPER/PlaceholderAPI-2.11.5.jar")
-            url("https://github.com/HSGamer/BetterBoard/releases/download/2.7/BetterBoard-2.7.jar")
-        }
         // Configure the Minecraft version for our task.
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.20.4")
+        minecraftVersion("1.20.6")
     }
 }

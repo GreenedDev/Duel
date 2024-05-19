@@ -36,7 +36,7 @@ duel:
   target-is-offline: "&cGiven player is offline."
   no-arenas-available: "&cCurrently, there are no arenas available."
   no-request-sent: "&cYou haven't sent duel request to &b%player%."
-  no-commands-in-duel: "&cYou cannot use commands while you are in duel."
+  this-command-blocked: "&cThis command is not allowed in duels."
   commands:
     duel:
       request-sent: "$<green>You have sent duel request to</green> <aqua>%player%</aqua><green>!</green> <red><b><hover:show_text:'<green>Click to cancel this request!</green>'><click:run_command:'/cancelduel %player%'>Cancel</click></hover></b></red>"
