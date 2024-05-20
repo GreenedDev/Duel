@@ -5,8 +5,10 @@ import net.multylands.duels.Duels;
 import net.multylands.duels.gui.GUIManager;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.DuelRestrictions;
+import net.multylands.duels.utils.BettingSystem;
 import net.multylands.duels.utils.Chat;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,21 +29,21 @@ public class DuelCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
             Chat.sendMessageSender(sender, plugin.languageConfig.getString("only-player-command"));
-            return false;
+            return true;
         }
         Player player = (Player) sender;
-        if (args.length != 1) {
-            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
-            return false;
+        if (!(args.length == 1 || args.length == 2)) {
+            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player bet(optional)");
+            return true;
         }
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
-            return false;
+            return true;
         }
         if (player.equals(target)) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.cant-duel-yourself"));
-            return false;
+            return true;
         }
         //already sent check
         if (Duels.requestsReceiverToSenders.containsKey(target.getUniqueId())) {
@@ -51,10 +53,10 @@ public class DuelCommand implements CommandExecutor {
                 }
                 if (request.getGame().getIsAboutToTeleportedToSpawn()) {
                     Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.target-already-in-duel").replace("%player%", target.getDisplayName()));
-                    return false;
+                    return true;
                 }
                 Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.request-already-sent").replace("%player%", target.getDisplayName()));
-                return false;
+                return true;
             }
         }
         //target already in duel check
@@ -64,29 +66,48 @@ public class DuelCommand implements CommandExecutor {
                     continue;
                 }
                 Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.target-already-in-duel").replace("%player%", target.getDisplayName()));
-                return false;
+                return true;
             }
         }
         //ignore check
-        if (plugin.ignoresConfig.contains("Ignores." + target.getUniqueId())) {
-            for (String loopUUID : plugin.ignoresConfig.getStringList("Ignores." + target.getUniqueId())) {
-                if (!Objects.equals(loopUUID, player.getUniqueId().toString())) {
-                    continue;
-                }
-                Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.ignore.player-is-ignoring-requests"));
-                return false;
+        if (plugin.ignoresConfig.getStringList(target.getUniqueId().toString()).contains(player.getUniqueId().toString())) {
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.ignore.player-is-ignoring-requests"));
+            return true;
+        }
+        float bet = 0;
+        if (args.length == 2) {
+            if (!plugin.getConfig().getBoolean("game.betting.enabled")) {
+                Chat.sendMessage(player, plugin.languageConfig.getString("duel.betting.not-enabled"));
+                return true;
+            }
+            try {
+                bet = Float.parseFloat(args[1]);
+            } catch (NumberFormatException e) {
+                Chat.sendMessage(player, plugin.languageConfig.getString("duel.betting.only-number"));
+                return true;
+            }
+            double minimum = plugin.getConfig().getDouble("game.betting.minimum");
+            double maximum = plugin.getConfig().getDouble("game.betting.maximum");
+            if (bet < minimum || bet > maximum) {
+                Chat.sendMessage(player, plugin.languageConfig.getString("duel.betting.out-of-range")
+                        .replace("%minimum%", String.valueOf(minimum))
+                        .replace("%maximum%", String.valueOf(maximum)));
+                return true;
             }
         }
         if (plugin.getConfig().getBoolean("modules.GUI")) {
-            guiManager.openInventory(player, target);
+            guiManager.openInventory(player, target, bet);
         } else {
             DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, true, false, false);
-            DuelRequest request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin);
+            DuelRequest request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, bet, plugin);
             request.storeRequest(false);
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.request-sent").replace("%player%", target.getName()));
             Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.duel.request-received").replace("%player%", player.getName()));
             Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.duel.click").replace("%player%", player.getName()));
+            if (plugin.getConfig().getBoolean("game.betting.enabled") && bet != 0) {
+                Chat.sendMessage(target, plugin.languageConfig.getString("duel.betting.bet-amount").replace("%amount%", String.valueOf(bet)));
+            }
         }
-        return false;
+        return true;
     }
 }

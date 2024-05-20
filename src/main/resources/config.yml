@@ -7,6 +7,16 @@ spawn_location:
   pitch: 0.0
   yaw: 0.0
 game:
+  betting:
+    enabled: true
+    minimum: 10
+    maximum: 10000000
+    #in percents
+    tax-amount: 10
+    bet-give-commands:
+      - eco give %player% %amount%
+    bet-take-commands:
+      - eco take %player% %amount%
   commands:
     blocked-or-allowed-commands:
       #set to true if you want the commands below to be allowed only.

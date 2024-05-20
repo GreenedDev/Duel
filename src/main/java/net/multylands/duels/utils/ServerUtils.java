@@ -22,6 +22,7 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 
+import java.util.List;
 import java.util.logging.Level;
 
 public class ServerUtils {

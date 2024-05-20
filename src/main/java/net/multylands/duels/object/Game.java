@@ -1,6 +1,7 @@
 package net.multylands.duels.object;
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.utils.BettingSystem;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.GameUtils;
 import net.multylands.duels.utils.SavingItems;
@@ -21,6 +22,7 @@ public class Game {
     boolean isInGame;
     int taskAssignedIDInTheList;
     boolean isAboutToBeTeleportedToSpawn = false;
+    double bet = 0;
     DuelRequest request;
     Duels plugin;
     List<UUID> spectators = new ArrayList<>();
@@ -29,10 +31,11 @@ public class Game {
     int taskId = 0;
     Instant runOutOfTime;
 
-    public Game(UUID sender, UUID target, DuelRequest request, DuelRestrictions duelRestrictions, boolean isInGame, boolean isStartingIn5Seconds, Duels plugin) {
+    public Game(UUID sender, UUID target, DuelRequest request, DuelRestrictions duelRestrictions, boolean isInGame, boolean isStartingIn5Seconds, double bet, Duels plugin) {
         this.senderUUID = sender;
         this.targetUUID = target;
         this.request = request;
+        this.bet = bet;
         this.isStartingIn5Seconds = isStartingIn5Seconds;
         this.restrictions = duelRestrictions;
         this.isInGame = isInGame;
@@ -106,7 +109,6 @@ public class Game {
     public void start(Arena arena) {
         this.arena = arena;
 
-
         arena.setAvailable(false);
         arena.setSenderUUID(senderUUID);
         arena.setTargetUUID(targetUUID);
@@ -121,10 +123,6 @@ public class Game {
 
         targetPlayer.teleport(arena.getFirstLocation(plugin));
         senderPlayer.teleport(arena.getSecondLocation(plugin));
-
-//        Set<DuelRequest> requestsThatWereAlreadyThere = RequestUtils.getRequestsReceiverToSenders(targetUUID, senderUUID);
-//        requestsThatWereAlreadyThere.add(request);
-//        Duels.requestsReceiverToSenders.put(senderUUID, requestsThatWereAlreadyThere);
 
         GameUtils.disableFlying(senderPlayer, targetPlayer);
         GameUtils.removeEffectsIfDisabled(restrictions, senderPlayer, targetPlayer);
@@ -150,6 +148,12 @@ public class Game {
         request.removeStoreRequest(true);
         GameUtils.reverseInventorySavingIfEnabled(restrictions, sender);
         GameUtils.reverseInventorySavingIfEnabled(restrictions, target);
+        if (bet != 0) {
+            BettingSystem.execGiveMoneyCommands(plugin, bet, sender.getName());
+            BettingSystem.execGiveMoneyCommands(plugin, bet, target.getName());
+            Chat.sendMessage(sender, plugin.languageConfig.getString("duel.betting.bet-added-back"));
+            Chat.sendMessage(target, plugin.languageConfig.getString("duel.betting.bet-added-back"));
+        }
     }
 
     public void endGameRestart() {
@@ -168,6 +172,13 @@ public class Game {
         request.removeStoreRequest(true);
         GameUtils.reverseInventorySavingIfEnabled(restrictions, sender);
         GameUtils.reverseInventorySavingIfEnabled(restrictions, target);
+
+        if (bet != 0) {
+            BettingSystem.execGiveMoneyCommands(plugin, bet, sender.getName());
+            BettingSystem.execGiveMoneyCommands(plugin, bet, target.getName());
+            Chat.sendMessage(sender, plugin.languageConfig.getString("duel.betting.bet-added-back"));
+            Chat.sendMessage(target, plugin.languageConfig.getString("duel.betting.bet-added-back"));
+        }
     }
 
     public void endGame(UUID winnerUUIDFromMethod) {
@@ -203,6 +214,12 @@ public class Game {
             request.removeStoreRequest(true);
         }, 20L * plugin.getConfig().getInt("game.time_to_pick_up_items"));
         GameUtils.executeEndCommands(plugin, winner, loser);
+
+        if (bet != 0) {
+            double tax = plugin.getConfig().getDouble("game.betting.tax-amount");
+            BettingSystem.execGiveMoneyCommands(plugin, 2*bet*(100-tax)/100, winner.getName());
+            Chat.sendMessage(winner, plugin.languageConfig.getString("duel.betting.bet-added"));
+        }
     }
 
     public UUID getOpponent(UUID someone) {
@@ -231,6 +248,9 @@ public class Game {
 
     public Arena getArena() {
         return arena;
+    }
+    public double getBet() {
+        return bet;
     }
 
     public void saveAndRunRanOutOfTimeTask() {

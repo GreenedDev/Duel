@@ -6,6 +6,7 @@ authors: [ GreenedDev ]
 softdepend:
   - Multiverse-Core
   - PlaceholderAPI
+  - Vault
 description:
   this is a duels plugin created for minecraft server Multylands. it was created due to the fact that managing duels required a lot of work. for example server helper needed to moderate 1v1 players to not use restricted PvP abilities.
 website: https://www.spigotmc.org/resources/114685/

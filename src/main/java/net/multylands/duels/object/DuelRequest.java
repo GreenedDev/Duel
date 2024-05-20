@@ -17,11 +17,11 @@ public class DuelRequest {
     Game game;
     ArrayList<Integer> taskIdForRequestTimeout = new ArrayList<>();
 
-    public DuelRequest(UUID sender, UUID target, DuelRestrictions duelRestrictions, boolean isInGame, boolean isStartingIn5Seconds, Duels plugin) {
+    public DuelRequest(UUID sender, UUID target, DuelRestrictions duelRestrictions, boolean isInGame, boolean isStartingIn5Seconds, double bet, Duels plugin) {
         this.senderUUID = sender;
         this.targetUUID = target;
         this.plugin = plugin;
-        game = new Game(sender, target, this, duelRestrictions, isInGame, isStartingIn5Seconds, plugin);
+        game = new Game(sender, target, this, duelRestrictions, isInGame, isStartingIn5Seconds, bet, plugin);
     }
 
     public Game getGame() {

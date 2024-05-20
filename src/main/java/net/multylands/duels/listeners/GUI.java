@@ -213,6 +213,10 @@ public class GUI implements Listener {
             if (request.getGame().getRestrictions().getDisabled() != null) {
                 Chat.sendMessage(target, plugin.languageConfig.getString("duel.restrictions.disabled-restrictions") + request.getGame().getRestrictions().getDisabled());
             }
+            double bet = request.getGame().getBet();
+            if (plugin.getConfig().getBoolean("game.betting.enabled") && bet != 0) {
+                Chat.sendMessage(target, plugin.languageConfig.getString("duel.betting.bet-amount").replace("%amount%", String.valueOf(bet)));
+            }
             Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.duel.click").replace("%player%", player.getName()));
             PlayersWhoSentRequest.add(player.getUniqueId());
             player.closeInventory();

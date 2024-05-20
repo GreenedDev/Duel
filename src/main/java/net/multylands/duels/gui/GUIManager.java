@@ -24,10 +24,10 @@ public class GUIManager {
 
     public List<String> lore = new ArrayList<>();
 
-    public void openInventory(Player sender, Player target) {
+    public void openInventory(Player sender, Player target, double bet) {
         sender.closeInventory();
         DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, false, false, false);
-        DuelRequest request = new DuelRequest(sender.getUniqueId(), target.getUniqueId(), restrictions, false, false, plugin);
+        DuelRequest request = new DuelRequest(sender.getUniqueId(), target.getUniqueId(), restrictions, false, false, bet, plugin);
         DuelInventoryHolder inventoryHolder = new DuelInventoryHolder(plugin, plugin.duelInventorySize, request);
         Inventory inventory = inventoryHolder.getInventory();
         ItemStack start = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.start.item")));

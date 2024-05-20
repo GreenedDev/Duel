@@ -33,6 +33,17 @@ admin:
   set-spawn:
     success: "&aSpawn location has been set successfully!"
 duel:
+  betting:
+    not-enabled: "&cBetting system is not enabled!"
+    only-number: "&cBetting amount can only be a number."
+    insufficient-funds: "&cYou don't have enough balance for that!"
+    insufficient-funds-sender: "&cRequest sender doesn't have enough balance."
+    out-of-range: "&cThe betting amount is out of range. Try &b%minimum%&f-&6%maximum%"
+    bet-amount: "&a Bet: &e%amount% &6$"
+    bet-removed: "&cBet has been removed from your balance."
+    bet-added: "&aBet has been added to your balance."
+    #in case of server restarts or players run out of duel time.
+    bet-added-back: "&cYour bet has been added back to your account."
   target-is-offline: "&cGiven player is offline."
   no-arenas-available: "&cCurrently, there are no arenas available."
   no-request-sent: "&cYou haven't sent duel request to &b%player%."

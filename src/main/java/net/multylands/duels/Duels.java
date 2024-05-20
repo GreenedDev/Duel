@@ -5,10 +5,7 @@ import net.multylands.duels.gui.GUIManager;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.placeholders.MiniPlaceholders;
-import net.multylands.duels.utils.Chat;
-import net.multylands.duels.utils.ConfigUtils;
-import net.multylands.duels.utils.ServerUtils;
-import net.multylands.duels.utils.UpdateChecker;
+import net.multylands.duels.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandExecutor;
@@ -56,6 +53,7 @@ public class Duels extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        BettingSystem.setupEconomy(this);
         miniMessage = MiniMessage.miniMessage();
         if (!ServerUtils.isPaper()) {
             getLogger().info("Server isn't running the PAPER software which means " +
