@@ -15,6 +15,7 @@ public class DuelRequest {
     UUID targetUUID;
     Duels plugin;
     Game game;
+    Arena selectedArena;
     ArrayList<Integer> taskIdForRequestTimeout = new ArrayList<>();
 
     public DuelRequest(UUID sender, UUID target, DuelRestrictions duelRestrictions, boolean isInGame, boolean isStartingIn5Seconds, double bet, Duels plugin) {

@@ -16,22 +16,24 @@ import net.multylands.duels.commands.player.request.CancelCommand;
 import net.multylands.duels.commands.player.request.DenyCommand;
 import net.multylands.duels.commands.player.spectate.SpectateCommand;
 import net.multylands.duels.commands.player.spectate.StopSpectateCommand;
+import net.multylands.duels.gui.listeners.ArenaGUIListener;
+import net.multylands.duels.gui.listeners.DuelGUIListener;
 import net.multylands.duels.listeners.*;
 import net.multylands.duels.placeholders.PlaceholderAPI;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 
-import java.util.List;
 import java.util.logging.Level;
 
 public class ServerUtils {
     public static void registerListeners(Duels plugin) {
-        plugin.getServer().getPluginManager().registerEvents(new GUI(plugin), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new DuelGUIListener(plugin), plugin);
         plugin.getServer().getPluginManager().registerEvents(new Game(plugin), plugin);
         plugin.getServer().getPluginManager().registerEvents(new Spectating(plugin), plugin);
         plugin.getServer().getPluginManager().registerEvents(new UpdateListener(plugin), plugin);
         plugin.getServer().getPluginManager().registerEvents(new Restrictions(plugin), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new ArenaGUIListener(plugin), plugin);
     }
 
     public static void registerCommands(Duels plugin) {

@@ -46,6 +46,7 @@ duel:
     bet-added-back: "&cYour bet has been added back to your account."
   target-is-offline: "&cGiven player is offline."
   no-arenas-available: "&cCurrently, there are no arenas available."
+  arena-not-available: "&cThat arena is not available."
   no-request-sent: "&cYou haven't sent duel request to &b%player%."
   this-command-blocked: "&cThis command is not allowed in duels."
   commands:
@@ -101,6 +102,27 @@ duel:
 
     won-duel: "&aYou won the duel! You will be teleported to spawn in &b%number% &aseconds. Pick up their items."
     lost-duel: "&cYou lost the duel."
+arena-GUI:
+  size: 54
+  title: "&8Select duel arena."
+  available: "&a(Available)"
+  unavailable: "&c(Unavailable)"
+  selected: "&aSelected!"
+  not-selected: "&cNot selected!"
+  back:
+    item: ARROW
+    glowing: true
+    slot: 53
+    display-name: "&cBack"
+    lore: []
+  format:
+    item: MAP
+    glowing: true
+    display-name: "&6%name% %available%"
+    lore:
+      - "&7Status: %status%"
+      - ""
+      - "&eClick to select!"
 duel-GUI:
   size: 27
   title: "&8Customize Your Duel Restrictions"
@@ -216,6 +238,17 @@ duel-GUI:
       - "&7you will go to the duel with your items."
       - ""
       - "&eClick to toggle!"
+  arena-selector:
+    slot: 22
+    item: MAP
+    glowing: true
+    display-name: "&6Arena Selector"
+    lore:
+      - "&7Select the PvP arena where you fight."
+      - "&7Leave this as it is if you want  to use"
+      - "&7random arena."
+      - ""
+      - "&eClick to open!"
   cancel:
     slot: 18
     item: BARRIER

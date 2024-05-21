@@ -14,6 +14,9 @@ public class Chat {
     }
 
     public static void sendMessage(Player player, String message) {
+        if (message.isEmpty()) {
+            return;
+        }
         if (message.startsWith("$")) {
             Component parsed = ServerUtils.miniMessage().deserialize(message.substring(1));
             player.sendMessage(parsed);
@@ -23,6 +26,9 @@ public class Chat {
     }
 
     public static void sendMessageSender(CommandSender sender, String message) {
+        if (message.isEmpty()) {
+            return;
+        }
         if (message.startsWith("$")) {
             Component parsed = ServerUtils.miniMessage().deserialize(message.substring(1));
             sender.sendMessage(parsed);

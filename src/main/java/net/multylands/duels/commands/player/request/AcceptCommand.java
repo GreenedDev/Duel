@@ -51,17 +51,24 @@ public class AcceptCommand implements CommandExecutor {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.accept.target-hasnt-sent-request"));
             return true;
         }
-        boolean Available = false;
+        boolean available = false;
         Arena availableArena = null;
-        for (Arena arena : Duels.Arenas.values()) {
-            if (!arena.isAvailable()) {
-                continue;
+        if (Duels.manager.selectedArenas.get(target.getUniqueId()) == null) {
+            for (Arena arena : Duels.Arenas.values()) {
+                if (!arena.isAvailable()) {
+                    continue;
+                }
+                available = true;
+                availableArena = arena;
+                break;
             }
-            Available = true;
-            availableArena = arena;
-            break;
+            System.out.println("it worked #1");
+        } else {
+            available = Duels.manager.selectedArenas.get(target.getUniqueId()).isAvailable();
+            availableArena = Duels.manager.selectedArenas.get(target.getUniqueId());
+            System.out.println("it worked");
         }
-        if (!Available) {
+        if (!available) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.no-arenas-available"));
             return true;
         }

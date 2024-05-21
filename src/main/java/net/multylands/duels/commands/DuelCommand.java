@@ -5,16 +5,12 @@ import net.multylands.duels.Duels;
 import net.multylands.duels.gui.GUIManager;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.DuelRestrictions;
-import net.multylands.duels.utils.BettingSystem;
 import net.multylands.duels.utils.Chat;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Objects;
 
 public class DuelCommand implements CommandExecutor {
     public GUIManager guiManager;
@@ -96,7 +92,8 @@ public class DuelCommand implements CommandExecutor {
             }
         }
         if (plugin.getConfig().getBoolean("modules.GUI")) {
-            guiManager.openInventory(player, target, bet);
+            DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, false, false, false);
+            guiManager.openDuelInventory(player, target, bet, restrictions);
         } else {
             DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, true, false, false);
             DuelRequest request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, bet, plugin);

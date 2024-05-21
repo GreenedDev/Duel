@@ -35,6 +35,7 @@ public class Duels extends JavaPlugin {
     public static HashMap<UUID, UUID> spectators = new HashMap<>();
     public String newVersion = null;
     public int duelInventorySize;
+    public int arenaInventorySize;
     public File ignoresFile;
     public String ignoresFileName = "ignores.yml";
     public File arenasFile;
@@ -48,7 +49,7 @@ public class Duels extends JavaPlugin {
     public FileConfiguration arenasConfig;
     public FileConfiguration languageConfig;
     public static BukkitScheduler scheduler = Bukkit.getScheduler();
-    public GUIManager manager;
+    public static GUIManager manager;
     public static HashMap<String, CommandExecutor> commandExecutors = new HashMap<>();
 
     @Override
@@ -116,6 +117,7 @@ public class Duels extends JavaPlugin {
             configUtils.addMissingKeysAndValues(languageConfig, languageFileName);
             loadArenas();
             duelInventorySize = languageConfig.getInt("duel-GUI.size");
+            arenaInventorySize = languageConfig.getInt("arena-GUI.size");
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }

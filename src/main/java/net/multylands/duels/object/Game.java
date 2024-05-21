@@ -179,6 +179,7 @@ public class Game {
             Chat.sendMessage(sender, plugin.languageConfig.getString("duel.betting.bet-added-back"));
             Chat.sendMessage(target, plugin.languageConfig.getString("duel.betting.bet-added-back"));
         }
+
     }
 
     public void endGame(UUID winnerUUIDFromMethod) {
@@ -214,7 +215,7 @@ public class Game {
             request.removeStoreRequest(true);
         }, 20L * plugin.getConfig().getInt("game.time_to_pick_up_items"));
         GameUtils.executeEndCommands(plugin, winner, loser);
-
+        GameUtils.teleportToSpawn(plugin, loser);
         if (bet != 0) {
             double tax = plugin.getConfig().getDouble("game.betting.tax-amount");
             BettingSystem.execGiveMoneyCommands(plugin, 2*bet*(100-tax)/100, winner.getName());

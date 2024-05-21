@@ -1,6 +1,7 @@
 package net.multylands.duels.gui;
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.Module;
 import net.multylands.duels.utils.Chat;
@@ -27,16 +28,17 @@ public class DuelInventoryHolder implements InventoryHolder {
         cancelSlot = plugin.languageConfig.getInt("duel-GUI.cancel.slot");
         this.request = request;
         this.inventory = plugin.getServer().createInventory(this, size, Chat.color(plugin.languageConfig.getString("duel-GUI.title")));
-        addItemIfEnabled("bow", inventory, request.getGame().getRestrictions().isBowAllowed(), Module.RESTRICTION);
-        addItemIfEnabled("totem", inventory, request.getGame().getRestrictions().isTotemAllowed(), Module.RESTRICTION);
-        addItemIfEnabled("golden-apple", inventory, request.getGame().getRestrictions().isGoldenAppleAllowed(), Module.RESTRICTION);
-        addItemIfEnabled("enchanted-golden-apple", inventory, request.getGame().getRestrictions().isNotchAllowed(), Module.RESTRICTION);
-        addItemIfEnabled("potion", inventory, request.getGame().getRestrictions().isPotionAllowed(), Module.RESTRICTION);
-        addItemIfEnabled("shield", inventory, request.getGame().getRestrictions().isShieldAllowed(), Module.RESTRICTION);
-        addItemIfEnabled("elytra", inventory, request.getGame().getRestrictions().isElytraAllowed(), Module.RESTRICTION);
-        addItemIfEnabled("ender-pearl", inventory, request.getGame().getRestrictions().isEnderPearlAllowed(), Module.RESTRICTION);
-        addItemIfEnabled("keep-inventory", inventory, request.getGame().getRestrictions().isKeepInventoryEnabled(), Module.OTHER);
-        addItemIfEnabled("inventory-saving", inventory, request.getGame().getRestrictions().isInventorySavingEnabled(), Module.OTHER);
+        addItemIfEnabled("toggle-bow", inventory, request.getGame().getRestrictions().isBowAllowed(), Module.RESTRICTION);
+        addItemIfEnabled("toggle-totem", inventory, request.getGame().getRestrictions().isTotemAllowed(), Module.RESTRICTION);
+        addItemIfEnabled("toggle-golden-apple", inventory, request.getGame().getRestrictions().isGoldenAppleAllowed(), Module.RESTRICTION);
+        addItemIfEnabled("toggle-enchanted-golden-apple", inventory, request.getGame().getRestrictions().isNotchAllowed(), Module.RESTRICTION);
+        addItemIfEnabled("toggle-potion", inventory, request.getGame().getRestrictions().isPotionAllowed(), Module.RESTRICTION);
+        addItemIfEnabled("toggle-shield", inventory, request.getGame().getRestrictions().isShieldAllowed(), Module.RESTRICTION);
+        addItemIfEnabled("toggle-elytra", inventory, request.getGame().getRestrictions().isElytraAllowed(), Module.RESTRICTION);
+        addItemIfEnabled("toggle-ender-pearl", inventory, request.getGame().getRestrictions().isEnderPearlAllowed(), Module.RESTRICTION);
+        addItemIfEnabled("toggle-keep-inventory", inventory, request.getGame().getRestrictions().isKeepInventoryEnabled(), Module.OTHER);
+        addItemIfEnabled("toggle-inventory-saving", inventory, request.getGame().getRestrictions().isInventorySavingEnabled(), Module.OTHER);
+        addItemIfEnabled("arena-selector", inventory, true, Module.OTHER);
         ItemStack cancel = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.cancel.item")));
         ItemMeta cancelMeta = cancel.getItemMeta();
         cancelMeta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.cancel.display-name")));
@@ -67,34 +69,35 @@ public class DuelInventoryHolder implements InventoryHolder {
     }
 
     public void addItemIfEnabled(String name, Inventory inventory, boolean toggled, Module module) {
+        String nameWithoutToggle = name.replace("toggle-", "");
         if (module == Module.RESTRICTION) {
-            if (!plugin.getConfig().getBoolean("modules.restrictions." + name)) {
+            if (!plugin.getConfig().getBoolean("modules.restrictions." + nameWithoutToggle)) {
                 return;
             }
         } else {
-            if (!(plugin.getConfig().getBoolean("modules." + name))) {
+            if (!(plugin.getConfig().getBoolean("modules." + nameWithoutToggle))) {
                 return;
             }
         }
-        ItemStack item = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.toggle-" + name + ".item")));
+        ItemStack item = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI." + name + ".item")));
         ItemMeta itemMeta = item.getItemMeta();
-        if (plugin.languageConfig.getBoolean("duel-GUI.toggle-" + name + ".glowing")) {
+        if (plugin.languageConfig.getBoolean("duel-GUI." + name + ".glowing")) {
             itemMeta.addEnchant(Enchantment.LURE, 1, true);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
         if (toggled) {
-            itemMeta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-" + name + ".display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+            itemMeta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI." + name + ".display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
         } else {
-            itemMeta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-" + name + ".display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+            itemMeta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI." + name + ".display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
         }
-        for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.toggle-" + name + ".lore")) {
+        for (String loreLine : plugin.languageConfig.getStringList("duel-GUI." + name + ".lore")) {
             lore.add(Chat.color(loreLine));
         }
         itemMeta.setLore(lore);
         item.setItemMeta(itemMeta);
         lore.clear();
 
-        int itemSlot = plugin.languageConfig.getInt("duel-GUI.toggle-" + name + ".slot");
+        int itemSlot = plugin.languageConfig.getInt("duel-GUI." + name + ".slot");
         inventory.setItem(itemSlot, item);
     }
 
