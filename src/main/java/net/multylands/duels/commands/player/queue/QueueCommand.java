@@ -8,6 +8,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 
 public class QueueCommand implements CommandExecutor {
     public Duels plugin;
@@ -27,7 +29,8 @@ public class QueueCommand implements CommandExecutor {
             Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label));
             return true;
         }
-        QueueSystem.playersInQueue.add(player.getUniqueId());
+        UUID playerUUID = player.getUniqueId();
+        QueueSystem.playersInQueue.add(playerUUID);
         QueueSystem.checkQueue(plugin);
         Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.queue.success"));
         return true;
