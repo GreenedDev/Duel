@@ -38,9 +38,7 @@ public class GUIManager {
         Inventory invFromHashMap = duelInventories.get(senderUUID);
         DuelRequest request = new DuelRequest(sender.getUniqueId(), target.getUniqueId(), restrictions, false, false, bet, plugin);
         if (invFromHashMap != null) {
-            System.out.println("open this is above of openinventory method");
             sender.openInventory(invFromHashMap);
-            System.out.println("open this is below of openinventory method");
             request.storeRequest(false);
             return;
         }
@@ -65,6 +63,8 @@ public class GUIManager {
         sender.openInventory(inventory);
         duelInventories.put(senderUUID, inventory);
         request.storeRequest(false);
+
+        inventoryRequests.put(senderUUID, request);
     }
     public void openArenaInventory(Player sender, DuelRequest request) {
         UUID senderUUID = sender.getUniqueId();

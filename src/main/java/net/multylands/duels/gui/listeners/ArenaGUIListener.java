@@ -92,14 +92,12 @@ public class ArenaGUIListener implements Listener {
                     lore.add(Chat.color(loreLine.replace("%status%", selected)));
                 }
                 Duels.manager.selectedArenas.put(player.getUniqueId(), arena);
-                System.out.println(player.getUniqueId()+" "+arenaName);
                 updateSelected(plugin, inv, arenaName);
             } else {
                 for (String loreLine : plugin.languageConfig.getStringList("arena-GUI.format.lore")) {
                     lore.add(Chat.color(loreLine.replace("%status%", not_selected)));
                 }
                 Duels.manager.selectedArenas.put(player.getUniqueId(), null);
-                System.out.println(player.getUniqueId()+" null");
             }
             meta.setLore(lore);
             item.setItemMeta(meta);

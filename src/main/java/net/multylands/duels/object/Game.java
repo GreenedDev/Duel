@@ -1,6 +1,7 @@
 package net.multylands.duels.object;
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.queue.QueueSystem;
 import net.multylands.duels.utils.BettingSystem;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.GameUtils;
@@ -154,6 +155,7 @@ public class Game {
             Chat.sendMessage(sender, plugin.languageConfig.getString("duel.betting.bet-added-back"));
             Chat.sendMessage(target, plugin.languageConfig.getString("duel.betting.bet-added-back"));
         }
+        QueueSystem.checkQueue(plugin);
     }
 
     public void endGameRestart() {
@@ -179,7 +181,6 @@ public class Game {
             Chat.sendMessage(sender, plugin.languageConfig.getString("duel.betting.bet-added-back"));
             Chat.sendMessage(target, plugin.languageConfig.getString("duel.betting.bet-added-back"));
         }
-
     }
 
     public void endGame(UUID winnerUUIDFromMethod) {
@@ -213,6 +214,7 @@ public class Game {
             arena.setAvailable(true);
             GameUtils.reverseInventorySavingIfEnabled(restrictions, winner);
             request.removeStoreRequest(true);
+            QueueSystem.checkQueue(plugin);
         }, 20L * plugin.getConfig().getInt("game.time_to_pick_up_items"));
         GameUtils.executeEndCommands(plugin, winner, loser);
         GameUtils.teleportToSpawn(plugin, loser);
@@ -221,6 +223,7 @@ public class Game {
             BettingSystem.execGiveMoneyCommands(plugin, 2*bet*(100-tax)/100, winner.getName());
             Chat.sendMessage(winner, plugin.languageConfig.getString("duel.betting.bet-added"));
         }
+
     }
 
     public UUID getOpponent(UUID someone) {

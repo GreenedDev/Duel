@@ -80,6 +80,8 @@ duel:
       already-spectating: "&cYou are already in spectator mode. Please leave the spectating mode first with /endspectating"
       not-in-spectator: "&cYou are not in the spectator mode."
       spectate-end-success: "&aYou have left the spectator mode."
+    queue:
+      success: "&aYou have been added to the Queue."
   spectating:
     cannot-damage-in-duel: "&cYou can't damage players when they are in duel."
     no-commands: "&cYou cannot use that command in the Spectating mode!"

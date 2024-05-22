@@ -93,7 +93,13 @@ public class DuelCommand implements CommandExecutor {
         }
         if (plugin.getConfig().getBoolean("modules.GUI")) {
             DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, false, false, false);
-            guiManager.openDuelInventory(player, target, bet, restrictions);
+            DuelRequest oldRequest = Duels.manager.inventoryRequests.get(player.getUniqueId());
+            if (oldRequest == null) {
+                guiManager.openDuelInventory(player, target, bet, restrictions);
+            } else {
+
+                guiManager.openDuelInventory(player, target, bet, oldRequest.getGame().getRestrictions());
+            }
         } else {
             DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, true, false, false);
             DuelRequest request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), restrictions, false, false, bet, plugin);

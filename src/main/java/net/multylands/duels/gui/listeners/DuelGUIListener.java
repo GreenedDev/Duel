@@ -49,7 +49,6 @@ public class DuelGUIListener implements Listener {
             PlayersWhoSentRequest.remove(playerUUID);
             return;
         }
-        System.out.println("close from duelgui close event");
         DuelInventoryHolder invHolder = ((DuelInventoryHolder) inv.getHolder());
         DuelRequest request = invHolder.getRequest();
         request.removeStoreRequest(false);
@@ -60,16 +59,16 @@ public class DuelGUIListener implements Listener {
     public void onClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem();
         Inventory inv = event.getInventory();
-        if (inv.getLocation() != null || !(inv.getHolder() instanceof DuelInventoryHolder) || item == null) {
+        Player player = (Player) event.getWhoClicked();
+        UUID playerUUID = player.getUniqueId();
+        if (inv.getLocation() != null || !(inv == Duels.manager.duelInventories.get(playerUUID)) || item == null) {
             return;
         }
-        Player player = (Player) event.getWhoClicked();
 
         event.setCancelled(true);
-        DuelInventoryHolder invHolder = ((DuelInventoryHolder) inv.getHolder());
         //always!!! get this request from the GUI clicker. because we are storing only sender: request in the requests map.
-        DuelRequest request = invHolder.getRequest();
-        Player target = Bukkit.getPlayer(request.getOpponent(player.getUniqueId()));
+        DuelRequest request = Duels.manager.inventoryRequests.get(playerUUID);
+        Player target = Bukkit.getPlayer(request.getOpponent(playerUUID));
         if (target == null) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
             request.removeStoreRequest(false);
@@ -91,8 +90,8 @@ public class DuelGUIListener implements Listener {
         int totemSlot = plugin.languageConfig.getInt("duel-GUI.toggle-totem.slot");
         int GPSlot = plugin.languageConfig.getInt("duel-GUI.toggle-golden-apple.slot");
         int NotchSlot = plugin.languageConfig.getInt("duel-GUI.toggle-enchanted-golden-apple.slot");
-        int potionsSlot = plugin.languageConfig.getInt("duel-GUI.toggle-potions.slot");
-        int shieldsSlot = plugin.languageConfig.getInt("duel-GUI.toggle-shields.slot");
+        int potionsSlot = plugin.languageConfig.getInt("duel-GUI.toggle-potion.slot");
+        int shieldsSlot = plugin.languageConfig.getInt("duel-GUI.toggle-shield.slot");
         int elytraSlot = plugin.languageConfig.getInt("duel-GUI.toggle-elytra.slot");
         int enderpearlSlot = plugin.languageConfig.getInt("duel-GUI.toggle-ender-pearl.slot");
         int keepInventorySlot = plugin.languageConfig.getInt("duel-GUI.toggle-keep-inventory.slot");
@@ -147,20 +146,20 @@ public class DuelGUIListener implements Listener {
             isPotionsEnabled = !isPotionsEnabled;
             restrictions.setPotionAllowed(isPotionsEnabled);
             if (isPotionsEnabled) {
-                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-potions.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-potion.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
             } else {
-                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-potions.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-potion.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
         } else if (slot == shieldsSlot) {
             isShieldsEnabled = !isShieldsEnabled;
             restrictions.setShield(isShieldsEnabled);
             if (isShieldsEnabled) {
-                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-shields.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-shield.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
             } else {
-                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-shields.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                meta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.toggle-shield.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
         } else if (slot == elytraSlot) {
@@ -204,13 +203,13 @@ public class DuelGUIListener implements Listener {
                 item.setItemMeta(meta);
             }
         } else if (slot == arenaSelectorSlot) {
-            playersWhoClosedBecauseOfArenaSelector.add(player.getUniqueId());
+            playersWhoClosedBecauseOfArenaSelector.add(playerUUID);
             request.getGame().setRestrictions(restrictions);
             Duels.manager.openArenaInventory(player, request);
         }else if (slot == startSlot) {
             restrictions.setComplete(true);
             //dont change position of player and target below
-            request = RequestUtils.getRequestForCommands(target.getUniqueId(), player.getUniqueId());
+            request = RequestUtils.getRequestForCommands(target.getUniqueId(), playerUUID);
             request.getGame().setRestrictions(restrictions);
 
             request.storeRequest(false);
@@ -228,7 +227,7 @@ public class DuelGUIListener implements Listener {
                 Chat.sendMessage(target, plugin.languageConfig.getString("duel.betting.bet-amount").replace("%amount%", String.valueOf(bet)));
             }
             Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.duel.click").replace("%player%", player.getName()));
-            PlayersWhoSentRequest.add(player.getUniqueId());
+            PlayersWhoSentRequest.add(playerUUID);
             player.closeInventory();
         } else if (slot == cancelSlot) {
             player.closeInventory();

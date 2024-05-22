@@ -11,6 +11,7 @@ import net.multylands.duels.commands.admin.arena.CreateArenaCommand;
 import net.multylands.duels.commands.admin.arena.DeleteArenaCommand;
 import net.multylands.duels.commands.admin.arena.SetPosCommand;
 import net.multylands.duels.commands.player.ignore.IgnoreCommand;
+import net.multylands.duels.commands.player.queue.QueueCommand;
 import net.multylands.duels.commands.player.request.AcceptCommand;
 import net.multylands.duels.commands.player.request.CancelCommand;
 import net.multylands.duels.commands.player.request.DenyCommand;
@@ -20,6 +21,7 @@ import net.multylands.duels.gui.listeners.ArenaGUIListener;
 import net.multylands.duels.gui.listeners.DuelGUIListener;
 import net.multylands.duels.listeners.*;
 import net.multylands.duels.placeholders.PlaceholderAPI;
+import net.multylands.duels.queue.QueueListener;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
@@ -34,6 +36,7 @@ public class ServerUtils {
         plugin.getServer().getPluginManager().registerEvents(new UpdateListener(plugin), plugin);
         plugin.getServer().getPluginManager().registerEvents(new Restrictions(plugin), plugin);
         plugin.getServer().getPluginManager().registerEvents(new ArenaGUIListener(plugin), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new QueueListener(), plugin);
     }
 
     public static void registerCommands(Duels plugin) {
@@ -46,6 +49,7 @@ public class ServerUtils {
         plugin.getCommand("stopspectate").setExecutor(new StopSpectateCommand(plugin));
         //admin commands
         plugin.getCommand("dueladmin").setExecutor(new DuelAdminCommand(plugin));
+        plugin.getCommand("duelqueue").setExecutor(new QueueCommand(plugin));
         Duels.commandExecutors.put("reload", new ReloadCommand(plugin));
         Duels.commandExecutors.put("setarenapos", new SetPosCommand(plugin));
         Duels.commandExecutors.put("setspawn", new SetSpawnCommand(plugin));

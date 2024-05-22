@@ -3,6 +3,7 @@ package net.multylands.duels.commands.player.request;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
+import net.multylands.duels.utils.ArenaUtils;
 import net.multylands.duels.utils.BettingSystem;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.RequestUtils;
@@ -51,24 +52,13 @@ public class AcceptCommand implements CommandExecutor {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.accept.target-hasnt-sent-request"));
             return true;
         }
-        boolean available = false;
-        Arena availableArena = null;
+        Arena availableArena;
         if (Duels.manager.selectedArenas.get(target.getUniqueId()) == null) {
-            for (Arena arena : Duels.Arenas.values()) {
-                if (!arena.isAvailable()) {
-                    continue;
-                }
-                available = true;
-                availableArena = arena;
-                break;
-            }
-            System.out.println("it worked #1");
+            availableArena = ArenaUtils.getAvailableArena();
         } else {
-            available = Duels.manager.selectedArenas.get(target.getUniqueId()).isAvailable();
             availableArena = Duels.manager.selectedArenas.get(target.getUniqueId());
-            System.out.println("it worked");
         }
-        if (!available) {
+        if (availableArena == null || !availableArena.isAvailable()) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.no-arenas-available"));
             return true;
         }
