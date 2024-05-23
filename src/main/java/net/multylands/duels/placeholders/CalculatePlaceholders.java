@@ -2,6 +2,7 @@ package net.multylands.duels.placeholders;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
+import net.multylands.duels.utils.MemoryStorage;
 import net.multylands.duels.utils.RequestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -52,7 +53,7 @@ public class CalculatePlaceholders {
         }
         UUID playerUUID = player.getUniqueId();
 
-        UUID toSpectate = Duels.spectators.get(playerUUID);
+        UUID toSpectate = MemoryStorage.spectators.get(playerUUID);
         if (toSpectate == null) {
             DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
             if (!RequestUtils.isInGame(request)) {

@@ -28,8 +28,8 @@ public class QueueSystem {
         for (UUID queuePlayerUUID : playersInQueue) {
             twoPlayers.add(queuePlayerUUID);
             if (twoPlayers.size() == 2) {
-                Player player1 = Bukkit.getPlayer(twoPlayers.getFirst());
-                Player player2 = Bukkit.getPlayer(twoPlayers.getLast());
+                Player player1 = Bukkit.getPlayer(twoPlayers.get(0));
+                Player player2 = Bukkit.getPlayer(twoPlayers.get(1));
                 //make them go in duel
                 DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, true, false, false);
                 DuelRequest request = new DuelRequest(player1.getUniqueId(), player2.getUniqueId(), restrictions, false, false, 0, plugin);

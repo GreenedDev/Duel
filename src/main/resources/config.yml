@@ -33,7 +33,7 @@ game:
         - kitgive %player2% rame
       start-normal:
         - someblablacommand %player1% %player2%
-    #list of commands that will be executed (from console) when duel starts. You can use %winner%
+    #list of commands that will be executed (from console) when duel ends. You can use %winner%
     #and %loser% placeholders here.
     end:
       - givetokensblabla %winner% 2

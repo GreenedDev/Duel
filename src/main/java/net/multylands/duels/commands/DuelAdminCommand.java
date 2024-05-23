@@ -2,6 +2,7 @@ package net.multylands.duels.commands;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.MemoryStorage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,13 +21,13 @@ public class DuelAdminCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0 || Duels.commandExecutors.get(args[0]) == null) {
+        if (args.length == 0 || MemoryStorage.commandExecutors.get(args[0]) == null) {
             for (String message : plugin.languageConfig.getStringList("admin.help")) {
                 sender.sendMessage(Chat.color(message));
             }
             return false;
         }
-        CommandExecutor executor = Duels.commandExecutors.get(args[0]);
+        CommandExecutor executor = MemoryStorage.commandExecutors.get(args[0]);
         executor.onCommand(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
         return false;
     }
@@ -34,7 +35,7 @@ public class DuelAdminCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> tabCompleteStrings = new ArrayList<>();
-        for (String commands : Duels.commandExecutors.keySet()) {
+        for (String commands : MemoryStorage.commandExecutors.keySet()) {
             if (commands.startsWith(args[0])) {
                 if (!commands.equalsIgnoreCase(args[0])) {
                     tabCompleteStrings.add(commands);

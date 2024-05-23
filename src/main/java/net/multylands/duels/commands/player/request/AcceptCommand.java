@@ -3,10 +3,7 @@ package net.multylands.duels.commands.player.request;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
-import net.multylands.duels.utils.ArenaUtils;
-import net.multylands.duels.utils.BettingSystem;
-import net.multylands.duels.utils.Chat;
-import net.multylands.duels.utils.RequestUtils;
+import net.multylands.duels.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -37,7 +34,7 @@ public class AcceptCommand implements CommandExecutor {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
             return true;
         }
-        for (Arena arena : Duels.Arenas.values()) {
+        for (Arena arena : MemoryStorage.Arenas.values()) {
             if (arena.isAvailable()) {
                 continue;
             }
@@ -53,10 +50,10 @@ public class AcceptCommand implements CommandExecutor {
             return true;
         }
         Arena availableArena;
-        if (Duels.manager.selectedArenas.get(target.getUniqueId()) == null) {
+        if (MemoryStorage.selectedArenas.get(target.getUniqueId()) == null) {
             availableArena = ArenaUtils.getAvailableArena();
         } else {
-            availableArena = Duels.manager.selectedArenas.get(target.getUniqueId());
+            availableArena = MemoryStorage.selectedArenas.get(target.getUniqueId());
         }
         if (availableArena == null || !availableArena.isAvailable()) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.no-arenas-available"));

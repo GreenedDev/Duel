@@ -1,6 +1,7 @@
 package net.multylands.duels.object;
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.utils.MemoryStorage;
 import org.bukkit.Location;
 
 import java.util.UUID;
@@ -54,16 +55,16 @@ public class Arena {
 
     public void setSenderUUID(UUID uuid) {
         this.target = uuid;
-        Duels.Arenas.put(getID(), this);
+        MemoryStorage.Arenas.put(getID(), this);
     }
 
     public void setTargetUUID(UUID uuid) {
         this.target = uuid;
-        Duels.Arenas.put(getID(), this);
+        MemoryStorage.Arenas.put(getID(), this);
     }
 
     public void setAvailable(boolean value) {
         this.isAvailable = value;
-        Duels.Arenas.put(getID(), this);
+        MemoryStorage.Arenas.put(getID(), this);
     }
 }

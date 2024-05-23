@@ -5,7 +5,7 @@ import net.multylands.duels.object.Arena;
 
 public class ArenaUtils {
     public static Arena getAvailableArena() {
-        for (Arena arena : Duels.Arenas.values()) {
+        for (Arena arena : MemoryStorage.Arenas.values()) {
             if (!arena.isAvailable()) {
                 continue;
             }

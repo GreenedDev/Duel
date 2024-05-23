@@ -1,6 +1,7 @@
 package net.multylands.duels.object;
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.utils.MemoryStorage;
 import net.multylands.duels.utils.RequestUtils;
 import org.bukkit.Bukkit;
 
@@ -52,8 +53,8 @@ public class DuelRequest {
         Set<DuelRequest> requestsWithoutThisRequestSenderToReceiver = RequestUtils.getRequestsSenderToReceivers(senderUUID, targetUUID);
 
         if (justStarted) {
-            Duels.playerToOpponentInGame.put(senderUUID, targetUUID);
-            Duels.playerToOpponentInGame.put(targetUUID, senderUUID);
+            MemoryStorage.playerToOpponentInGame.put(senderUUID, targetUUID);
+            MemoryStorage.playerToOpponentInGame.put(targetUUID, senderUUID);
         }
         int taskIDOfTheTimeout = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (getGame().getIsInGame()) {
@@ -66,8 +67,8 @@ public class DuelRequest {
         //do not move the below code up because the taskid will not be saved then
         requestsWithoutThisRequestReceiverToSenders.add(this);
         requestsWithoutThisRequestSenderToReceiver.add(this);
-        Duels.requestsReceiverToSenders.put(targetUUID, requestsWithoutThisRequestReceiverToSenders);
-        Duels.requestsSenderToReceivers.put(senderUUID, requestsWithoutThisRequestSenderToReceiver);
+        MemoryStorage.requestsReceiverToSenders.put(targetUUID, requestsWithoutThisRequestReceiverToSenders);
+        MemoryStorage.requestsSenderToReceivers.put(senderUUID, requestsWithoutThisRequestSenderToReceiver);
     }
 
     public void removeStoreRequest(boolean justEnded) {
@@ -80,18 +81,18 @@ public class DuelRequest {
 
         Set<DuelRequest> requestsWithoutThisRequestSenderToReceiver = RequestUtils.getRequestsSenderToReceivers(senderUUID, targetUUID);
         if (requestsWithoutThisRequestSenderToReceiver.isEmpty()) {
-            Duels.requestsSenderToReceivers.remove(senderUUID);
+            MemoryStorage.requestsSenderToReceivers.remove(senderUUID);
         } else {
-            Duels.requestsSenderToReceivers.put(senderUUID, requestsWithoutThisRequestSenderToReceiver);
+            MemoryStorage.requestsSenderToReceivers.put(senderUUID, requestsWithoutThisRequestSenderToReceiver);
         }
         if (requestsWithoutThisRequestReceiverToSenders.isEmpty()) {
-            Duels.requestsReceiverToSenders.remove(targetUUID);
+            MemoryStorage.requestsReceiverToSenders.remove(targetUUID);
         } else {
-            Duels.requestsReceiverToSenders.put(targetUUID, requestsWithoutThisRequestReceiverToSenders);
+            MemoryStorage.requestsReceiverToSenders.put(targetUUID, requestsWithoutThisRequestReceiverToSenders);
         }
         if (justEnded) {
-            Duels.playerToOpponentInGame.remove(senderUUID);
-            Duels.playerToOpponentInGame.remove(targetUUID);
+            MemoryStorage.playerToOpponentInGame.remove(senderUUID);
+            MemoryStorage.playerToOpponentInGame.remove(targetUUID);
         }
     }
 

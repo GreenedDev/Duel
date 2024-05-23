@@ -3,6 +3,7 @@ package net.multylands.duels.commands.player.spectate;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.MemoryStorage;
 import net.multylands.duels.utils.RequestUtils;
 import net.multylands.duels.utils.SpectatorUtils;
 import org.bukkit.Bukkit;
@@ -41,7 +42,7 @@ public class SpectateCommand implements CommandExecutor {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.spectate.is-not-in-duel").replace("%player%", toSpectateName));
             return false;
         }
-        if (Duels.spectators.containsKey(player.getUniqueId())) {
+        if (MemoryStorage.spectators.containsKey(player.getUniqueId())) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.spectate.already-spectating"));
             return false;
         }

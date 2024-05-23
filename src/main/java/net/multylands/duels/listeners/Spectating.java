@@ -3,6 +3,7 @@ package net.multylands.duels.listeners;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.MemoryStorage;
 import net.multylands.duels.utils.RequestUtils;
 import net.multylands.duels.utils.SpectatorUtils;
 import org.bukkit.Location;
@@ -33,10 +34,10 @@ public class Spectating implements Listener {
     public void onMove(PlayerMoveEvent event) {
         Player playerWhoMoved = event.getPlayer();
         UUID uuid = playerWhoMoved.getUniqueId();
-        if (!Duels.spectators.containsKey(uuid)) {
+        if (!MemoryStorage.spectators.containsKey(uuid)) {
             return;
         }
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(Duels.spectators.get(uuid));
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(MemoryStorage.spectators.get(uuid));
         Location loc1 = request.getGame().getArena().getFirstLocation(plugin);
         if (playerWhoMoved.getLocation().distance(loc1) < 50) {
             return;
@@ -79,7 +80,7 @@ public class Spectating implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         Player playerWhoLeft = event.getPlayer();
         UUID playerWhoLeftUUID = playerWhoLeft.getUniqueId();
-        if (!Duels.spectators.containsKey(playerWhoLeftUUID)) {
+        if (!MemoryStorage.spectators.containsKey(playerWhoLeftUUID)) {
             return;
         }
         SpectatorUtils.endSpectating(playerWhoLeft, plugin);
@@ -90,7 +91,7 @@ public class Spectating implements Listener {
     public void onCommand(PlayerCommandPreprocessEvent event) {
         Player commandSender = event.getPlayer();
         UUID commandSenderUUID = commandSender.getUniqueId();
-        if (!Duels.spectators.containsKey(commandSenderUUID)) {
+        if (!MemoryStorage.spectators.containsKey(commandSenderUUID)) {
             return;
         }
         String command = event.getMessage();
@@ -123,7 +124,7 @@ public class Spectating implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onDamage(EntityDamageEvent event) {
         UUID damagedUUID = event.getEntity().getUniqueId();
-        if (!Duels.spectators.containsKey(damagedUUID)) {
+        if (!MemoryStorage.spectators.containsKey(damagedUUID)) {
             return;
         }
         event.setCancelled(true);
@@ -134,7 +135,7 @@ public class Spectating implements Listener {
     public void onTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
         UUID playerUUID = player.getUniqueId();
-        if (!Duels.spectators.containsKey(playerUUID)) {
+        if (!MemoryStorage.spectators.containsKey(playerUUID)) {
             return;
         }
         SpectatorUtils.endSpectating(player, plugin);
@@ -149,7 +150,7 @@ public class Spectating implements Listener {
         }
         Player player = ((Player) shooterEntity).getPlayer();
         UUID playerUUID = player.getUniqueId();
-        if (!Duels.spectators.containsKey(playerUUID)) {
+        if (!MemoryStorage.spectators.containsKey(playerUUID)) {
             return;
         }
         event.setCancelled(true);

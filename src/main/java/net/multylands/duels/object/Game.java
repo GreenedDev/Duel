@@ -2,10 +2,7 @@ package net.multylands.duels.object;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.queue.QueueSystem;
-import net.multylands.duels.utils.BettingSystem;
-import net.multylands.duels.utils.Chat;
-import net.multylands.duels.utils.GameUtils;
-import net.multylands.duels.utils.SavingItems;
+import net.multylands.duels.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -166,8 +163,8 @@ public class Game {
         GameUtils.resetShieldsDelay(plugin, restrictions, target);
 
 
-        Bukkit.getScheduler().cancelTask(Duels.tasksToCancel.get(senderUUID));
-        Duels.tasksToCancel.remove(senderUUID);
+        Bukkit.getScheduler().cancelTask(MemoryStorage.tasksToCancel.get(senderUUID));
+        MemoryStorage.tasksToCancel.remove(senderUUID);
 
         GameUtils.teleportToSpawn(plugin, sender);
         GameUtils.teleportToSpawn(plugin, target);
@@ -196,8 +193,8 @@ public class Game {
         request.storeRequest(false);
 
 
-        Bukkit.getScheduler().cancelTask(Duels.tasksToCancel.get(senderUUID));
-        Duels.tasksToCancel.remove(senderUUID);
+        Bukkit.getScheduler().cancelTask(MemoryStorage.tasksToCancel.get(senderUUID));
+        MemoryStorage.tasksToCancel.remove(senderUUID);
 
 
         Player winner = Bukkit.getPlayer(winnerUUID);
@@ -223,7 +220,7 @@ public class Game {
             BettingSystem.execGiveMoneyCommands(plugin, 2*bet*(100-tax)/100, winner.getName());
             Chat.sendMessage(winner, plugin.languageConfig.getString("duel.betting.bet-added"));
         }
-
+        MemoryStorage.listOfPlayersWhoShouldBeTeleportedToSpawnAfterRespawn.add(loser.getUniqueId());
     }
 
     public UUID getOpponent(UUID someone) {
@@ -264,7 +261,7 @@ public class Game {
         taskId = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             endGameRanOutOfTime();
         }, 20L * 60 * max_duel_time_minutes).getTaskId();
-        Duels.tasksToCancel.put(senderUUID, taskId);
+        MemoryStorage.tasksToCancel.put(senderUUID, taskId);
         Instant timeWhenDuelRunsOutOfTime = Instant.now().plus(max_duel_time_minutes, ChronoUnit.MINUTES);
         setRunOutOfTimeInstant(timeWhenDuelRunsOutOfTime);
     }

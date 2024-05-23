@@ -6,6 +6,7 @@ import net.multylands.duels.gui.GUIManager;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.MemoryStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -42,8 +43,8 @@ public class DuelCommand implements CommandExecutor {
             return true;
         }
         //already sent check
-        if (Duels.requestsReceiverToSenders.containsKey(target.getUniqueId())) {
-            for (DuelRequest request : Duels.requestsReceiverToSenders.get(target.getUniqueId())) {
+        if (MemoryStorage.requestsReceiverToSenders.containsKey(target.getUniqueId())) {
+            for (DuelRequest request : MemoryStorage.requestsReceiverToSenders.get(target.getUniqueId())) {
                 if (request.getSender() != player.getUniqueId()) {
                     continue;
                 }
@@ -56,8 +57,8 @@ public class DuelCommand implements CommandExecutor {
             }
         }
         //target already in duel check
-        if (Duels.requestsReceiverToSenders.containsKey(target.getUniqueId())) {
-            for (DuelRequest request : Duels.requestsReceiverToSenders.get(target.getUniqueId())) {
+        if (MemoryStorage.requestsReceiverToSenders.containsKey(target.getUniqueId())) {
+            for (DuelRequest request : MemoryStorage.requestsReceiverToSenders.get(target.getUniqueId())) {
                 if (!request.getGame().getIsInGame()) {
                     continue;
                 }
@@ -93,7 +94,7 @@ public class DuelCommand implements CommandExecutor {
         }
         if (plugin.getConfig().getBoolean("modules.GUI")) {
             DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, false, false, false);
-            DuelRequest oldRequest = Duels.manager.inventoryRequests.get(player.getUniqueId());
+            DuelRequest oldRequest = MemoryStorage.inventoryRequests.get(player.getUniqueId());
             if (oldRequest == null) {
                 guiManager.openDuelInventory(player, target, bet, restrictions);
             } else {

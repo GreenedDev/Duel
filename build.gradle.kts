@@ -34,7 +34,7 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
 }
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 group = "net.multylands.duels"
 version = "1.40"
@@ -53,6 +53,7 @@ tasks.withType<JavaCompile> {
 tasks.withType<Javadoc> {
     options.encoding = "UTF-8"
 }
+
 tasks {
     shadowJar {
         // See https://github.com/johnrengelman/shadow/issues/448
@@ -74,5 +75,10 @@ tasks {
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("1.20.6")
+        javaLauncher.set(
+            project.javaToolchains.launcherFor {
+                languageVersion.set(JavaLanguageVersion.of(21))
+            }
+        )
     }
 }

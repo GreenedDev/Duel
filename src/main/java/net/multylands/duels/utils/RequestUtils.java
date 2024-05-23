@@ -10,20 +10,20 @@ import java.util.UUID;
 
 public class RequestUtils {
     public static DuelRequest getRequestOfTheDuelPlayerIsIn(UUID playerUUID) {
-        UUID targetUUID = Duels.playerToOpponentInGame.get(playerUUID);
+        UUID targetUUID = MemoryStorage.playerToOpponentInGame.get(playerUUID);
         if (targetUUID == null) {
             return null;
         }
-        if (Duels.requestsReceiverToSenders.get(playerUUID) != null) {
-            for (DuelRequest request : Duels.requestsReceiverToSenders.get(playerUUID)) {
+        if (MemoryStorage.requestsReceiverToSenders.get(playerUUID) != null) {
+            for (DuelRequest request : MemoryStorage.requestsReceiverToSenders.get(playerUUID)) {
                 if (!((request.getSender() == playerUUID || request.getTarget() == playerUUID) && ((request.getSender() == targetUUID || request.getTarget() == targetUUID)))) {
                     continue;
                 }
                 return request;
             }
         }
-        if (Duels.requestsSenderToReceivers.get(playerUUID) != null) {
-            for (DuelRequest request : Duels.requestsSenderToReceivers.get(playerUUID)) {
+        if (MemoryStorage.requestsSenderToReceivers.get(playerUUID) != null) {
+            for (DuelRequest request : MemoryStorage.requestsSenderToReceivers.get(playerUUID)) {
                 if (!((request.getSender() == playerUUID || request.getTarget() == playerUUID) && ((request.getSender() == targetUUID || request.getTarget() == targetUUID)))) {
                     continue;
                 }
@@ -41,10 +41,10 @@ public class RequestUtils {
     }
 
     public static DuelRequest getRequestForCommands(UUID receiverUUID, UUID senderUUID) {
-        if (Duels.requestsReceiverToSenders.get(receiverUUID) == null) {
+        if (MemoryStorage.requestsReceiverToSenders.get(receiverUUID) == null) {
             return null;
         }
-        for (DuelRequest request : Duels.requestsReceiverToSenders.get(receiverUUID)) {
+        for (DuelRequest request : MemoryStorage.requestsReceiverToSenders.get(receiverUUID)) {
             if (!(request.getSender() == senderUUID && request.getTarget() == receiverUUID)) {
                 continue;
             }
@@ -54,9 +54,9 @@ public class RequestUtils {
     }
 
     public static Set<DuelRequest> getRequestsReceiverToSenders(UUID targetUUID, UUID senderUUID) {
-        Set<DuelRequest> requestsThatWereAlreadyThere = Duels.requestsReceiverToSenders.get(targetUUID);
+        Set<DuelRequest> requestsThatWereAlreadyThere = MemoryStorage.requestsReceiverToSenders.get(targetUUID);
         //checking if there was no value set for that key preventing requestsThatWereAlreadyThere to be null
-        if (Duels.requestsReceiverToSenders.get(targetUUID) == null) {
+        if (MemoryStorage.requestsReceiverToSenders.get(targetUUID) == null) {
             requestsThatWereAlreadyThere = new HashSet<>();
         } else {
             //removing the old request that was in map. so that when you add a new one duplicate doesnt happen
@@ -73,8 +73,8 @@ public class RequestUtils {
     }
 
     public static Set<DuelRequest> getRequestsSenderToReceivers(UUID senderUUID, UUID targetUUID) {
-        Set<DuelRequest> requestsThatWereAlreadyThereSenderToReceiver = Duels.requestsSenderToReceivers.get(senderUUID);
-        if (Duels.requestsSenderToReceivers.get(senderUUID) == null) {
+        Set<DuelRequest> requestsThatWereAlreadyThereSenderToReceiver = MemoryStorage.requestsSenderToReceivers.get(senderUUID);
+        if (MemoryStorage.requestsSenderToReceivers.get(senderUUID) == null) {
             requestsThatWereAlreadyThereSenderToReceiver = new HashSet<>();
         } else {
             //removing the old request that was in map. so that when you add a new one duplicate doesnt happen

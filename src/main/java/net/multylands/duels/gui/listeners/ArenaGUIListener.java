@@ -2,10 +2,10 @@ package net.multylands.duels.gui.listeners;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.gui.ArenaInventoryHolder;
-import net.multylands.duels.gui.GUIManager;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.MemoryStorage;
 import net.multylands.duels.utils.PersistentDataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,7 +19,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,13 +39,13 @@ public class ArenaGUIListener implements Listener {
         }
         Player player = (Player) event.getPlayer();
         UUID playerUUID = player.getUniqueId();
-        if (!(inv == Duels.manager.arenaInventories.get(playerUUID))) {
+        if (!(inv == MemoryStorage.arenaInventories.get(playerUUID))) {
             return;
         }
-        DuelRequest request = Duels.manager.inventoryRequests.get(playerUUID);
+        DuelRequest request = MemoryStorage.inventoryRequests.get(playerUUID);
         Player target = Bukkit.getPlayer(request.getOpponent(player.getUniqueId()));
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            Duels.manager.openDuelInventory(player, target, request.getGame().getBet(), request.getGame().getRestrictions());
+            Duels.guiManager.openDuelInventory(player, target, request.getGame().getBet(), request.getGame().getRestrictions());
         }, 1L);
     }
 
@@ -62,7 +61,7 @@ public class ArenaGUIListener implements Listener {
         UUID playerUUID = player.getUniqueId();
         event.setCancelled(true);
         //always!!! get this request from the GUI clicker. because we are storing only sender: request in the requests map.
-        DuelRequest request = Duels.manager.inventoryRequests.get(playerUUID);
+        DuelRequest request = MemoryStorage.inventoryRequests.get(playerUUID);
         Player target = Bukkit.getPlayer(request.getOpponent(player.getUniqueId()));
         if (target == null) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
@@ -79,7 +78,7 @@ public class ArenaGUIListener implements Listener {
             String selected = Chat.color(plugin.languageConfig.getString("arena-GUI.selected"));
 
             String arenaName = PersistentDataManager.getArenaName(plugin, item);
-            Arena arena = Duels.Arenas.get(arenaName);
+            Arena arena = MemoryStorage.Arenas.get(arenaName);
             ItemMeta meta = item.getItemMeta();
 
             if (!arena.isAvailable()) {
@@ -87,17 +86,17 @@ public class ArenaGUIListener implements Listener {
                 return;
             }
 
-            if (Duels.manager.selectedArenas.get(player.getUniqueId()) == null || Duels.manager.selectedArenas.get(player.getUniqueId()).getID() != arenaName) {
+            if (MemoryStorage.selectedArenas.get(player.getUniqueId()) == null || MemoryStorage.selectedArenas.get(player.getUniqueId()).getID() != arenaName) {
                 for (String loreLine : plugin.languageConfig.getStringList("arena-GUI.format.lore")) {
                     lore.add(Chat.color(loreLine.replace("%status%", selected)));
                 }
-                Duels.manager.selectedArenas.put(player.getUniqueId(), arena);
+                MemoryStorage.selectedArenas.put(player.getUniqueId(), arena);
                 updateSelected(plugin, inv, arenaName);
             } else {
                 for (String loreLine : plugin.languageConfig.getStringList("arena-GUI.format.lore")) {
                     lore.add(Chat.color(loreLine.replace("%status%", not_selected)));
                 }
-                Duels.manager.selectedArenas.put(player.getUniqueId(), null);
+                MemoryStorage.selectedArenas.put(player.getUniqueId(), null);
             }
             meta.setLore(lore);
             item.setItemMeta(meta);

@@ -1,10 +1,10 @@
 package net.multylands.duels.gui.listeners;
 
 import net.multylands.duels.Duels;
-import net.multylands.duels.gui.DuelInventoryHolder;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.MemoryStorage;
 import net.multylands.duels.utils.RequestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -33,10 +33,10 @@ public class DuelGUIListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         UUID playerUUID = player.getUniqueId();
-        Duels.manager.duelInventories.remove(playerUUID);
-        Duels.manager.selectedArenas.remove(playerUUID);
-        Duels.manager.arenaInventories.remove(playerUUID);
-        Duels.manager.inventoryRequests.remove(playerUUID);
+        MemoryStorage.duelInventories.remove(playerUUID);
+        MemoryStorage.selectedArenas.remove(playerUUID);
+        MemoryStorage.arenaInventories.remove(playerUUID);
+        MemoryStorage.inventoryRequests.remove(playerUUID);
     }
     @EventHandler
     public void onGuiClose(InventoryCloseEvent event) {
@@ -50,7 +50,7 @@ public class DuelGUIListener implements Listener {
         if (inv.getLocation() != null) {
             return;
         }
-        if (!(inv == Duels.manager.duelInventories.get(playerUUID))) {
+        if (!(inv == MemoryStorage.duelInventories.get(playerUUID))) {
             return;
         }
 
@@ -58,7 +58,7 @@ public class DuelGUIListener implements Listener {
             PlayersWhoSentRequest.remove(playerUUID);
             return;
         }
-        DuelRequest request = Duels.manager.inventoryRequests.get(playerUUID);
+        DuelRequest request = MemoryStorage.inventoryRequests.get(playerUUID);
         request.removeStoreRequest(false);
         Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.cancel.request-cancelled"));
     }
@@ -69,13 +69,13 @@ public class DuelGUIListener implements Listener {
         Inventory inv = event.getInventory();
         Player player = (Player) event.getWhoClicked();
         UUID playerUUID = player.getUniqueId();
-        if (inv.getLocation() != null || !(inv == Duels.manager.duelInventories.get(playerUUID)) || item == null) {
+        if (inv.getLocation() != null || !(inv == MemoryStorage.duelInventories.get(playerUUID)) || item == null) {
             return;
         }
 
         event.setCancelled(true);
         //always!!! get this request from the GUI clicker. because we are storing only sender: request in the requests map.
-        DuelRequest request = Duels.manager.inventoryRequests.get(playerUUID);
+        DuelRequest request = MemoryStorage.inventoryRequests.get(playerUUID);
         Player target = Bukkit.getPlayer(request.getOpponent(playerUUID));
         if (target == null) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
@@ -213,7 +213,7 @@ public class DuelGUIListener implements Listener {
         } else if (slot == arenaSelectorSlot) {
             playersWhoClosedBecauseOfArenaSelector.add(playerUUID);
             request.getGame().setRestrictions(restrictions);
-            Duels.manager.openArenaInventory(player, request);
+            Duels.guiManager.openArenaInventory(player, request);
         }else if (slot == startSlot) {
             restrictions.setComplete(true);
             //dont change position of player and target below

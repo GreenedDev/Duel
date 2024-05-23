@@ -4,6 +4,7 @@ import net.multylands.duels.Duels;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.MemoryStorage;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -57,9 +58,9 @@ public class SetPosCommand implements CommandExecutor {
         Location loc1 = plugin.arenasConfig.getLocation(arenaName + ".pos1");
         Location loc2 = plugin.arenasConfig.getLocation(arenaName + ".pos2");
         Arena arena = new Arena(loc1, loc2, null, null, arenaName);
-        if (Duels.Arenas.containsKey(arenaName)) {
+        if (MemoryStorage.Arenas.containsKey(arenaName)) {
             //to prevent players getting lost when their arena was replaced.
-            for (Set<DuelRequest> requestsSet : Duels.requestsReceiverToSenders.values()) {
+            for (Set<DuelRequest> requestsSet : MemoryStorage.requestsReceiverToSenders.values()) {
                 for (DuelRequest request : requestsSet) {
                     if (!request.getGame().getIsInGame()) {
                         continue;
@@ -71,7 +72,7 @@ public class SetPosCommand implements CommandExecutor {
                 }
             }
         }
-        Duels.Arenas.put(arenaName, arena);
+        MemoryStorage.Arenas.put(arenaName, arena);
         Chat.sendMessage(player, plugin.languageConfig.getString("admin.set-pos.arena-loaded"));
         return false;
     }

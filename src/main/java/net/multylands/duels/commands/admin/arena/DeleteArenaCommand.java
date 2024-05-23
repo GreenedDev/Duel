@@ -3,6 +3,7 @@ package net.multylands.duels.commands.admin.arena;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.MemoryStorage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -41,7 +42,7 @@ public class DeleteArenaCommand implements CommandExecutor {
         plugin.saveArenasConfig();
         plugin.reloadArenaConfig();
         //to prevent players getting lost when their arena was deleted.
-        for (Set<DuelRequest> requestsSet : Duels.requestsReceiverToSenders.values()) {
+        for (Set<DuelRequest> requestsSet : MemoryStorage.requestsReceiverToSenders.values()) {
             for (DuelRequest request : requestsSet) {
                 if (!request.getGame().getIsInGame()) {
                     continue;

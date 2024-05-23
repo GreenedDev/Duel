@@ -5,6 +5,7 @@ import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.MemoryStorage;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -27,15 +28,10 @@ public class GUIManager {
 
     public List<String> lore = new ArrayList<>();
 
-    public HashMap<UUID, Inventory> duelInventories = new HashMap<>();
-    public HashMap<UUID, Inventory> arenaInventories = new HashMap<>();
-
-    public HashMap<UUID, Arena> selectedArenas = new HashMap<>();
-    public HashMap<UUID, DuelRequest> inventoryRequests = new HashMap<>();
 
     public void openDuelInventory(Player sender, Player target, double bet, DuelRestrictions restrictions) {
         UUID senderUUID = sender.getUniqueId();
-        Inventory invFromHashMap = duelInventories.get(senderUUID);
+        Inventory invFromHashMap = MemoryStorage.duelInventories.get(senderUUID);
         DuelRequest request = new DuelRequest(sender.getUniqueId(), target.getUniqueId(), restrictions, false, false, bet, plugin);
         if (invFromHashMap != null) {
             sender.openInventory(invFromHashMap);
@@ -61,23 +57,23 @@ public class GUIManager {
         inventory.setItem(startSlot, start);
 
         sender.openInventory(inventory);
-        duelInventories.put(senderUUID, inventory);
+        MemoryStorage.duelInventories.put(senderUUID, inventory);
         request.storeRequest(false);
 
-        inventoryRequests.put(senderUUID, request);
+        MemoryStorage.inventoryRequests.put(senderUUID, request);
     }
     public void openArenaInventory(Player sender, DuelRequest request) {
         UUID senderUUID = sender.getUniqueId();
-        Inventory invFromHashMap = arenaInventories.get(senderUUID);
-        DuelRequest reqFromHashMap = inventoryRequests.get(senderUUID);
+        Inventory invFromHashMap = MemoryStorage.arenaInventories.get(senderUUID);
+        DuelRequest reqFromHashMap = MemoryStorage.inventoryRequests.get(senderUUID);
         if (invFromHashMap != null && reqFromHashMap != null) {
             sender.openInventory(invFromHashMap);
             return;
         }
         ArenaInventoryHolder inventoryHolder = new ArenaInventoryHolder(plugin, plugin.arenaInventorySize);
         Inventory inventory = inventoryHolder.getInventory();
-        inventoryRequests.put(senderUUID, request);
-        arenaInventories.put(senderUUID, inventory);
+        MemoryStorage.inventoryRequests.put(senderUUID, request);
+        MemoryStorage.arenaInventories.put(senderUUID, inventory);
 
         sender.openInventory(inventory);
     }

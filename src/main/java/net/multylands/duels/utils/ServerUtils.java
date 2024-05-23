@@ -40,7 +40,7 @@ public class ServerUtils {
     }
 
     public static void registerCommands(Duels plugin) {
-        plugin.getCommand("duel").setExecutor(new DuelCommand(plugin.manager, plugin));
+        plugin.getCommand("duel").setExecutor(new DuelCommand(plugin.guiManager, plugin));
         plugin.getCommand("acceptduel").setExecutor(new AcceptCommand(plugin));
         plugin.getCommand("cancelduel").setExecutor(new CancelCommand(plugin));
         plugin.getCommand("denyduel").setExecutor(new DenyCommand(plugin));
@@ -50,13 +50,13 @@ public class ServerUtils {
         //admin commands
         plugin.getCommand("dueladmin").setExecutor(new DuelAdminCommand(plugin));
         plugin.getCommand("duelqueue").setExecutor(new QueueCommand(plugin));
-        Duels.commandExecutors.put("reload", new ReloadCommand(plugin));
-        Duels.commandExecutors.put("setarenapos", new SetPosCommand(plugin));
-        Duels.commandExecutors.put("setspawn", new SetSpawnCommand(plugin));
-        Duels.commandExecutors.put("createarena", new CreateArenaCommand(plugin));
-        Duels.commandExecutors.put("deletearena", new DeleteArenaCommand(plugin));
-        Duels.commandExecutors.put("arenalist", new ArenaListCommand(plugin));
-        Duels.commandExecutors.put("help", new DuelAdminCommand(plugin));
+        MemoryStorage.commandExecutors.put("reload", new ReloadCommand(plugin));
+        MemoryStorage.commandExecutors.put("setarenapos", new SetPosCommand(plugin));
+        MemoryStorage.commandExecutors.put("setspawn", new SetSpawnCommand(plugin));
+        MemoryStorage.commandExecutors.put("createarena", new CreateArenaCommand(plugin));
+        MemoryStorage.commandExecutors.put("deletearena", new DeleteArenaCommand(plugin));
+        MemoryStorage.commandExecutors.put("arenalist", new ArenaListCommand(plugin));
+        MemoryStorage.commandExecutors.put("help", new DuelAdminCommand(plugin));
     }
 
     public static boolean isPaper() {

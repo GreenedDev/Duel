@@ -8,7 +8,6 @@ import net.multylands.duels.placeholders.MiniPlaceholders;
 import net.multylands.duels.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,40 +16,22 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Set;
-import java.util.UUID;
 
 public class Duels extends JavaPlugin {
-    public static HashMap<String, Arena> Arenas = new HashMap<>();
-    //storing only sender: request(withTargetName)
-    public static HashMap<UUID, Set<DuelRequest>> requestsReceiverToSenders = new HashMap<>();
-    public static HashMap<UUID, Set<DuelRequest>> requestsSenderToReceivers = new HashMap<>();
-    //storing sender: player
-    //and player: sender
-    public static HashMap<UUID, UUID> playerToOpponentInGame = new HashMap<>();
-    //storing uuid: taskID
-    public static HashMap<UUID, Integer> tasksToCancel = new HashMap<>();
-    //storing spectator: toSpectate
-    public static HashMap<UUID, UUID> spectators = new HashMap<>();
     public String newVersion = null;
     public int duelInventorySize;
     public int arenaInventorySize;
     public File ignoresFile;
-    public String ignoresFileName = "ignores.yml";
     public File arenasFile;
-    public String arenasFileName = "arenas.yml";
     public File configFile;
-    public String configFileName = "config.yml";
     public File languageFile;
-    public String languageFileName = "language.yml";
     public static MiniMessage miniMessage;
     public FileConfiguration ignoresConfig;
     public FileConfiguration arenasConfig;
     public FileConfiguration languageConfig;
     public static BukkitScheduler scheduler = Bukkit.getScheduler();
-    public static GUIManager manager;
-    public static HashMap<String, CommandExecutor> commandExecutors = new HashMap<>();
+    public static GUIManager guiManager;
 
     @Override
     public void onEnable() {
@@ -66,14 +47,14 @@ public class Duels extends JavaPlugin {
         MiniPlaceholders.implementMiniPlaceholders(this);
         ServerUtils.implementBStats(this);
         ServerUtils.implementPlaceholderAPI(this);
-        manager = new GUIManager(this);
+        guiManager = new GUIManager(this);
         ServerUtils.registerListeners(this);
         ServerUtils.registerCommands(this);
     }
 
     @Override
     public void onDisable() {
-        for (Set<DuelRequest> requestsSet : requestsReceiverToSenders.values()) {
+        for (Set<DuelRequest> requestsSet : MemoryStorage.requestsReceiverToSenders.values()) {
             for (DuelRequest request : requestsSet) {
                 if (!request.getGame().getIsInGame()) {
                     continue;
@@ -86,22 +67,22 @@ public class Duels extends JavaPlugin {
     private void createConfigs() {
         try {
             ConfigUtils configUtils = new ConfigUtils(this);
-            ignoresFile = new File(getDataFolder(), ignoresFileName);
-            arenasFile = new File(getDataFolder(), arenasFileName);
-            configFile = new File(getDataFolder(), configFileName);
-            languageFile = new File(getDataFolder(), languageFileName);
+            ignoresFile = new File(getDataFolder(), ConfigUtils.ignoresFileName);
+            arenasFile = new File(getDataFolder(), ConfigUtils.arenasFileName);
+            configFile = new File(getDataFolder(), ConfigUtils.configFileName);
+            languageFile = new File(getDataFolder(), ConfigUtils.languageFileName);
             //we are checking if files exist to avoid console spamming. try it and see :)
             if (!ignoresFile.exists()) {
-                saveResource(ignoresFileName, false);
+                saveResource(ConfigUtils.ignoresFileName, false);
             }
             if (!languageFile.exists()) {
-                saveResource(languageFileName, false);
+                saveResource(ConfigUtils.languageFileName, false);
             }
             if (!configFile.exists()) {
                 saveDefaultConfig();
             }
             if (!arenasFile.exists()) {
-                saveResource(arenasFileName, false);
+                saveResource(ConfigUtils.arenasFileName, false);
             }
             arenasConfig = new YamlConfiguration();
             ignoresConfig = new YamlConfiguration();
@@ -111,10 +92,10 @@ public class Duels extends JavaPlugin {
             arenasConfig.load(arenasFile);
             languageConfig.load(languageFile);
             getConfig().load(configFile);
-            configUtils.addMissingKeysAndValues(getConfig(), configFileName);
-            configUtils.addMissingKeysAndValues(ignoresConfig, ignoresFileName);
-            configUtils.addMissingKeysAndValues(arenasConfig, arenasFileName);
-            configUtils.addMissingKeysAndValues(languageConfig, languageFileName);
+            configUtils.addMissingKeysAndValues(getConfig(), ConfigUtils.configFileName);
+            configUtils.addMissingKeysAndValues(ignoresConfig, ConfigUtils.ignoresFileName);
+            configUtils.addMissingKeysAndValues(arenasConfig, ConfigUtils.arenasFileName);
+            configUtils.addMissingKeysAndValues(languageConfig, ConfigUtils.languageFileName);
             loadArenas();
             duelInventorySize = languageConfig.getInt("duel-GUI.size");
             arenaInventorySize = languageConfig.getInt("arena-GUI.size");
@@ -149,14 +130,14 @@ public class Duels extends JavaPlugin {
     }
 
     public void reloadArenaConfig() {
-        arenasFile = new File(getDataFolder(), arenasFileName);
+        arenasFile = new File(getDataFolder(), ConfigUtils.arenasFileName);
         arenasConfig = YamlConfiguration.loadConfiguration(arenasFile);
-        Arenas.clear();
+        MemoryStorage.Arenas.clear();
         loadArenas();
     }
 
     public void loadArenas() {
-        for (Set<DuelRequest> requestsSet : requestsReceiverToSenders.values()) {
+        for (Set<DuelRequest> requestsSet : MemoryStorage.requestsReceiverToSenders.values()) {
             for (DuelRequest request : requestsSet) {
                 if (!request.getGame().getIsInGame()) {
                     continue;
@@ -172,12 +153,12 @@ public class Duels extends JavaPlugin {
             Location loc1 = arenasConfig.getLocation(arenaID + ".pos1");
             Location loc2 = arenasConfig.getLocation(arenaID + ".pos2");
             Arena arena = new Arena(loc1, loc2, null, null, arenaID);
-            Arenas.put(arenaID, arena);
+            MemoryStorage.Arenas.put(arenaID, arena);
         }
     }
 
     public void reloadLanguageConfig() {
-        languageFile = new File(getDataFolder(), languageFileName);
+        languageFile = new File(getDataFolder(), ConfigUtils.languageFileName);
         languageConfig = YamlConfiguration.loadConfiguration(languageFile);
     }
 }

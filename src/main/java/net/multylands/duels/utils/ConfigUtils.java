@@ -12,6 +12,11 @@ import java.util.List;
 public class ConfigUtils {
     Duels plugin;
 
+    public static String ignoresFileName = "ignores.yml";
+    public static String arenasFileName = "arenas.yml";
+    public static String configFileName = "config.yml";
+    public static String languageFileName = "language.yml";
+
     public ConfigUtils(Duels plugin) {
         this.plugin = plugin;
     }

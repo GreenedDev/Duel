@@ -4,6 +4,7 @@ import net.multylands.duels.Duels;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.MemoryStorage;
 import net.multylands.duels.utils.PersistentDataManager;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -25,7 +26,7 @@ public class ArenaInventoryHolder implements InventoryHolder {
         this.plugin = plugin;
         inventory = plugin.getServer().createInventory(this, size, Chat.color(plugin.languageConfig.getString("arena-GUI.title")));
         int slot = 0;
-        for (Arena arena : Duels.Arenas.values()) {
+        for (Arena arena : MemoryStorage.Arenas.values()) {
             String arenaName = arena.getID();
             createItem(plugin, arenaName, arena.isAvailable(), slot);
             slot++;
