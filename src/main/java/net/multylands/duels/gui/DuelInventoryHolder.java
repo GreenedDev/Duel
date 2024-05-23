@@ -55,14 +55,6 @@ public class DuelInventoryHolder implements InventoryHolder {
         inventory.setItem(cancelSlot, cancel);
     }
 
-    public void setRequest(DuelRequest request) {
-        this.request = request;
-    }
-
-    public DuelRequest getRequest() {
-        return this.request;
-    }
-
     @Override
     public Inventory getInventory() {
         return this.inventory;

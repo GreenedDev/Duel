@@ -100,7 +100,7 @@ public class Game implements Listener {
         if (player.getUniqueId() != request.getGame().getWinnerUUID()) {
             return;
         }
-        Chat.sendMessage(player, plugin.languageConfig.getString("duel.no-commands-in-duel"));
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.this-command-blocked"));
         event.setCancelled(true);
     }
 

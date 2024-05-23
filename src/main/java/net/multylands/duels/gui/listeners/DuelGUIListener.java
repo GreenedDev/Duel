@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -28,7 +29,15 @@ public class DuelGUIListener implements Listener {
     public static HashSet<UUID> playersWhoClosedBecauseOfArenaSelector = new HashSet<>();
 
     public static HashSet<UUID> PlayersWhoSentRequest = new HashSet<>();
-
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+        Duels.manager.duelInventories.remove(playerUUID);
+        Duels.manager.selectedArenas.remove(playerUUID);
+        Duels.manager.arenaInventories.remove(playerUUID);
+        Duels.manager.inventoryRequests.remove(playerUUID);
+    }
     @EventHandler
     public void onGuiClose(InventoryCloseEvent event) {
         Inventory inv = event.getInventory();
@@ -49,8 +58,7 @@ public class DuelGUIListener implements Listener {
             PlayersWhoSentRequest.remove(playerUUID);
             return;
         }
-        DuelInventoryHolder invHolder = ((DuelInventoryHolder) inv.getHolder());
-        DuelRequest request = invHolder.getRequest();
+        DuelRequest request = Duels.manager.inventoryRequests.get(playerUUID);
         request.removeStoreRequest(false);
         Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.cancel.request-cancelled"));
     }
