@@ -91,7 +91,19 @@ public class Duels extends JavaPlugin {
             ignoresConfig.load(ignoresFile);
             arenasConfig.load(arenasFile);
             languageConfig.load(languageFile);
+
             getConfig().load(configFile);
+            if (getConfig().getLocation("spawn_location") == null) {
+                if (Bukkit.getWorld("world") == null) {
+                    Location spawnLoc = new Location(Bukkit.getWorlds().get(0), 0, 90, 0);
+                    getConfig().set("spawn_location", spawnLoc);
+                    saveConfig();
+                } else {
+                    Location spawnLoc = new Location(Bukkit.getWorld("world"), 0, 90, 0);
+                    getConfig().set("spawn_location", spawnLoc);
+                    saveConfig();
+                }
+            }
             configUtils.addMissingKeysAndValues(getConfig(), ConfigUtils.configFileName);
             configUtils.addMissingKeysAndValues(ignoresConfig, ConfigUtils.ignoresFileName);
             configUtils.addMissingKeysAndValues(arenasConfig, ConfigUtils.arenasFileName);

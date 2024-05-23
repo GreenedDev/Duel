@@ -51,8 +51,16 @@ public class GameUtils {
         target.setAllowFlight(false);
     }
 
-    public static void executeEndCommands(Duels plugin, Player winner, Player loser) {
-        for (String commandFromTheLoop : plugin.getConfig().getStringList("game.commands.end")) {
+    public static void executeEndCommands(Duels plugin, DuelRestrictions restrictions, Player winner, Player loser) {
+        if (restrictions.isInventorySavingEnabled()) {
+            for (String commandFromTheLoop : plugin.getConfig().getStringList("game.commands.end.inventory-saving-enabled")) {
+                String command = commandFromTheLoop.replace("%winner%", winner.getName())
+                        .replace("%loser%", loser.getName());
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            }
+            return;
+        }
+        for (String commandFromTheLoop : plugin.getConfig().getStringList("game.commands.end.normal")) {
             String command = commandFromTheLoop.replace("%winner%", winner.getName())
                     .replace("%loser%", loser.getName());
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
@@ -61,14 +69,14 @@ public class GameUtils {
 
     public static void executeStartCommands(Duels plugin, DuelRestrictions restrictions,  Player senderPlayer, Player targetPlayer) {
         if (restrictions.isInventorySavingEnabled()) {
-            for (String commandFromTheLoop : plugin.getConfig().getStringList("game.commands.start.inventory-saving-enabled-start")) {
+            for (String commandFromTheLoop : plugin.getConfig().getStringList("game.commands.start.inventory-saving-enabled")) {
                 String command = commandFromTheLoop.replace("%player1%", senderPlayer.getName())
                         .replace("%player2%", targetPlayer.getName());
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
             }
             return;
         }
-        for (String commandFromTheLoop : plugin.getConfig().getStringList("game.commands.start.start-normal")) {
+        for (String commandFromTheLoop : plugin.getConfig().getStringList("game.commands.start.normal")) {
             String command = commandFromTheLoop.replace("%player1%", senderPlayer.getName())
                     .replace("%player2%", targetPlayer.getName());
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);

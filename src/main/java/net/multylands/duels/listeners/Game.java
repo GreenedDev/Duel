@@ -3,6 +3,7 @@ package net.multylands.duels.listeners;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -140,11 +141,12 @@ public class Game implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-
         SavingItems.giveItemsBackIfAvailable(player);
         if (MemoryStorage.listOfPlayersWhoShouldBeTeleportedToSpawnAfterRespawn.contains(player.getUniqueId())) {
             MemoryStorage.listOfPlayersWhoShouldBeTeleportedToSpawnAfterRespawn.remove(player.getUniqueId());
-            GameUtils.teleportToSpawn(plugin, player);
+            Bukkit.getScheduler().runTaskLater(plugin, ()-> {
+                GameUtils.teleportToSpawn(plugin, player);
+            }, 2L);
         }
     }
 }

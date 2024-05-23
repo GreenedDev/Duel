@@ -1,11 +1,3 @@
-spawn_location:
-  ==: org.bukkit.Location
-  world: world
-  x: 0.0
-  y: 0.0
-  z: 0.0
-  pitch: 0.0
-  yaw: 0.0
 game:
   betting:
     enabled: true
@@ -27,17 +19,22 @@ game:
     #list of commands that will be executed (from console) when duel starts. You can use %player1%
     #and %player2% placeholders here. for more info %player1% is the player who sent the duel request to %player2%
     start:
-      #if inventory saving is enabled commands in /start-normal will not be executed
-      inventory-saving-enabled-start:
+      #if inventory saving is enabled, commands in /normal will not be executed
+      inventory-saving-enabled:
         - kitgive %player1% rame
         - kitgive %player2% rame
-      start-normal:
+      normal:
         - someblablacommand %player1% %player2%
     #list of commands that will be executed (from console) when duel ends. You can use %winner%
     #and %loser% placeholders here.
     end:
-      - givetokensblabla %winner% 2
-      - removetokensblabla %loser% 3
+      #if inventory saving is enabled, commands in /normal will not be executed
+      inventory-saving-enabled:
+        - clear %winner%
+        - clear %loser%
+      normal:
+        - givetokensblabla %winner% 2
+        - removetokensblabla %loser% 3
   # you can set both ones above like end: [] or start: [] to disable them.
   #Max duel time in minutes. After this time goes both players will be teleported to the spawn.
   max_duel_time: 10

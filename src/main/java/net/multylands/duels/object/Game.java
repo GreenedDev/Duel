@@ -213,8 +213,7 @@ public class Game {
             request.removeStoreRequest(true);
             QueueSystem.checkQueue(plugin);
         }, 20L * plugin.getConfig().getInt("game.time_to_pick_up_items"));
-        GameUtils.executeEndCommands(plugin, winner, loser);
-        GameUtils.teleportToSpawn(plugin, loser);
+        GameUtils.executeEndCommands(plugin, restrictions, winner, loser);
         if (bet != 0) {
             double tax = plugin.getConfig().getDouble("game.betting.tax-amount");
             BettingSystem.execGiveMoneyCommands(plugin, 2*bet*(100-tax)/100, winner.getName());
