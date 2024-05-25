@@ -50,9 +50,20 @@ duel:
   no-request-sent: "&cYou haven't sent duel request to &b%player%."
   this-command-blocked: "&cThis command is not allowed in duels."
   commands:
+    help:
+      - "&aDuel Commands:"
+      - "&e/duels &7- &bDisplays this message."
+      - "&e/duel <player> &7- &bSend a duel request to the player."
+      - "&e/duels accept <player> &7- &bAccept someone's duel request."
+      - "&e/duels deny <player> &7- &bDeny someone's duel request."
+      - "&e/duels cancel <player> &7- &bCancel duel request to player."
+      - "&e/duels spectate <player> &7- &bSpectate player's duel."
+      - "&e/duels stopspectate &7- &bStop spectating."
+      - "&e/duels queue &7- &bAdd/Remove yourself into/from the queue."
+      - "&e/duels ignore &7- &bIgnore/Unignore player."
     duel:
-      request-sent: "$<green>You have sent duel request to</green> <aqua>%player%</aqua><green>!</green> <red><b><hover:show_text:'<green>Click to cancel this request!</green>'><click:run_command:'/cancelduel %player%'>Cancel</click></hover></b></red>"
-      click: "$<green>Click</green> <red><b><hover:show_text:'<red>Click to deny this request!</red>'><click:run_command:'/denyduel %player%'>DENY</click></hover></b></red>/<green><b><hover:show_text:'<green>Click to accept this request!</green>'><click:run_command:'/acceptduel %player%'>ACCEPT</click></hover></b></green>"
+      request-sent: "$<green>You have sent duel request to</green> <aqua>%player%</aqua><green>!</green> <red><b><hover:show_text:'<green>Click to cancel this request!</green>'><click:run_command:'/duels cancel %player%'>Cancel</click></hover></b></red>"
+      click: "$<green>Click</green> <red><b><hover:show_text:'<red>Click to deny this request!</red>'><click:run_command:'/duels deny %player%'>DENY</click></hover></b></red>/<green><b><hover:show_text:'<green>Click to accept this request!</green>'><click:run_command:'/duels accept %player%'>ACCEPT</click></hover></b></green>"
       request-received: "&b%player% &ais sending you a duel request."
       target-already-in-duel: "&b%player% &cis already in duel."
       cant-duel-yourself: "&cYou can't duel yourself!"
@@ -77,11 +88,12 @@ duel:
       is-not-in-duel: "&b%player% &cis not in duel!"
       success: "&6Spectating &b%player%"
       is-spectating: "&b%player% &6is now spectating."
-      already-spectating: "&cYou are already in spectator mode. Please leave the spectating mode first with /endspectating"
+      already-spectating: "&cYou are already in spectator mode. Please leave the spectating mode first with /duels stopspectating"
       not-in-spectator: "&cYou are not in the spectator mode."
       spectate-end-success: "&aYou have left the spectator mode."
     queue:
-      success: "&aYou have been added to the Queue."
+      added: "&aYou have been added to the Queue."
+      removed: "&cYou have been removed from the Queue."
   spectating:
     cannot-damage-in-duel: "&cYou can't damage players when they are in duel."
     no-commands: "&cYou cannot use that command in the Spectating mode!"

@@ -2,7 +2,8 @@ package net.multylands.duels.placeholders;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
-import net.multylands.duels.utils.MemoryStorage;
+import net.multylands.duels.queue.QueueSystem;
+import net.multylands.duels.utils.storage.MemoryStorage;
 import net.multylands.duels.utils.RequestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -28,6 +29,17 @@ public class CalculatePlaceholders {
             return "opponent isn't online";
         }
         return opponent.getName();
+    }
+    public static String getBet(OfflinePlayer player) {
+        if (!player.isOnline()) {
+            return "Error #1";
+        }
+        UUID playerUUID = player.getUniqueId();
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
+        if (!RequestUtils.isInGame(request)) {
+            return "You aren't in the duel";
+        }
+        return request.getGame().getBet()+"";
     }
 
     public static String getOpponentPing(OfflinePlayer player) {
@@ -66,6 +78,9 @@ public class CalculatePlaceholders {
             return "number of spectators error #1";
         }
         return String.valueOf(request.getGame().getNumberOfSpectators());
+    }
+    public static String getNumberOfQueuePlayers() {
+        return String.valueOf(QueueSystem.playersInQueue.size());
     }
 
     public static String getTimeLeft(OfflinePlayer player, Duels plugin) {

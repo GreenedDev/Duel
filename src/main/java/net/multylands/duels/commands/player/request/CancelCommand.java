@@ -25,7 +25,7 @@ public class CancelCommand implements CommandExecutor {
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 1) {
-            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
+            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " cancel player");
             return false;
         }
         //checking if he has sent any request

@@ -3,7 +3,7 @@ package net.multylands.duels.commands.player.spectate;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
-import net.multylands.duels.utils.MemoryStorage;
+import net.multylands.duels.utils.storage.MemoryStorage;
 import net.multylands.duels.utils.RequestUtils;
 import net.multylands.duels.utils.SpectatorUtils;
 import org.bukkit.Bukkit;
@@ -27,7 +27,7 @@ public class SpectateCommand implements CommandExecutor {
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 1) {
-            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
+            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " spectate player");
             return false;
         }
         String toSpectateName = args[0];

@@ -3,7 +3,8 @@ package net.multylands.duels.utils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.multylands.duels.Duels;
 import net.multylands.duels.commands.DuelAdminCommand;
-import net.multylands.duels.commands.DuelCommand;
+import net.multylands.duels.commands.DuelsCommand;
+import net.multylands.duels.commands.player.request.SendCommand;
 import net.multylands.duels.commands.admin.ReloadCommand;
 import net.multylands.duels.commands.admin.SetSpawnCommand;
 import net.multylands.duels.commands.admin.arena.ArenaListCommand;
@@ -22,6 +23,7 @@ import net.multylands.duels.gui.listeners.DuelGUIListener;
 import net.multylands.duels.listeners.*;
 import net.multylands.duels.placeholders.PlaceholderAPI;
 import net.multylands.duels.queue.QueueListener;
+import net.multylands.duels.utils.storage.MemoryStorage;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
@@ -40,23 +42,25 @@ public class ServerUtils {
     }
 
     public static void registerCommands(Duels plugin) {
-        plugin.getCommand("duel").setExecutor(new DuelCommand(plugin.guiManager, plugin));
-        plugin.getCommand("acceptduel").setExecutor(new AcceptCommand(plugin));
-        plugin.getCommand("cancelduel").setExecutor(new CancelCommand(plugin));
-        plugin.getCommand("denyduel").setExecutor(new DenyCommand(plugin));
-        plugin.getCommand("ignoreduel").setExecutor(new IgnoreCommand(plugin));
-        plugin.getCommand("spectate").setExecutor(new SpectateCommand(plugin));
-        plugin.getCommand("stopspectate").setExecutor(new StopSpectateCommand(plugin));
+        plugin.getCommand("duel").setExecutor(new SendCommand(plugin.guiManager, plugin));
+        plugin.getCommand("duels").setExecutor(new DuelsCommand(plugin));
+        //player commands
+        MemoryStorage.playerCommandExecutors.put("accept", new AcceptCommand(plugin));
+        MemoryStorage.playerCommandExecutors.put("cancel", new CancelCommand(plugin));
+        MemoryStorage.playerCommandExecutors.put("deny", new DenyCommand(plugin));
+        MemoryStorage.playerCommandExecutors.put("ignore", new IgnoreCommand(plugin));
+        MemoryStorage.playerCommandExecutors.put("spectate", new SpectateCommand(plugin));
+        MemoryStorage.playerCommandExecutors.put("stopspectate", new StopSpectateCommand(plugin));
+        MemoryStorage.playerCommandExecutors.put("queue", new QueueCommand(plugin));
         //admin commands
         plugin.getCommand("dueladmin").setExecutor(new DuelAdminCommand(plugin));
-        plugin.getCommand("duelqueue").setExecutor(new QueueCommand(plugin));
-        MemoryStorage.commandExecutors.put("reload", new ReloadCommand(plugin));
-        MemoryStorage.commandExecutors.put("setarenapos", new SetPosCommand(plugin));
-        MemoryStorage.commandExecutors.put("setspawn", new SetSpawnCommand(plugin));
-        MemoryStorage.commandExecutors.put("createarena", new CreateArenaCommand(plugin));
-        MemoryStorage.commandExecutors.put("deletearena", new DeleteArenaCommand(plugin));
-        MemoryStorage.commandExecutors.put("arenalist", new ArenaListCommand(plugin));
-        MemoryStorage.commandExecutors.put("help", new DuelAdminCommand(plugin));
+        MemoryStorage.adminCommandExecutors.put("reload", new ReloadCommand(plugin));
+        MemoryStorage.adminCommandExecutors.put("setarenapos", new SetPosCommand(plugin));
+        MemoryStorage.adminCommandExecutors.put("setspawn", new SetSpawnCommand(plugin));
+        MemoryStorage.adminCommandExecutors.put("createarena", new CreateArenaCommand(plugin));
+        MemoryStorage.adminCommandExecutors.put("deletearena", new DeleteArenaCommand(plugin));
+        MemoryStorage.adminCommandExecutors.put("arenalist", new ArenaListCommand(plugin));
+        MemoryStorage.adminCommandExecutors.put("help", new DuelAdminCommand(plugin));
     }
 
     public static boolean isPaper() {

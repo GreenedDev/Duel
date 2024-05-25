@@ -16,65 +16,9 @@ commands:
       - pri
       - 1v1
     description: Simply invite player to a duel with restrictions
-  cancelduel:
-    aliases:
-      - duelcancel
-      - removeduel
-      - duelremove
-      - pricancel
-      - removepri
-      - priremove
-    description: Cancel your duel request
-  acceptduel:
-    aliases:
-      - duelaccept
-      - confirmduel
-      - duelconfirm
-      - priaccept
-      - confirmpri
-      - priconfirm
-    description: Accept someone's duel request. Requires player argument
-  ignoreduel:
-    aliases:
-      - ignoreduels
-      - duelsignore
-      - duelignore
-      - ignorepris
-      - ignorepri
-      - prisignore
-      - priignore
-    description: Ignore someone's duel requests
-  denyduel:
-    aliases:
-      - dueldeny
-      - duelno
-      - prideny
-      - prino
-      - nopri
-      - denypri
-    description: Deny someone's duel request
+  duels:
+    description: List of duel commands.
   dueladmin:
     aliases:
       - adminduel
     description: Various admin commands.
-  spectate:
-    aliases:
-      - watchduel
-      - duelwatch
-      - spectateduel
-      - duelspectate
-    description: Spectate someone's Duel match
-  stopspectate:
-    aliases:
-      - stopwatchduel
-      - stopwatchingduel
-      - duelwatchstop
-      - duelspectatestop
-      - endspectate
-      - spectateend
-      - spectatestop
-    description: Stop spectate mode.
-  duelqueue:
-    aliases:
-      - queueduel
-    description: Add yourself into the duel queue.

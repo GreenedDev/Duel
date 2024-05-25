@@ -32,6 +32,13 @@ public class MiniPlaceholders {
             Player player = (Player) audience;
             return Tag.selfClosingInserting(Component.text(CalculatePlaceholders.getNumberOfSpectators(player)));
         });
+        builder.globalPlaceholder("queue_amount", (audience, queue) -> {
+            return Tag.selfClosingInserting(Component.text(CalculatePlaceholders.getNumberOfQueuePlayers()));
+        });
+        builder.audiencePlaceholder("bet_amount", (audience, queue, ctx) -> {
+            Player player = (Player) audience;
+            return Tag.selfClosingInserting(Component.text(CalculatePlaceholders.getBet(player)));
+        });
         builder.build().register();
     }
 

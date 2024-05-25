@@ -1,4 +1,4 @@
-package net.multylands.duels.utils;
+package net.multylands.duels.utils.storage;
 
 import net.multylands.duels.Duels;
 import org.bukkit.NamespacedKey;

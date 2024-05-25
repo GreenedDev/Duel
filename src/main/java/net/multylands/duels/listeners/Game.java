@@ -3,6 +3,8 @@ package net.multylands.duels.listeners;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.*;
+import net.multylands.duels.utils.storage.MemoryStorage;
+import net.multylands.duels.utils.storage.SavingItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

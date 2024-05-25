@@ -25,6 +25,7 @@ public class QueueSystem {
             return;
         }
         List<UUID> twoPlayers = new ArrayList<>();
+        List<UUID> playersToRemoveFromQueue = new ArrayList<>();
         for (UUID queuePlayerUUID : playersInQueue) {
             twoPlayers.add(queuePlayerUUID);
             if (twoPlayers.size() == 2) {
@@ -36,10 +37,14 @@ public class QueueSystem {
                 request.storeRequest(false);
 
                 request.getGame().start(availableArena);
-
+                playersToRemoveFromQueue.add(twoPlayers.get(0));
+                playersToRemoveFromQueue.add(twoPlayers.get(1));
                 twoPlayers.clear();
                 continue;
             }
+        }
+        for (UUID playerToRemove : playersToRemoveFromQueue) {
+            playersInQueue.remove(playerToRemove);
         }
         twoPlayers.clear();
     }

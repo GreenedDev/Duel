@@ -3,7 +3,7 @@ package net.multylands.duels.commands.admin.arena;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
-import net.multylands.duels.utils.MemoryStorage;
+import net.multylands.duels.utils.storage.MemoryStorage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

@@ -1,7 +1,7 @@
 package net.multylands.duels.utils;
 
-import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
+import net.multylands.duels.utils.storage.MemoryStorage;
 
 import java.util.HashSet;
 import java.util.Iterator;

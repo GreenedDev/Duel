@@ -2,7 +2,7 @@ package net.multylands.duels.commands.player.spectate;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.utils.Chat;
-import net.multylands.duels.utils.MemoryStorage;
+import net.multylands.duels.utils.storage.MemoryStorage;
 import net.multylands.duels.utils.SpectatorUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,7 +24,7 @@ public class StopSpectateCommand implements CommandExecutor {
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 0) {
-            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label));
+            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label)+" stopspectate");
             return false;
         }
         if (!MemoryStorage.spectators.containsKey(player.getUniqueId())) {

@@ -1,4 +1,4 @@
-package net.multylands.duels.utils;
+package net.multylands.duels.utils.storage;
 
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
@@ -30,7 +30,8 @@ public class MemoryStorage {
     public static HashMap<UUID, Arena> selectedArenas = new HashMap<>();
     public static HashMap<UUID, DuelRequest> inventoryRequests = new HashMap<>();
 
-    public static HashMap<String, CommandExecutor> commandExecutors = new HashMap<>();
+    public static HashMap<String, CommandExecutor> adminCommandExecutors = new HashMap<>();
+    public static HashMap<String, CommandExecutor> playerCommandExecutors = new HashMap<>();
 
     public static HashMap<UUID, HashMap<Integer, ItemStack>> savedInventories = new HashMap<>();
 

@@ -4,7 +4,7 @@ import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.utils.Chat;
-import net.multylands.duels.utils.MemoryStorage;
+import net.multylands.duels.utils.storage.MemoryStorage;
 import net.multylands.duels.utils.RequestUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

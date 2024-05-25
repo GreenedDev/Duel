@@ -3,6 +3,7 @@ package net.multylands.duels.object;
 import net.multylands.duels.Duels;
 import net.multylands.duels.queue.QueueSystem;
 import net.multylands.duels.utils.*;
+import net.multylands.duels.utils.storage.MemoryStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

@@ -26,13 +26,18 @@ public class QueueCommand implements CommandExecutor {
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 0) {
-            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label));
+            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label)+" queue");
             return true;
         }
         UUID playerUUID = player.getUniqueId();
-        QueueSystem.playersInQueue.add(playerUUID);
-        QueueSystem.checkQueue(plugin);
-        Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.queue.success"));
+        if (QueueSystem.playersInQueue.contains(playerUUID)) {
+            QueueSystem.playersInQueue.remove(playerUUID);
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.queue.removed"));
+        } else {
+            QueueSystem.playersInQueue.add(playerUUID);
+            QueueSystem.checkQueue(plugin);
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.queue.added"));
+        }
         return true;
     }
 }

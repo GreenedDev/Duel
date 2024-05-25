@@ -2,10 +2,9 @@ package net.multylands.duels.gui;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.Arena;
-import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
-import net.multylands.duels.utils.MemoryStorage;
-import net.multylands.duels.utils.PersistentDataManager;
+import net.multylands.duels.utils.storage.MemoryStorage;
+import net.multylands.duels.utils.storage.PersistentDataManager;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;

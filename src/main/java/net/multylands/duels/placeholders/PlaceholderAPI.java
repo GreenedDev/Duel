@@ -51,6 +51,12 @@ public class PlaceholderAPI extends PlaceholderExpansion {
         if (params.equalsIgnoreCase("spectators")) {
             return CalculatePlaceholders.getNumberOfSpectators(player);
         }
+        if (params.equalsIgnoreCase("queue_amount")) {
+            return CalculatePlaceholders.getNumberOfQueuePlayers();
+        }
+        if (params.equalsIgnoreCase("bet_amount")) {
+            return CalculatePlaceholders.getBet(player);
+        }
         return Chat.color(plugin.getConfig().getString("glowing-wrong-placeholder"));
     }
 }

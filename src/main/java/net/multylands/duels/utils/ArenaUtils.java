@@ -1,7 +1,7 @@
 package net.multylands.duels.utils;
 
-import net.multylands.duels.Duels;
 import net.multylands.duels.object.Arena;
+import net.multylands.duels.utils.storage.MemoryStorage;
 
 public class ArenaUtils {
     public static Arena getAvailableArena() {

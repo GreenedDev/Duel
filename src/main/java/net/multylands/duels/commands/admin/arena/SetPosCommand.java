@@ -4,7 +4,7 @@ import net.multylands.duels.Duels;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
-import net.multylands.duels.utils.MemoryStorage;
+import net.multylands.duels.utils.storage.MemoryStorage;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

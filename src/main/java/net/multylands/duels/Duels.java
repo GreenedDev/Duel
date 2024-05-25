@@ -6,6 +6,8 @@ import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.placeholders.MiniPlaceholders;
 import net.multylands.duels.utils.*;
+import net.multylands.duels.utils.storage.ConfigUtils;
+import net.multylands.duels.utils.storage.MemoryStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;

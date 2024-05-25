@@ -1,7 +1,7 @@
 package net.multylands.duels.object;
 
 import net.multylands.duels.Duels;
-import net.multylands.duels.utils.MemoryStorage;
+import net.multylands.duels.utils.storage.MemoryStorage;
 import net.multylands.duels.utils.RequestUtils;
 import org.bukkit.Bukkit;
 

@@ -25,7 +25,7 @@ public class DenyCommand implements CommandExecutor {
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 1) {
-            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
+            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " deny player");
             return false;
         }
         Player target = Bukkit.getPlayer(args[0]);
