@@ -26,9 +26,11 @@ public class DuelGUIListener implements Listener {
     public DuelGUIListener(Duels plugin) {
         this.plugin = plugin;
     }
+
     public static HashSet<UUID> playersWhoClosedBecauseOfArenaSelector = new HashSet<>();
 
     public static HashSet<UUID> PlayersWhoSentRequest = new HashSet<>();
+
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
@@ -38,6 +40,7 @@ public class DuelGUIListener implements Listener {
         MemoryStorage.arenaInventories.remove(playerUUID);
         MemoryStorage.inventoryRequests.remove(playerUUID);
     }
+
     @EventHandler
     public void onGuiClose(InventoryCloseEvent event) {
         Inventory inv = event.getInventory();
@@ -47,13 +50,9 @@ public class DuelGUIListener implements Listener {
             playersWhoClosedBecauseOfArenaSelector.remove(playerUUID);
             return;
         }
-        if (inv.getLocation() != null) {
-            return;
-        }
         if (!(inv == MemoryStorage.duelInventories.get(playerUUID))) {
             return;
         }
-
         if (PlayersWhoSentRequest.contains(playerUUID)) {
             PlayersWhoSentRequest.remove(playerUUID);
             return;
@@ -66,9 +65,12 @@ public class DuelGUIListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem();
-        Inventory inv = event.getInventory();
+        Inventory inv = event.getClickedInventory();
         Player player = (Player) event.getWhoClicked();
         UUID playerUUID = player.getUniqueId();
+        if (event.getInventory() == MemoryStorage.duelInventories.get(playerUUID)) {
+            event.setCancelled(true);
+        }
         if (inv.getLocation() != null || !(inv == MemoryStorage.duelInventories.get(playerUUID)) || item == null) {
             return;
         }
@@ -213,8 +215,8 @@ public class DuelGUIListener implements Listener {
         } else if (slot == arenaSelectorSlot) {
             playersWhoClosedBecauseOfArenaSelector.add(playerUUID);
             request.getGame().setRestrictions(restrictions);
-            Duels.guiManager.openArenaInventory(player, request);
-        }else if (slot == startSlot) {
+            Duels.guiManager.openArenaInventory(player);
+        } else if (slot == startSlot) {
             restrictions.setComplete(true);
             //dont change position of player and target below
             request = RequestUtils.getRequestForCommands(target.getUniqueId(), playerUUID);
@@ -223,12 +225,24 @@ public class DuelGUIListener implements Listener {
             request.storeRequest(false);
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.request-sent").replace("%player%", target.getName()));
             Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.duel.request-received").replace("%player%", player.getName()));
-            Chat.sendMessage(target, plugin.languageConfig.getString("duel.restrictions.restrictions"));
-            if (request.getGame().getRestrictions().getEnabled() != null) {
-                Chat.sendMessage(target, plugin.languageConfig.getString("duel.restrictions.enabled-restrictions") + request.getGame().getRestrictions().getEnabled());
+            Chat.sendMessage(target, plugin.languageConfig.getString("duel.restrictions-modules.restrictions"));
+            if (restrictions.getEnabled() != null) {
+                Chat.sendMessage(target, plugin.languageConfig.getString("duel.restrictions-modules.enabled-restrictions") + request.getGame().getRestrictions().getEnabled());
             }
-            if (request.getGame().getRestrictions().getDisabled() != null) {
-                Chat.sendMessage(target, plugin.languageConfig.getString("duel.restrictions.disabled-restrictions") + request.getGame().getRestrictions().getDisabled());
+            if (restrictions.getDisabled() != null) {
+                Chat.sendMessage(target, plugin.languageConfig.getString("duel.restrictions-modules.disabled-restrictions") + request.getGame().getRestrictions().getDisabled());
+            }
+            String enabled = plugin.languageConfig.getString("duel.other-modules.enabled");
+            String disabled = plugin.languageConfig.getString("duel.other-modules.disabled");
+            if (restrictions.isKeepInventoryEnabled()) {
+                Chat.sendMessage(target, plugin.languageConfig.getString("duel.other-modules.keep-inventory").replace("%toggled%", enabled));
+            } else {
+                Chat.sendMessage(target, plugin.languageConfig.getString("duel.other-modules.keep-inventory").replace("%toggled%", disabled));
+            }
+            if (restrictions.isInventorySavingEnabled()) {
+                Chat.sendMessage(target, plugin.languageConfig.getString("duel.other-modules.inventory-saving").replace("%toggled%", enabled));
+            } else {
+                Chat.sendMessage(target, plugin.languageConfig.getString("duel.other-modules.inventory-saving").replace("%toggled%", disabled));
             }
             double bet = request.getGame().getBet();
             if (plugin.getConfig().getBoolean("game.betting.enabled") && bet != 0) {

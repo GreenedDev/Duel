@@ -1,7 +1,6 @@
 package net.multylands.duels.utils;
 
 import net.kyori.adventure.text.Component;
-import net.multylands.duels.Duels;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

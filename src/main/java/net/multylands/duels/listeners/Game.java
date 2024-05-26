@@ -144,8 +144,8 @@ public class Game implements Listener {
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         SavingItems.giveItemsBackIfAvailable(player);
-        if (MemoryStorage.listOfPlayersWhoShouldBeTeleportedToSpawnAfterRespawn.contains(player.getUniqueId())) {
-            MemoryStorage.listOfPlayersWhoShouldBeTeleportedToSpawnAfterRespawn.remove(player.getUniqueId());
+        if (MemoryStorage.playersWhoShouldBeTeleportedToSpawnAfterRespawn.contains(player.getUniqueId())) {
+            MemoryStorage.playersWhoShouldBeTeleportedToSpawnAfterRespawn.remove(player.getUniqueId());
             Bukkit.getScheduler().runTaskLater(plugin, ()-> {
                 GameUtils.teleportToSpawn(plugin, player);
             }, 2L);

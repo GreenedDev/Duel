@@ -127,7 +127,7 @@ public class Game {
         GameUtils.removeEffectsIfDisabled(restrictions, senderPlayer, targetPlayer);
         GameUtils.disableShieldsIfDisabled(plugin, restrictions, senderPlayer, targetPlayer);
         saveAndRunRanOutOfTimeTask();
-        GameUtils.executeStartCommands( plugin, restrictions, senderPlayer, targetPlayer);
+        GameUtils.executeStartCommands( plugin, restrictions, senderPlayer, targetPlayer, arena.getID());
         GameUtils.startCounting(plugin, this, senderPlayer, targetPlayer);
 
         request.storeRequest(true);
@@ -214,13 +214,13 @@ public class Game {
             request.removeStoreRequest(true);
             QueueSystem.checkQueue(plugin);
         }, 20L * plugin.getConfig().getInt("game.time_to_pick_up_items"));
-        GameUtils.executeEndCommands(plugin, restrictions, winner, loser);
+        GameUtils.executeEndCommands(plugin, restrictions, winner, loser, arena.getID());
         if (bet != 0) {
             double tax = plugin.getConfig().getDouble("game.betting.tax-amount");
             BettingSystem.execGiveMoneyCommands(plugin, 2*bet*(100-tax)/100, winner.getName());
             Chat.sendMessage(winner, plugin.languageConfig.getString("duel.betting.bet-added"));
         }
-        MemoryStorage.listOfPlayersWhoShouldBeTeleportedToSpawnAfterRespawn.add(loser.getUniqueId());
+        MemoryStorage.playersWhoShouldBeTeleportedToSpawnAfterRespawn.add(loser.getUniqueId());
     }
 
     public UUID getOpponent(UUID someone) {

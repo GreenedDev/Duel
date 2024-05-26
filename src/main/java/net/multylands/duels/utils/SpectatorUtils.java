@@ -23,7 +23,7 @@ public class SpectatorUtils {
             firstPlayer.showPlayer(plugin, player);
         }
         if (opponent != null) {
-            firstPlayer.showPlayer(plugin, player);
+            opponent.showPlayer(plugin, player);
         }
         request.getGame().removeSpectator(player.getUniqueId());
         request.storeRequest(false);
@@ -42,7 +42,7 @@ public class SpectatorUtils {
             firstPlayer.showPlayer(plugin, player);
         }
         if (opponent != null) {
-            firstPlayer.showPlayer(plugin, player);
+            opponent.showPlayer(plugin, player);
         }
     }
 

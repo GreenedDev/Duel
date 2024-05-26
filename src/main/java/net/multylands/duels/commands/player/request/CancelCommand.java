@@ -28,12 +28,12 @@ public class CancelCommand implements CommandExecutor {
             Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " cancel player");
             return false;
         }
-        //checking if he has sent any request
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
             return false;
         }
+        //checking if he has sent any request
         DuelRequest request = RequestUtils.getRequestForCommands(target.getUniqueId(), player.getUniqueId());
         if (request == null) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.no-request-sent").replace("%player%", target.getName()));

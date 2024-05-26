@@ -147,9 +147,6 @@ public class DuelRestrictions {
         if (isEnderPearlAllowed) {
             builder.append("Ender Pearl,");
         }
-        if (isKeepInventoryEnabled) {
-            builder.append("Keep Inventory,");
-        }
         String finalString = builder.toString();
         if (finalString.isEmpty()) {
             return null;
@@ -187,9 +184,6 @@ public class DuelRestrictions {
         }
         if (!isEnderPearlAllowed) {
             builder.append("Ender Pearl,");
-        }
-        if (!isKeepInventoryEnabled) {
-            builder.append("Keep Inventory,");
         }
         String finalString = builder.toString();
         if (finalString.isEmpty()) {

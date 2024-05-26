@@ -52,13 +52,16 @@ public class ArenaGUIListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         ItemStack item = event.getCurrentItem();
-        Inventory inv = event.getInventory();
+        Inventory inv = event.getClickedInventory();
         int slot = event.getSlot();
-        if (inv.getLocation() != null || !(inv.getHolder() instanceof ArenaInventoryHolder) || item == null) {
-            return;
-        }
         Player player = (Player) event.getWhoClicked();
         UUID playerUUID = player.getUniqueId();
+        if (event.getInventory() == MemoryStorage.arenaInventories.get(playerUUID)) {
+            event.setCancelled(true);
+        }
+        if (inv.getLocation() != null || !(inv == MemoryStorage.arenaInventories.get(playerUUID)) || item == null) {
+            return;
+        }
         event.setCancelled(true);
         //always!!! get this request from the GUI clicker. because we are storing only sender: request in the requests map.
         DuelRequest request = MemoryStorage.inventoryRequests.get(playerUUID);

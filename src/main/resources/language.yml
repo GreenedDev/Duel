@@ -97,7 +97,7 @@ duel:
   spectating:
     cannot-damage-in-duel: "&cYou can't damage players when they are in duel."
     no-commands: "&cYou cannot use that command in the Spectating mode!"
-  restrictions:
+  restrictions-modules:
     restrictions: "&6Restrictions:"
     enabled-restrictions: " &aEnabled: &b"
     disabled-restrictions: " &aDisabled: &b"
@@ -108,6 +108,11 @@ duel:
       enchanted-golden-apple: "&cUsage of enchanted golden apples is disabled in this duel."
       elytra: "&cUsage of elytra is disabled in this duel."
       ender-pearl: "&cUsage of ender pearl is disabled in this duel."
+  other-modules:
+    keep-inventory: " &aKeep-Inventory: &b%toggled%"
+    inventory-saving: " &aInventory-Saving: &b%toggled%"
+    enabled: "&aEnabled"
+    disabled: "&cDisabled"
   game:
     duel-started: "&aDuel started. Get ready your weapons and your luck!"
     duel-countdown: "&aDuel is starting in %color+countdown%s&a."

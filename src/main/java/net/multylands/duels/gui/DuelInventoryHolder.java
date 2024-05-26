@@ -63,11 +63,11 @@ public class DuelInventoryHolder implements InventoryHolder {
     public void addItemIfEnabled(String name, Inventory inventory, boolean toggled, Module module) {
         String nameWithoutToggle = name.replace("toggle-", "");
         if (module == Module.RESTRICTION) {
-            if (!plugin.getConfig().getBoolean("modules.restrictions." + nameWithoutToggle)) {
+            if (!plugin.getConfig().getBoolean("modules.restrictions." + nameWithoutToggle+".enabled")) {
                 return;
             }
         } else {
-            if (!(plugin.getConfig().getBoolean("modules." + nameWithoutToggle))) {
+            if (!(plugin.getConfig().getBoolean("modules." + nameWithoutToggle+".enabled"))) {
                 return;
             }
         }

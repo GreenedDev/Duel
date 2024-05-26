@@ -17,24 +17,26 @@ game:
       commands:
         - /somecommand
     #list of commands that will be executed (from console) when duel starts. You can use %player1%
-    #and %player2% placeholders here. for more info %player1% is the player who sent the duel request to %player2%
+    #and %player2% placeholders here. for more info %player1% is the player who sent the duel request to %player2%.
+    #%player1%, %player2%, %arena_name%
     start:
       #if inventory saving is enabled, commands in /normal will not be executed
       inventory-saving-enabled:
         - kitgive %player1% rame
         - kitgive %player2% rame
       normal:
-        - someblablacommand %player1% %player2%
+        - someblablacommand %player1% %player2% %arena_name%
     #list of commands that will be executed (from console) when duel ends. You can use %winner%
     #and %loser% placeholders here.
+    #%winner%, %loser%, %arena_name%
     end:
       #if inventory saving is enabled, commands in /normal will not be executed
       inventory-saving-enabled:
         - clear %winner%
         - clear %loser%
       normal:
-        - givetokensblabla %winner% 2
-        - removetokensblabla %loser% 3
+        - givetokensblabla %winner% 2 %arena_name%
+        - removetokensblabla %loser% 3 %arena_name%
   # you can set both ones above like end: [] or start: [] to disable them.
   #Max duel time in minutes. After this time goes both players will be teleported to the spawn.
   max_duel_time: 10
@@ -66,20 +68,41 @@ placeholders:
 #won't be able to turn on/off that restriction.
 modules:
   arena-selector: true
-  keep-inventory: true
   #Disabling this will disable restriction GUI and request will be directly sent without specifying duel restrictions.
   #Use this to disable ALL restrictions.
   GUI: true
+
+  keep-inventory:
+    enabled: true
+    toggled-by-default: true
   #Inventory Saving feature. when request receiver accepts the duel, if this is enabled, both players items will be
   #taken away and stored. whenever duel ends we give them their items back. You can use this if you want to give
   #players some kits in game.commands.start
-  inventory-saving: false
+  inventory-saving:
+    enabled: false
+    toggled-by-default: false
   restrictions:
-    bow: true
-    totem: true
-    golden-apple: true
-    enchanted-golden-apple: true
-    potion: true
-    shield: true
-    elytra: true
-    ender-pearl: true
+    bow:
+      enabled: true
+      toggled-by-default: true
+    totem:
+      enabled: true
+      toggled-by-default: true
+    golden-apple:
+      enabled: true
+      toggled-by-default: true
+    enchanted-golden-apple:
+      enabled: true
+      toggled-by-default: true
+    potion:
+      enabled: true
+      toggled-by-default: true
+    shield:
+      enabled: true
+      toggled-by-default: true
+    elytra:
+      enabled: true
+      toggled-by-default: true
+    ender-pearl:
+      enabled: true
+      toggled-by-default: true

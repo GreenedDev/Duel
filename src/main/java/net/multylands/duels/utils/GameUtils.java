@@ -52,34 +52,42 @@ public class GameUtils {
         target.setAllowFlight(false);
     }
 
-    public static void executeEndCommands(Duels plugin, DuelRestrictions restrictions, Player winner, Player loser) {
+    public static void executeEndCommands(Duels plugin, DuelRestrictions restrictions, Player winner, Player loser, String arenaName) {
         if (restrictions.isInventorySavingEnabled()) {
             for (String commandFromTheLoop : plugin.getConfig().getStringList("game.commands.end.inventory-saving-enabled")) {
-                String command = commandFromTheLoop.replace("%winner%", winner.getName())
-                        .replace("%loser%", loser.getName());
+                String command = commandFromTheLoop
+                        .replace("%winner%", winner.getName())
+                        .replace("%loser%", loser.getName())
+                        .replace("%arena_name%", arenaName);;
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
             }
             return;
         }
         for (String commandFromTheLoop : plugin.getConfig().getStringList("game.commands.end.normal")) {
-            String command = commandFromTheLoop.replace("%winner%", winner.getName())
-                    .replace("%loser%", loser.getName());
+            String command = commandFromTheLoop
+                    .replace("%winner%", winner.getName())
+                    .replace("%loser%", loser.getName())
+                    .replace("%arena_name%", arenaName);;
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         }
     }
 
-    public static void executeStartCommands(Duels plugin, DuelRestrictions restrictions,  Player senderPlayer, Player targetPlayer) {
+    public static void executeStartCommands(Duels plugin, DuelRestrictions restrictions,  Player senderPlayer, Player targetPlayer, String arenaName) {
         if (restrictions.isInventorySavingEnabled()) {
             for (String commandFromTheLoop : plugin.getConfig().getStringList("game.commands.start.inventory-saving-enabled")) {
-                String command = commandFromTheLoop.replace("%player1%", senderPlayer.getName())
-                        .replace("%player2%", targetPlayer.getName());
+                String command = commandFromTheLoop
+                        .replace("%player1%", senderPlayer.getName())
+                        .replace("%player2%", targetPlayer.getName())
+                        .replace("%arena_name%", arenaName);
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
             }
             return;
         }
         for (String commandFromTheLoop : plugin.getConfig().getStringList("game.commands.start.normal")) {
-            String command = commandFromTheLoop.replace("%player1%", senderPlayer.getName())
-                    .replace("%player2%", targetPlayer.getName());
+            String command = commandFromTheLoop
+                    .replace("%player1%", senderPlayer.getName())
+                    .replace("%player2%", targetPlayer.getName())
+                    .replace("%arena_name%", arenaName);;
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         }
     }

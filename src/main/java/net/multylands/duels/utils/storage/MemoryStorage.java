@@ -35,5 +35,5 @@ public class MemoryStorage {
 
     public static HashMap<UUID, HashMap<Integer, ItemStack>> savedInventories = new HashMap<>();
 
-    public static HashSet<UUID> listOfPlayersWhoShouldBeTeleportedToSpawnAfterRespawn = new HashSet<>();
+    public static HashSet<UUID> playersWhoShouldBeTeleportedToSpawnAfterRespawn = new HashSet<>();
 }
