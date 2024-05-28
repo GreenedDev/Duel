@@ -11,8 +11,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Set;
-
 public class SetPosCommand implements CommandExecutor {
     public Duels plugin;
 
@@ -60,16 +58,11 @@ public class SetPosCommand implements CommandExecutor {
         Arena arena = new Arena(loc1, loc2, null, null, arenaName);
         if (MemoryStorage.Arenas.containsKey(arenaName)) {
             //to prevent players getting lost when their arena was replaced.
-            for (Set<DuelRequest> requestsSet : MemoryStorage.requestsSenderToReceivers.values()) {
-                for (DuelRequest request : requestsSet) {
-                    if (!request.getGame().getIsInGame()) {
-                        continue;
-                    }
-                    if (!request.getGame().getArena().getID().equals(arenaName)) {
-                        continue;
-                    }
-                    request.getGame().endGameRestart();
+            for (DuelRequest request : MemoryStorage.inGameDuels) {
+                if (!request.getGame().getArena().getID().equals(arenaName)) {
+                    continue;
                 }
+                request.getGame().endGameRestart();
             }
         }
         MemoryStorage.Arenas.put(arenaName, arena);

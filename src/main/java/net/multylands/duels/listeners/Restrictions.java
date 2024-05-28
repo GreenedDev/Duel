@@ -34,7 +34,9 @@ public class Restrictions implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -55,15 +57,17 @@ public class Restrictions implements Listener {
         if (!(event.getEntity().getShooter() instanceof Player)) {
             return;
         }
-        Player shooter = (Player) event.getEntity().getShooter();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(shooter.getUniqueId());
+        Player player = (Player) event.getEntity().getShooter();
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
         if (request.getGame().getRestrictions().isBowAllowed()) {
             return;
         }
-        Chat.sendMessage(shooter, (plugin.languageConfig.getString("duel.restrictions-modules.deny-message.arrow")));
+        Chat.sendMessage(player, (plugin.languageConfig.getString("duel.restrictions-modules.deny-message.arrow")));
         event.setCancelled(true);
     }
 
@@ -73,9 +77,11 @@ public class Restrictions implements Listener {
         if (!(event.getEntity() instanceof Player)) {
             return;
         }
-        Player playerWhoUsedTotem = (Player) event.getEntity();
-        UUID playerWhoUsedTotemUUID = playerWhoUsedTotem.getUniqueId();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerWhoUsedTotem.getUniqueId());
+        Player player = (Player) event.getEntity();
+        UUID playerUUID = player.getUniqueId();
+
+        UUID playerWhoUsedTotemUUID = player.getUniqueId();
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -95,7 +101,9 @@ public class Restrictions implements Listener {
             return;
         }
         Player player = ((Player) entity).getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -116,15 +124,17 @@ public class Restrictions implements Listener {
         if (!(event.getEntity().getShooter() instanceof Player)) {
             return;
         }
-        Player shooter = (Player) event.getEntity().getShooter();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(shooter.getUniqueId());
+        Player player = (Player) event.getEntity().getShooter();
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
         if (request.getGame().getRestrictions().isEnderPearlAllowed()) {
             return;
         }
-        Chat.sendMessage(shooter, plugin.languageConfig.getString("duel.restrictions-modules.deny-message.ender-pearl"));
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.restrictions-modules.deny-message.ender-pearl"));
         event.setCancelled(true);
     }
 
@@ -135,7 +145,9 @@ public class Restrictions implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -153,7 +165,9 @@ public class Restrictions implements Listener {
             return;
         }
         Player player = (Player) event.getEntity().getShooter();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -172,7 +186,9 @@ public class Restrictions implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -187,7 +203,9 @@ public class Restrictions implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onPearl(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
         }

@@ -2,14 +2,19 @@ package net.multylands.duels.object;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.queue.QueueSystem;
-import net.multylands.duels.utils.*;
+import net.multylands.duels.utils.BettingSystem;
+import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.GameUtils;
 import net.multylands.duels.utils.storage.MemoryStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class Game {
@@ -127,7 +132,7 @@ public class Game {
         GameUtils.removeEffectsIfDisabled(restrictions, senderPlayer, targetPlayer);
         GameUtils.disableShieldsIfDisabled(plugin, restrictions, senderPlayer, targetPlayer);
         saveAndRunRanOutOfTimeTask();
-        GameUtils.executeStartCommands( plugin, restrictions, senderPlayer, targetPlayer, arena.getID());
+        GameUtils.executeStartCommands(plugin, restrictions, senderPlayer, targetPlayer, arena.getID());
         GameUtils.startCounting(plugin, this, senderPlayer, targetPlayer);
 
         request.storeRequest(true);
@@ -193,12 +198,11 @@ public class Game {
         setWinnerUUID(winnerUUIDFromMethod);
         request.storeRequest(false);
 
-
         Bukkit.getScheduler().cancelTask(MemoryStorage.tasksToCancel.get(senderUUID));
         MemoryStorage.tasksToCancel.remove(senderUUID);
 
-
         Player winner = Bukkit.getPlayer(winnerUUID);
+        UUID loserUUID = getOpponent(winnerUUID);
         Player loser = Bukkit.getPlayer(getOpponent(winnerUUID));
         if (winner == null) {
             plugin.getLogger().log(Level.INFO, "&c&lDUELS SOMETHING WENT SUPER WRONG. CONTACT GREENED ERROR TYPE #3");
@@ -217,10 +221,10 @@ public class Game {
         GameUtils.executeEndCommands(plugin, restrictions, winner, loser, arena.getID());
         if (bet != 0) {
             double tax = plugin.getConfig().getDouble("game.betting.tax-amount");
-            BettingSystem.execGiveMoneyCommands(plugin, 2*bet*(100-tax)/100, winner.getName());
+            BettingSystem.execGiveMoneyCommands(plugin, 2 * bet * (100 - tax) / 100, winner.getName());
             Chat.sendMessage(winner, plugin.languageConfig.getString("duel.betting.bet-added"));
         }
-        MemoryStorage.playersWhoShouldBeTeleportedToSpawnAfterRespawn.add(loser.getUniqueId());
+        MemoryStorage.playersWhoShouldBeTeleportedToSpawnAfterRespawn.add(loserUUID);
     }
 
     public UUID getOpponent(UUID someone) {
@@ -250,6 +254,7 @@ public class Game {
     public Arena getArena() {
         return arena;
     }
+
     public double getBet() {
         return bet;
     }

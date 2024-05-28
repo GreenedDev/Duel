@@ -5,7 +5,10 @@ import net.multylands.duels.gui.GUIManager;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.placeholders.MiniPlaceholders;
-import net.multylands.duels.utils.*;
+import net.multylands.duels.utils.BettingSystem;
+import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.ServerUtils;
+import net.multylands.duels.utils.UpdateChecker;
 import net.multylands.duels.utils.storage.ConfigUtils;
 import net.multylands.duels.utils.storage.MemoryStorage;
 import org.bukkit.Bukkit;
@@ -18,7 +21,6 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Set;
 
 public class Duels extends JavaPlugin {
     public String newVersion = null;
@@ -56,13 +58,8 @@ public class Duels extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (Set<DuelRequest> requestsSet : MemoryStorage.requestsSenderToReceivers.values()) {
-            for (DuelRequest request : requestsSet) {
-                if (!request.getGame().getIsInGame()) {
-                    continue;
-                }
-                request.getGame().endGameRestart();
-            }
+        for (DuelRequest request : MemoryStorage.inGameDuels) {
+            request.getGame().endGameRestart();
         }
     }
 
@@ -151,14 +148,10 @@ public class Duels extends JavaPlugin {
     }
 
     public void loadArenas() {
-        for (Set<DuelRequest> requestsSet : MemoryStorage.requestsSenderToReceivers.values()) {
-            for (DuelRequest request : requestsSet) {
-                if (!request.getGame().getIsInGame()) {
-                    continue;
-                }
-                request.getGame().endGameRestart();
-            }
+        for (DuelRequest request : MemoryStorage.inGameDuels) {
+            request.getGame().endGameRestart();
         }
+
         for (String arenaID : arenasConfig.getKeys(false)) {
             if (arenasConfig.getLocation(arenaID + ".pos1") == null
                     || arenasConfig.getLocation(arenaID + ".pos2") == null) {

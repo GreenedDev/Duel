@@ -3,13 +3,18 @@ package net.multylands.duels.commands.player.request;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
-import net.multylands.duels.utils.*;
+import net.multylands.duels.utils.ArenaUtils;
+import net.multylands.duels.utils.BettingSystem;
+import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.RequestUtils;
 import net.multylands.duels.utils.storage.MemoryStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 
 public class AcceptCommand implements CommandExecutor {
@@ -26,6 +31,7 @@ public class AcceptCommand implements CommandExecutor {
             return true;
         }
         Player player = ((Player) sender).getPlayer();
+        UUID playerUUID = player.getUniqueId();
         if (args.length != 1) {
             Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " accept player");
             return true;
@@ -35,26 +41,27 @@ public class AcceptCommand implements CommandExecutor {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
             return true;
         }
+        UUID targetUUID = target.getUniqueId();
         for (Arena arena : MemoryStorage.Arenas.values()) {
             if (arena.isAvailable()) {
                 continue;
             }
-            if (player.getUniqueId().equals(arena.getSenderUUID()) || player.getUniqueId().equals(arena.getTargetUUID())) {
+            if (playerUUID.equals(arena.getSenderUUID()) || playerUUID.equals(arena.getTargetUUID())) {
                 Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.accept.already-in-duel"));
                 return true;
             }
         }
-        DuelRequest request = RequestUtils.getRequestForCommands(player.getUniqueId(), target.getUniqueId());
+        DuelRequest request = RequestUtils.getRequestForCommands(playerUUID, targetUUID);
 
         if (request == null) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.accept.target-hasnt-sent-request"));
             return true;
         }
         Arena availableArena;
-        if (MemoryStorage.selectedArenas.get(target.getUniqueId()) == null) {
+        if (MemoryStorage.selectedArenas.get(targetUUID) == null) {
             availableArena = ArenaUtils.getAvailableArena();
         } else {
-            availableArena = MemoryStorage.selectedArenas.get(target.getUniqueId());
+            availableArena = MemoryStorage.selectedArenas.get(targetUUID);
         }
         if (availableArena == null || !availableArena.isAvailable()) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.no-arenas-available"));
@@ -84,10 +91,9 @@ public class AcceptCommand implements CommandExecutor {
         request.getGame().start(availableArena);
         //If player has sent the request to same player but the same player sent
         //another request to this player and he accepted we are removing first request
-        if (RequestUtils.getRequestForCommands(target.getUniqueId(), player.getUniqueId()) != null) {
-            DuelRequest oldRequestOfFirstPlayer = RequestUtils.getRequestForCommands(target.getUniqueId(), player.getUniqueId());
+        if (RequestUtils.getRequestForCommands(targetUUID, playerUUID) != null) {
+            DuelRequest oldRequestOfFirstPlayer = RequestUtils.getRequestForCommands(targetUUID, playerUUID);
             oldRequestOfFirstPlayer.removeStoreRequest(false);
-            System.out.println("removed old request");
         }
         return true;
     }

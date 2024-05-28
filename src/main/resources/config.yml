@@ -43,8 +43,8 @@ game:
   #After the duel ends how many SECONDS should we give the
   #winner to pick up the loser's item before teleporting them to the spawn
   time_to_pick_up_items: 10
-
-#Delay in ticks. We use this after the duel ends to reset player's shield blocking delay. Don't touch if you don't know what this does.
+#Delay in ticks. We use this after the duel ends to reset player's shield blocking delay.
+#Don't touch if you don't know what this does.
 default-shield-blocking-delay: 5
 
 #Request time out time (in seconds)

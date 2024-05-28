@@ -12,11 +12,14 @@ import java.util.UUID;
 public class SpectatorUtils {
     public static void endSpectating(Player player, Duels plugin) {
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
-        UUID toSpectateUUID = MemoryStorage.spectators.get(player.getUniqueId());
+        UUID playerUUID = player.getUniqueId();
+        UUID toSpectateUUID = MemoryStorage.spectators.get(playerUUID);
+
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectateUUID);
-        MemoryStorage.spectators.remove(player.getUniqueId());
+        MemoryStorage.spectators.remove(playerUUID);
         Player firstPlayer = Bukkit.getPlayer(request.getTarget());
         Player opponent = Bukkit.getPlayer(request.getSender());
+
         player.teleport(spawnLoc);
         player.setAllowFlight(false);
         if (firstPlayer != null) {
@@ -25,15 +28,17 @@ public class SpectatorUtils {
         if (opponent != null) {
             opponent.showPlayer(plugin, player);
         }
-        request.getGame().removeSpectator(player.getUniqueId());
+        request.getGame().removeSpectator(playerUUID);
         request.storeRequest(false);
     }
 
     public static void endSpectatingForEndGame(Player player, Duels plugin) {
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
-        UUID toSpectateUUID = MemoryStorage.spectators.get(player.getUniqueId());
+        UUID playerUUID = player.getUniqueId();
+        UUID toSpectateUUID = MemoryStorage.spectators.get(playerUUID);
+
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectateUUID);
-        MemoryStorage.spectators.remove(player.getUniqueId());
+        MemoryStorage.spectators.remove(playerUUID);
         Player firstPlayer = Bukkit.getPlayer(request.getTarget());
         Player opponent = Bukkit.getPlayer(request.getSender());
         player.teleport(spawnLoc);
@@ -47,15 +52,18 @@ public class SpectatorUtils {
     }
 
     public static void startSpectating(Player player, Player toSpectate, Duels plugin) {
+        UUID toSpectateUUID = toSpectate.getUniqueId();
+        UUID playerUUID = player.getUniqueId();
+
         //the teleport needs to be first here
         player.teleport(toSpectate);
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectate.getUniqueId());
-        Player opponent = Bukkit.getPlayer(request.getOpponent(toSpectate.getUniqueId()));
-        MemoryStorage.spectators.put(player.getUniqueId(), toSpectate.getUniqueId());
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectateUUID);
+        Player opponent = Bukkit.getPlayer(request.getOpponent(toSpectateUUID));
+        MemoryStorage.spectators.put(playerUUID, toSpectateUUID);
         player.setAllowFlight(true);
         toSpectate.hidePlayer(plugin, player);
         opponent.hidePlayer(plugin, player);
-        request.getGame().addSpectator(player.getUniqueId());
+        request.getGame().addSpectator(playerUUID);
         request.storeRequest(false);
     }
 }

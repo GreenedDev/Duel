@@ -19,7 +19,7 @@ public class MemoryStorage {
     public static Set<DuelRequest> inGameDuels = new HashSet<>();
     //storing uuid: taskID
     public static HashMap<UUID, Integer> tasksToCancel = new HashMap<>();
-    //storing spectator: toSpectate
+    //storing spectator: spectatedPlayer
     public static HashMap<UUID, UUID> spectators = new HashMap<>();
 
     public static HashMap<UUID, Inventory> duelInventories = new HashMap<>();

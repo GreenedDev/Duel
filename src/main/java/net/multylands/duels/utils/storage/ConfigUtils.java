@@ -1,6 +1,7 @@
 package net.multylands.duels.utils.storage;
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.object.DuelRestrictions;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -19,6 +20,29 @@ public class ConfigUtils {
 
     public ConfigUtils(Duels plugin) {
         this.plugin = plugin;
+    }
+
+    public static DuelRestrictions getDefaultRestrictions(Duels plugin) {
+
+        boolean bowAllowed = getRestrictionToggledByDefault(plugin, "bow");
+        boolean notchAllowed = getRestrictionToggledByDefault(plugin, "enchanted-golden-apple");
+        boolean potionAllowed = getRestrictionToggledByDefault(plugin, "potion");
+        boolean goldenAppleAllowed = getRestrictionToggledByDefault(plugin, "golden-apple");
+        boolean shieldAllowed = getRestrictionToggledByDefault(plugin, "shield");
+        boolean totemAllowed = getRestrictionToggledByDefault(plugin, "totem");
+        boolean elytraAllowed = getRestrictionToggledByDefault(plugin, "elytra");
+        boolean enderPearlAllowed = getRestrictionToggledByDefault(plugin, "ender-pearl");
+        boolean keep_inventory_enabled = getModuleToggledByDefault(plugin, "keep-inventory");
+        boolean inventory_saving_enabled = getModuleToggledByDefault(plugin, "inventory-saving");
+        return new DuelRestrictions(bowAllowed, notchAllowed, potionAllowed, goldenAppleAllowed, shieldAllowed, totemAllowed, elytraAllowed, enderPearlAllowed, true, keep_inventory_enabled, inventory_saving_enabled);
+    }
+
+    public static boolean getRestrictionToggledByDefault(Duels plugin, String name) {
+        return plugin.getConfig().getBoolean("modules.restrictions." + name + ".toggled-by-default");
+    }
+
+    public static boolean getModuleToggledByDefault(Duels plugin, String name) {
+        return plugin.getConfig().getBoolean("modules." + name + ".toggled-by-default");
     }
 
     public void addMissingKeysAndValues(FileConfiguration config, String fileName) {

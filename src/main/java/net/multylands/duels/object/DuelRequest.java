@@ -1,8 +1,8 @@
 package net.multylands.duels.object;
 
 import net.multylands.duels.Duels;
-import net.multylands.duels.utils.storage.MemoryStorage;
 import net.multylands.duels.utils.RequestUtils;
+import net.multylands.duels.utils.storage.MemoryStorage;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -62,7 +62,6 @@ public class DuelRequest {
         //do not move the below code up because the taskid will not be saved then
         requestsWithoutThisRequestSenderToReceiver.add(this);
         MemoryStorage.requestsSenderToReceivers.put(senderUUID, requestsWithoutThisRequestSenderToReceiver);
-        System.out.println(MemoryStorage.requestsSenderToReceivers);
     }
 
     public void removeStoreRequest(boolean justEnded) {

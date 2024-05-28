@@ -12,6 +12,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class SpectateCommand implements CommandExecutor {
     public Duels plugin;
 
@@ -26,6 +28,7 @@ public class SpectateCommand implements CommandExecutor {
             return false;
         }
         Player player = ((Player) sender).getPlayer();
+        UUID playerUUID = player.getUniqueId();
         if (args.length != 1) {
             Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " spectate player");
             return false;
@@ -36,17 +39,17 @@ public class SpectateCommand implements CommandExecutor {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
             return false;
         }
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectate.getUniqueId());
-        //will return null if player is not in game because in the getRequestOfTheDuelPlayerIsIn method we are checking if toSpectate player is in the list of players that are in game.
-        if (!RequestUtils.isInGame(request)) {
+        UUID toSpectateUUID = toSpectate.getUniqueId();
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectateUUID);
+        if (request == null) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.spectate.is-not-in-duel").replace("%player%", toSpectateName));
             return false;
         }
-        if (MemoryStorage.spectators.containsKey(player.getUniqueId())) {
+        if (MemoryStorage.spectators.containsKey(playerUUID)) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.spectate.already-spectating"));
             return false;
         }
-        Player toSpectateOpponent = Bukkit.getPlayer(request.getOpponent(toSpectate.getUniqueId()));
+        Player toSpectateOpponent = Bukkit.getPlayer(request.getOpponent(toSpectateUUID));
         SpectatorUtils.startSpectating(player, toSpectate, plugin);
         Chat.sendMessage(toSpectate, plugin.languageConfig.getString("duel.commands.spectate.is-spectating").replace("%player%", player.getName()));
         Chat.sendMessage(toSpectateOpponent, plugin.languageConfig.getString("duel.commands.spectate.is-spectating").replace("%player%", player.getName()));

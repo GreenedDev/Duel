@@ -9,8 +9,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Set;
-
 public class DeleteArenaCommand implements CommandExecutor {
     public Duels plugin;
 
@@ -42,16 +40,11 @@ public class DeleteArenaCommand implements CommandExecutor {
         plugin.saveArenasConfig();
         plugin.reloadArenaConfig();
         //to prevent players getting lost when their arena was deleted.
-        for (Set<DuelRequest> requestsSet : MemoryStorage.requestsSenderToReceivers.values()) {
-            for (DuelRequest request : requestsSet) {
-                if (!request.getGame().getIsInGame()) {
-                    continue;
-                }
-                if (!request.getGame().getArena().getID().equals(arenaName)) {
-                    continue;
-                }
-                request.getGame().endGameRestart();
+        for (DuelRequest request : MemoryStorage.inGameDuels) {
+            if (!request.getGame().getArena().getID().equals(arenaName)) {
+                continue;
             }
+            request.getGame().endGameRestart();
         }
         Chat.sendMessage(player, plugin.languageConfig.getString("admin.delete-arena.success").replace("%arena%", arenaName));
         return false;

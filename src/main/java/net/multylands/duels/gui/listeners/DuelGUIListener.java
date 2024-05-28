@@ -4,8 +4,8 @@ import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.utils.Chat;
-import net.multylands.duels.utils.storage.MemoryStorage;
 import net.multylands.duels.utils.RequestUtils;
+import net.multylands.duels.utils.storage.MemoryStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -77,6 +77,7 @@ public class DuelGUIListener implements Listener {
         event.setCancelled(true);
         //always!!! get this request from the GUI clicker. because we are storing only sender: request in the requests map.
         DuelRequest request = MemoryStorage.inventoryRequests.get(playerUUID);
+        UUID targetUUID = request.getOpponent(playerUUID);
         Player target = Bukkit.getPlayer(request.getOpponent(playerUUID));
         if (target == null) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
@@ -198,7 +199,7 @@ public class DuelGUIListener implements Listener {
         } else if (slot == startSlot) {
             restrictions.setComplete(true);
             //dont change position of player and target below
-            request = RequestUtils.getRequestForCommands(target.getUniqueId(), playerUUID);
+            request = RequestUtils.getRequestForCommands(targetUUID, playerUUID);
             request.getGame().setRestrictions(restrictions);
 
             request.storeRequest(false);

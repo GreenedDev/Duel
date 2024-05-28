@@ -2,7 +2,9 @@ package net.multylands.duels.listeners;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
-import net.multylands.duels.utils.*;
+import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.GameUtils;
+import net.multylands.duels.utils.RequestUtils;
 import net.multylands.duels.utils.storage.MemoryStorage;
 import net.multylands.duels.utils.storage.SavingItems;
 import org.bukkit.Bukkit;
@@ -26,7 +28,9 @@ public class Game implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (request == null) {
             return;
         }
@@ -41,7 +45,7 @@ public class Game implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         Player playerWhoLeft = event.getPlayer();
         UUID playerWhoLeftUUID = playerWhoLeft.getUniqueId();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerWhoLeft.getUniqueId());
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerWhoLeftUUID);
         if (request == null) {
             return;
         }
@@ -56,7 +60,9 @@ public class Game implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (request == null) {
             return;
         }
@@ -90,7 +96,9 @@ public class Game implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onCommandForWinner(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         //do not check this with requestutils.isingame because when we run endGame method we set game as ended.
         if (request == null) {
             return;
@@ -98,7 +106,7 @@ public class Game implements Listener {
         if (!request.getGame().getIsAboutToTeleportedToSpawn()) {
             return;
         }
-        if (player.getUniqueId() != request.getGame().getWinnerUUID()) {
+        if (playerUUID != request.getGame().getWinnerUUID()) {
             return;
         }
         Chat.sendMessage(player, plugin.languageConfig.getString("duel.this-command-blocked"));
@@ -110,7 +118,7 @@ public class Game implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player dead = event.getEntity().getPlayer();
         UUID deadUUID = dead.getUniqueId();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(dead.getUniqueId());
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(deadUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -128,7 +136,8 @@ public class Game implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
+        UUID playerUUID = player.getUniqueId();
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
@@ -143,10 +152,12 @@ public class Game implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+
         SavingItems.giveItemsBackIfAvailable(player);
-        if (MemoryStorage.playersWhoShouldBeTeleportedToSpawnAfterRespawn.contains(player.getUniqueId())) {
-            MemoryStorage.playersWhoShouldBeTeleportedToSpawnAfterRespawn.remove(player.getUniqueId());
-            Bukkit.getScheduler().runTaskLater(plugin, ()-> {
+        if (MemoryStorage.playersWhoShouldBeTeleportedToSpawnAfterRespawn.contains(playerUUID)) {
+            MemoryStorage.playersWhoShouldBeTeleportedToSpawnAfterRespawn.remove(playerUUID);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 GameUtils.teleportToSpawn(plugin, player);
             }, 2L);
         }

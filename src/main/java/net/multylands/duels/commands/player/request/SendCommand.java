@@ -3,12 +3,11 @@ package net.multylands.duels.commands.player.request;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.gui.GUIManager;
-import net.multylands.duels.listeners.Restrictions;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
-import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.RequestUtils;
+import net.multylands.duels.utils.storage.ConfigUtils;
 import net.multylands.duels.utils.storage.MemoryStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -18,9 +17,8 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.UUID;
 
 public class SendCommand implements CommandExecutor, TabCompleter {
     public GUIManager guiManager;
@@ -38,6 +36,7 @@ public class SendCommand implements CommandExecutor, TabCompleter {
             return true;
         }
         Player player = (Player) sender;
+        UUID playerUUID = player.getUniqueId();
         if (!(args.length == 1 || args.length == 2 || args.length == 3)) {
             Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player bet(optional)");
             return true;
@@ -47,13 +46,14 @@ public class SendCommand implements CommandExecutor, TabCompleter {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
             return true;
         }
+        UUID targetUUID = target.getUniqueId();
         if (player.equals(target)) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.cant-duel-yourself"));
             return true;
         }
         //already sent check
-        for (DuelRequest request : RequestUtils.getPlayerRequestsS_R(player)) {
-            if (request.getSender() != player.getUniqueId()) {
+        for (DuelRequest request : RequestUtils.getPlayerRequestsS_R(playerUUID)) {
+            if (request.getTarget() != targetUUID) {
                 continue;
             }
             if (request.getGame().getIsAboutToTeleportedToSpawn()) {
@@ -63,16 +63,16 @@ public class SendCommand implements CommandExecutor, TabCompleter {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.request-already-sent").replace("%player%", target.getDisplayName()));
             return true;
         }
-        //target already in duel check. sender of his own request is target itself
-        for (DuelRequest request : RequestUtils.getPlayerRequestsS_R(target)) {
-            if (!request.getGame().getIsInGame()) {
+        //target already in duel check.
+        for (DuelRequest request : MemoryStorage.inGameDuels) {
+            if (!(request.getTarget() == targetUUID || request.getSender() == targetUUID)) {
                 continue;
             }
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.target-already-in-duel").replace("%player%", target.getDisplayName()));
             return true;
         }
         //ignore check
-        if (plugin.ignoresConfig.getStringList(target.getUniqueId().toString()).contains(player.getUniqueId().toString())) {
+        if (plugin.ignoresConfig.getStringList(targetUUID.toString()).contains(playerUUID.toString())) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.ignore.player-is-ignoring-requests"));
             return true;
         }
@@ -104,17 +104,17 @@ public class SendCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
             Arena arena = MemoryStorage.Arenas.get(arenaName);
-            MemoryStorage.selectedArenas.put(player.getUniqueId(), arena);
+            MemoryStorage.selectedArenas.put(playerUUID, arena);
         }
         if (plugin.getConfig().getBoolean("modules.GUI")) {
-            DuelRequest oldRequest = MemoryStorage.inventoryRequests.get(player.getUniqueId());
+            DuelRequest oldRequest = MemoryStorage.inventoryRequests.get(playerUUID);
             if (oldRequest == null) {
-                guiManager.openDuelInventory(player, target, bet, getDefaultRestrictions(plugin));
+                guiManager.openDuelInventory(player, target, bet, ConfigUtils.getDefaultRestrictions(plugin));
             } else {
                 guiManager.openDuelInventory(player, target, bet, oldRequest.getGame().getRestrictions());
             }
         } else {
-            DuelRequest request = new DuelRequest(player.getUniqueId(), target.getUniqueId(), getDefaultRestrictions(plugin), false, false, bet, plugin);
+            DuelRequest request = new DuelRequest(playerUUID, targetUUID, ConfigUtils.getDefaultRestrictions(plugin), false, false, bet, plugin);
             request.storeRequest(false);
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.request-sent").replace("%player%", target.getName()));
             Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.duel.request-received").replace("%player%", player.getName()));
@@ -137,28 +137,5 @@ public class SendCommand implements CommandExecutor, TabCompleter {
             }
         });
         return tabCompleteStrings;
-    }
-
-    public static DuelRestrictions getDefaultRestrictions(Duels plugin) {
-
-        boolean bowAllowed = getRestrictionToggledByDefault(plugin, "bow");
-        boolean notchAllowed = getRestrictionToggledByDefault(plugin, "enchanted-golden-apple");
-        boolean potionAllowed = getRestrictionToggledByDefault(plugin, "potion");
-        boolean goldenAppleAllowed = getRestrictionToggledByDefault(plugin, "golden-apple");
-        boolean shieldAllowed = getRestrictionToggledByDefault(plugin, "shield");
-        boolean totemAllowed = getRestrictionToggledByDefault(plugin, "totem");
-        boolean elytraAllowed = getRestrictionToggledByDefault(plugin, "elytra");
-        boolean enderPearlAllowed = getRestrictionToggledByDefault(plugin, "ender-pearl");
-        boolean keep_inventory_enabled = getModuleToggledByDefault(plugin, "keep-inventory");
-        boolean inventory_saving_enabled = getModuleToggledByDefault(plugin, "inventory-saving");
-        return new DuelRestrictions(bowAllowed, notchAllowed, potionAllowed, goldenAppleAllowed, shieldAllowed, totemAllowed, elytraAllowed, enderPearlAllowed, true, keep_inventory_enabled, inventory_saving_enabled);
-    }
-
-    public static boolean getRestrictionToggledByDefault(Duels plugin, String name) {
-        return plugin.getConfig().getBoolean("modules.restrictions." + name + ".toggled-by-default");
-    }
-
-    public static boolean getModuleToggledByDefault(Duels plugin, String name) {
-        return plugin.getConfig().getBoolean("modules." + name + ".toggled-by-default");
     }
 }

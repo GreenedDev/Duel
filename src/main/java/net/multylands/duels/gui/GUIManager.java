@@ -29,8 +29,10 @@ public class GUIManager {
 
     public void openDuelInventory(Player sender, Player target, double bet, DuelRestrictions restrictions) {
         UUID senderUUID = sender.getUniqueId();
+        UUID targetUUID = target.getUniqueId();
+
         Inventory invFromHashMap = MemoryStorage.duelInventories.get(senderUUID);
-        DuelRequest request = new DuelRequest(sender.getUniqueId(), target.getUniqueId(), restrictions, false, false, bet, plugin);
+        DuelRequest request = new DuelRequest(senderUUID, targetUUID, restrictions, false, false, bet, plugin);
         if (invFromHashMap != null) {
             setStartItem(plugin, invFromHashMap, target.getName());
             sender.openInventory(invFromHashMap);
@@ -47,6 +49,7 @@ public class GUIManager {
         request.storeRequest(false);
         MemoryStorage.inventoryRequests.put(senderUUID, request);
     }
+
     public void openArenaInventory(Player sender) {
         UUID senderUUID = sender.getUniqueId();
         Inventory invFromHashMap = MemoryStorage.arenaInventories.get(senderUUID);
@@ -61,6 +64,7 @@ public class GUIManager {
 
         sender.openInventory(inventory);
     }
+
     public static void setStartItem(Duels plugin, Inventory inventory, String targetName) {
         ItemStack start = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.start.item")));
         ItemMeta startMeta = start.getItemMeta();

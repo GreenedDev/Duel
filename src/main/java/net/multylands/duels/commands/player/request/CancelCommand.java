@@ -10,6 +10,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class CancelCommand implements CommandExecutor {
     Duels plugin;
 
@@ -24,6 +26,7 @@ public class CancelCommand implements CommandExecutor {
             return false;
         }
         Player player = ((Player) sender).getPlayer();
+        UUID playerUUID = player.getUniqueId();
         if (args.length != 1) {
             Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " cancel player");
             return false;
@@ -33,8 +36,9 @@ public class CancelCommand implements CommandExecutor {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
             return false;
         }
+        UUID targetUUID = target.getUniqueId();
         //checking if he has sent any request
-        DuelRequest request = RequestUtils.getRequestForCommands(target.getUniqueId(), player.getUniqueId());
+        DuelRequest request = RequestUtils.getRequestForCommands(targetUUID, playerUUID);
         if (request == null) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.no-request-sent").replace("%player%", target.getName()));
             return false;

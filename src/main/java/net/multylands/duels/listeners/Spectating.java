@@ -3,9 +3,9 @@ package net.multylands.duels.listeners;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
-import net.multylands.duels.utils.storage.MemoryStorage;
 import net.multylands.duels.utils.RequestUtils;
 import net.multylands.duels.utils.SpectatorUtils;
+import net.multylands.duels.utils.storage.MemoryStorage;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -64,11 +64,14 @@ public class Spectating implements Listener {
         }
         Player victim = ((Player) entity).getPlayer();
         Player attacker = ((Player) attackerEntity).getPlayer();
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(victim.getUniqueId());
+        UUID victimUUID = victim.getUniqueId();
+        UUID attackerUUID = attacker.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(victimUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getOpponent(victim.getUniqueId()) == attacker.getUniqueId()) {
+        if (request.getOpponent(victimUUID) == attackerUUID) {
             return;
         }
         Chat.sendMessage(attacker, plugin.languageConfig.getString("duel.spectating.cannot-damage-in-duel"));
@@ -135,6 +138,7 @@ public class Spectating implements Listener {
     public void onTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
         UUID playerUUID = player.getUniqueId();
+
         if (!MemoryStorage.spectators.containsKey(playerUUID)) {
             return;
         }

@@ -10,6 +10,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class DenyCommand implements CommandExecutor {
     Duels plugin;
 
@@ -24,6 +26,7 @@ public class DenyCommand implements CommandExecutor {
             return false;
         }
         Player player = ((Player) sender).getPlayer();
+        UUID playerUUID = player.getUniqueId();
         if (args.length != 1) {
             Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " deny player");
             return false;
@@ -33,7 +36,8 @@ public class DenyCommand implements CommandExecutor {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.target-is-offline"));
             return false;
         }
-        DuelRequest request = RequestUtils.getRequestForCommands(player.getUniqueId(), target.getUniqueId());
+        UUID targetUUID = target.getUniqueId();
+        DuelRequest request = RequestUtils.getRequestForCommands(playerUUID, targetUUID);
         if (request == null) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.deny.target-hasnt-sent-request"));
             return false;

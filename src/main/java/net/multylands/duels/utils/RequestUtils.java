@@ -2,7 +2,6 @@ package net.multylands.duels.utils;
 
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.storage.MemoryStorage;
-import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -58,9 +57,9 @@ public class RequestUtils {
         return requestsThatWereAlreadyThereSenderToReceiver;
     }
 
-    public static Set<DuelRequest> getPlayerRequestsS_R(Player sender) {
-        if (MemoryStorage.requestsSenderToReceivers.containsKey(sender.getUniqueId())) {
-            return MemoryStorage.requestsSenderToReceivers.get(sender.getUniqueId());
+    public static Set<DuelRequest> getPlayerRequestsS_R(UUID sender) {
+        if (MemoryStorage.requestsSenderToReceivers.containsKey(sender)) {
+            return MemoryStorage.requestsSenderToReceivers.get(sender);
         }
         return new HashSet<>();
     }
