@@ -42,7 +42,7 @@ public class DeleteArenaCommand implements CommandExecutor {
         plugin.saveArenasConfig();
         plugin.reloadArenaConfig();
         //to prevent players getting lost when their arena was deleted.
-        for (Set<DuelRequest> requestsSet : MemoryStorage.requestsReceiverToSenders.values()) {
+        for (Set<DuelRequest> requestsSet : MemoryStorage.requestsSenderToReceivers.values()) {
             for (DuelRequest request : requestsSet) {
                 if (!request.getGame().getIsInGame()) {
                     continue;

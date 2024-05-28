@@ -60,7 +60,7 @@ public class SetPosCommand implements CommandExecutor {
         Arena arena = new Arena(loc1, loc2, null, null, arenaName);
         if (MemoryStorage.Arenas.containsKey(arenaName)) {
             //to prevent players getting lost when their arena was replaced.
-            for (Set<DuelRequest> requestsSet : MemoryStorage.requestsReceiverToSenders.values()) {
+            for (Set<DuelRequest> requestsSet : MemoryStorage.requestsSenderToReceivers.values()) {
                 for (DuelRequest request : requestsSet) {
                     if (!request.getGame().getIsInGame()) {
                         continue;

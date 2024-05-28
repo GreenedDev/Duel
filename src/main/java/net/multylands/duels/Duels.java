@@ -56,7 +56,7 @@ public class Duels extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (Set<DuelRequest> requestsSet : MemoryStorage.requestsReceiverToSenders.values()) {
+        for (Set<DuelRequest> requestsSet : MemoryStorage.requestsSenderToReceivers.values()) {
             for (DuelRequest request : requestsSet) {
                 if (!request.getGame().getIsInGame()) {
                     continue;
@@ -151,7 +151,7 @@ public class Duels extends JavaPlugin {
     }
 
     public void loadArenas() {
-        for (Set<DuelRequest> requestsSet : MemoryStorage.requestsReceiverToSenders.values()) {
+        for (Set<DuelRequest> requestsSet : MemoryStorage.requestsSenderToReceivers.values()) {
             for (DuelRequest request : requestsSet) {
                 if (!request.getGame().getIsInGame()) {
                     continue;

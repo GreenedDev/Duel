@@ -14,11 +14,9 @@ import java.util.UUID;
 public class MemoryStorage {
     public static HashMap<String, Arena> Arenas = new HashMap<>();
     //storing only sender: request(withTargetName)
-    public static HashMap<UUID, Set<DuelRequest>> requestsReceiverToSenders = new HashMap<>();
     public static HashMap<UUID, Set<DuelRequest>> requestsSenderToReceivers = new HashMap<>();
-    //storing sender: player
-    //and player: sender
-    public static HashMap<UUID, UUID> playerToOpponentInGame = new HashMap<>();
+
+    public static Set<DuelRequest> inGameDuels = new HashSet<>();
     //storing uuid: taskID
     public static HashMap<UUID, Integer> tasksToCancel = new HashMap<>();
     //storing spectator: toSpectate

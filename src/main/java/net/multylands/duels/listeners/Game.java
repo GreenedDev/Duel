@@ -27,7 +27,7 @@ public class Game implements Listener {
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
-        if (!RequestUtils.isInGame(request)) {
+        if (request == null) {
             return;
         }
         if (!request.getGame().getIsStartingIn5Seconds()) {
@@ -42,7 +42,7 @@ public class Game implements Listener {
         Player playerWhoLeft = event.getPlayer();
         UUID playerWhoLeftUUID = playerWhoLeft.getUniqueId();
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerWhoLeft.getUniqueId());
-        if (!RequestUtils.isInGame(request)) {
+        if (request == null) {
             return;
         }
         UUID winner = request.getOpponent(playerWhoLeftUUID);
@@ -57,7 +57,7 @@ public class Game implements Listener {
     public void onCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(player.getUniqueId());
-        if (!RequestUtils.isInGame(request)) {
+        if (request == null) {
             return;
         }
         String command = event.getMessage();

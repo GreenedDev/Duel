@@ -26,7 +26,7 @@ public class QueueCommand implements CommandExecutor {
         }
         Player player = ((Player) sender).getPlayer();
         if (args.length != 0) {
-            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label)+" queue");
+            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " queue");
             return true;
         }
         UUID playerUUID = player.getUniqueId();

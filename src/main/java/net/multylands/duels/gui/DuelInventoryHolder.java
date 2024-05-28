@@ -38,7 +38,7 @@ public class DuelInventoryHolder implements InventoryHolder {
         addItemIfEnabled("toggle-ender-pearl", inventory, request.getGame().getRestrictions().isEnderPearlAllowed(), Module.RESTRICTION);
         addItemIfEnabled("toggle-keep-inventory", inventory, request.getGame().getRestrictions().isKeepInventoryEnabled(), Module.OTHER);
         addItemIfEnabled("toggle-inventory-saving", inventory, request.getGame().getRestrictions().isInventorySavingEnabled(), Module.OTHER);
-        addItemIfEnabled("arena-selector", inventory, true, Module.OTHER);
+        addItemIfEnabled("arena-selector", inventory, true, Module.ARENA_SELECTOR);
         ItemStack cancel = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.cancel.item")));
         ItemMeta cancelMeta = cancel.getItemMeta();
         cancelMeta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.cancel.display-name")));
@@ -66,7 +66,11 @@ public class DuelInventoryHolder implements InventoryHolder {
             if (!plugin.getConfig().getBoolean("modules.restrictions." + nameWithoutToggle+".enabled")) {
                 return;
             }
-        } else {
+        } else if (module == Module.ARENA_SELECTOR) {
+            if (!(plugin.getConfig().getBoolean("modules." + nameWithoutToggle))) {
+                return;
+            }
+        } else if (module == Module.OTHER){
             if (!(plugin.getConfig().getBoolean("modules." + nameWithoutToggle+".enabled"))) {
                 return;
             }

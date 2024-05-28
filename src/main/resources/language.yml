@@ -5,6 +5,7 @@ command-usage: "&cUsage: /%command%"
 no-perm: "&cYou don't have a permission to execute this command!"
 
 update-available: "&6[Duels] &aAn update &6%newversion% &afor the Duels plugin is now available. Download it from &bhttps://www.spigotmc.org/resources/114685/"
+
 admin:
   reload:
     all-config-reloaded: "&aArenas, Language and default config has been reloaded!"

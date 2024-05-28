@@ -16,7 +16,6 @@ public class DuelRequest {
     UUID targetUUID;
     Duels plugin;
     Game game;
-    Arena selectedArena;
     ArrayList<Integer> taskIdForRequestTimeout = new ArrayList<>();
 
     public DuelRequest(UUID sender, UUID target, DuelRestrictions duelRestrictions, boolean isInGame, boolean isStartingIn5Seconds, double bet, Duels plugin) {
@@ -47,14 +46,10 @@ public class DuelRequest {
     }
 
     public void storeRequest(boolean justStarted) {
-        Set<DuelRequest> requestsWithoutThisRequestReceiverToSenders = RequestUtils.getRequestsReceiverToSenders(targetUUID, senderUUID);
-
-        //second map
         Set<DuelRequest> requestsWithoutThisRequestSenderToReceiver = RequestUtils.getRequestsSenderToReceivers(senderUUID, targetUUID);
 
         if (justStarted) {
-            MemoryStorage.playerToOpponentInGame.put(senderUUID, targetUUID);
-            MemoryStorage.playerToOpponentInGame.put(targetUUID, senderUUID);
+            MemoryStorage.inGameDuels.add(this);
         }
         int taskIDOfTheTimeout = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (getGame().getIsInGame()) {
@@ -65,10 +60,9 @@ public class DuelRequest {
         taskIdForRequestTimeout.add(taskIDOfTheTimeout);
 
         //do not move the below code up because the taskid will not be saved then
-        requestsWithoutThisRequestReceiverToSenders.add(this);
         requestsWithoutThisRequestSenderToReceiver.add(this);
-        MemoryStorage.requestsReceiverToSenders.put(targetUUID, requestsWithoutThisRequestReceiverToSenders);
         MemoryStorage.requestsSenderToReceivers.put(senderUUID, requestsWithoutThisRequestSenderToReceiver);
+        System.out.println(MemoryStorage.requestsSenderToReceivers);
     }
 
     public void removeStoreRequest(boolean justEnded) {
@@ -77,22 +71,14 @@ public class DuelRequest {
             Bukkit.getScheduler().cancelTask(taskIDOfTheTimeout);
         });
         taskIdForRequestTimeout.clear();
-        Set<DuelRequest> requestsWithoutThisRequestReceiverToSenders = RequestUtils.getRequestsReceiverToSenders(targetUUID, senderUUID);
-
         Set<DuelRequest> requestsWithoutThisRequestSenderToReceiver = RequestUtils.getRequestsSenderToReceivers(senderUUID, targetUUID);
         if (requestsWithoutThisRequestSenderToReceiver.isEmpty()) {
             MemoryStorage.requestsSenderToReceivers.remove(senderUUID);
         } else {
             MemoryStorage.requestsSenderToReceivers.put(senderUUID, requestsWithoutThisRequestSenderToReceiver);
         }
-        if (requestsWithoutThisRequestReceiverToSenders.isEmpty()) {
-            MemoryStorage.requestsReceiverToSenders.remove(targetUUID);
-        } else {
-            MemoryStorage.requestsReceiverToSenders.put(targetUUID, requestsWithoutThisRequestReceiverToSenders);
-        }
         if (justEnded) {
-            MemoryStorage.playerToOpponentInGame.remove(senderUUID);
-            MemoryStorage.playerToOpponentInGame.remove(targetUUID);
+            MemoryStorage.inGameDuels.remove(this);
         }
     }
 

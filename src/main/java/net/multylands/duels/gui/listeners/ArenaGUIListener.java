@@ -59,7 +59,7 @@ public class ArenaGUIListener implements Listener {
         if (event.getInventory() == MemoryStorage.arenaInventories.get(playerUUID)) {
             event.setCancelled(true);
         }
-        if (inv.getLocation() != null || !(inv == MemoryStorage.arenaInventories.get(playerUUID)) || item == null) {
+        if (!(inv == MemoryStorage.arenaInventories.get(playerUUID)) || item == null) {
             return;
         }
         event.setCancelled(true);

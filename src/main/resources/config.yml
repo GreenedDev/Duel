@@ -71,9 +71,8 @@ modules:
   #Disabling this will disable restriction GUI and request will be directly sent without specifying duel restrictions.
   #Use this to disable ALL restrictions.
   GUI: true
-
   keep-inventory:
-    enabled: true
+    enabled: false
     toggled-by-default: true
   #Inventory Saving feature. when request receiver accepts the duel, if this is enabled, both players items will be
   #taken away and stored. whenever duel ends we give them their items back. You can use this if you want to give
