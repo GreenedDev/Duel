@@ -40,10 +40,10 @@ public class DuelsCommand implements CommandExecutor, TabCompleter {
             if (args[0].equalsIgnoreCase("queue") || args[0].equalsIgnoreCase("stopspectate")) {
                 return tabCompleteStrings;
             }
-            Bukkit.getOnlinePlayers().stream().forEach(player ->  {
+            Bukkit.getOnlinePlayers().forEach(player -> {
                 String playerName = player.getName().toLowerCase();
                 String args1 = args[1].toLowerCase();
-                if (playerName.startsWith(args1) && player.getName() != sender.getName()) {
+                if (playerName.startsWith(args1) && !player.getName().equals(sender.getName())) {
                     tabCompleteStrings.add(player.getName());
                 }
             });

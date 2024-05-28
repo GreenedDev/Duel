@@ -9,23 +9,20 @@ import java.util.logging.Level;
 
 public class BettingSystem {
     public static Economy econ = null;
-    public static boolean economyStatus = false;
 
     public static void setupEconomy(Duels plugin) {
         if (plugin.getServer().getPluginManager().getPlugin("Vault") == null) {
-            economyStatus = false;
             plugin.getLogger().log(Level.INFO, "You don't have vault plugin on the server. Betting system is disabled.");
             return;
         }
         RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
-            economyStatus = false;
             plugin.getLogger().log(Level.INFO, "Found no economy provider.");
             return;
         }
         econ = rsp.getProvider();
-        economyStatus = true;
     }
+
     public static void execTakeMoneyCommands(Duels plugin, double amount, String playerName) {
         for (String command : plugin.getConfig().getStringList("game.betting.bet-take-commands")) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
@@ -33,6 +30,7 @@ public class BettingSystem {
                     .replace("%player%", playerName));
         }
     }
+
     public static void execGiveMoneyCommands(Duels plugin, double amount, String playerName) {
         for (String command : plugin.getConfig().getStringList("game.betting.bet-give-commands")) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command

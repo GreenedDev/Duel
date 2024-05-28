@@ -99,7 +99,7 @@ public class Game implements Listener {
         UUID playerUUID = player.getUniqueId();
 
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
-        //do not check this with requestutils.isingame because when we run endGame method we set game as ended.
+        //do not check this with requestUtils.IsInGame() because when we run endGame method we set game as ended.
         if (request == null) {
             return;
         }

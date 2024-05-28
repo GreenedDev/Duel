@@ -4,7 +4,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.multylands.duels.Duels;
 import net.multylands.duels.commands.DuelAdminCommand;
 import net.multylands.duels.commands.DuelsCommand;
-import net.multylands.duels.commands.player.request.SendCommand;
 import net.multylands.duels.commands.admin.ReloadCommand;
 import net.multylands.duels.commands.admin.SetSpawnCommand;
 import net.multylands.duels.commands.admin.arena.ArenaListCommand;
@@ -16,11 +15,15 @@ import net.multylands.duels.commands.player.queue.QueueCommand;
 import net.multylands.duels.commands.player.request.AcceptCommand;
 import net.multylands.duels.commands.player.request.CancelCommand;
 import net.multylands.duels.commands.player.request.DenyCommand;
+import net.multylands.duels.commands.player.request.SendCommand;
 import net.multylands.duels.commands.player.spectate.SpectateCommand;
 import net.multylands.duels.commands.player.spectate.StopSpectateCommand;
 import net.multylands.duels.gui.listeners.ArenaGUIListener;
 import net.multylands.duels.gui.listeners.DuelGUIListener;
-import net.multylands.duels.listeners.*;
+import net.multylands.duels.listeners.Game;
+import net.multylands.duels.listeners.Restrictions;
+import net.multylands.duels.listeners.Spectating;
+import net.multylands.duels.listeners.UpdateListener;
 import net.multylands.duels.placeholders.PlaceholderAPI;
 import net.multylands.duels.queue.QueueListener;
 import net.multylands.duels.utils.storage.MemoryStorage;
@@ -42,7 +45,7 @@ public class ServerUtils {
     }
 
     public static void registerCommands(Duels plugin) {
-        plugin.getCommand("duel").setExecutor(new SendCommand(plugin.guiManager, plugin));
+        plugin.getCommand("duel").setExecutor(new SendCommand(Duels.guiManager, plugin));
         plugin.getCommand("duels").setExecutor(new DuelsCommand(plugin));
         //player commands
         MemoryStorage.playerCommandExecutors.put("accept", new AcceptCommand(plugin));

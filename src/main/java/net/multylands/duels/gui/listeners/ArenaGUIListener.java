@@ -89,7 +89,7 @@ public class ArenaGUIListener implements Listener {
                 return;
             }
 
-            if (MemoryStorage.selectedArenas.get(playerUUID) == null || MemoryStorage.selectedArenas.get(playerUUID).getID() != arenaName) {
+            if (MemoryStorage.selectedArenas.get(playerUUID) == null || !MemoryStorage.selectedArenas.get(playerUUID).getID().equals(arenaName)) {
                 for (String loreLine : plugin.languageConfig.getStringList("arena-GUI.format.lore")) {
                     lore.add(Chat.color(loreLine.replace("%status%", selected)));
                 }

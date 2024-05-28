@@ -13,7 +13,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -24,7 +23,6 @@ public class Game {
     UUID winnerUUID;
     DuelRestrictions restrictions;
     boolean isInGame;
-    int taskAssignedIDInTheList;
     boolean isAboutToBeTeleportedToSpawn = false;
     double bet = 0;
     DuelRequest request;
@@ -44,14 +42,6 @@ public class Game {
         this.restrictions = duelRestrictions;
         this.isInGame = isInGame;
         this.plugin = plugin;
-    }
-
-    public UUID getSender() {
-        return senderUUID;
-    }
-
-    public UUID getTarget() {
-        return targetUUID;
     }
 
     public boolean getIsInGame() {
@@ -82,16 +72,8 @@ public class Game {
         return restrictions;
     }
 
-    public void setSender(UUID player) {
-        this.senderUUID = player;
-    }
-
     public void setIsInGame(boolean isInGame) {
         this.isInGame = isInGame;
-    }
-
-    public void setTarget(UUID target) {
-        this.targetUUID = target;
     }
 
     public void setIsStartingIn5Seconds(boolean YesOrNot) {
@@ -260,9 +242,7 @@ public class Game {
     }
 
     public void saveAndRunRanOutOfTimeTask() {
-        Random random = new Random();
         int max_duel_time_minutes = plugin.getConfig().getInt("game.max_duel_time");
-        taskAssignedIDInTheList = random.nextInt(999999);
         taskId = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             endGameRanOutOfTime();
         }, 20L * 60 * max_duel_time_minutes).getTaskId();

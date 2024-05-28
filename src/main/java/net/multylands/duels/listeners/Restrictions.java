@@ -93,7 +93,7 @@ public class Restrictions implements Listener {
         request.getGame().endGame(winner);
     }
 
-    //antielytra
+    //anti elytra
     @EventHandler(ignoreCancelled = true)
     public void onGliding(EntityToggleGlideEvent event) {
         Entity entity = event.getEntity();
@@ -114,7 +114,7 @@ public class Restrictions implements Listener {
         event.setCancelled(true);
     }
 
-    //antipearl
+    //anti pearl
     @EventHandler(ignoreCancelled = true)
     public void enderPearlLaunch(ProjectileLaunchEvent event) {
         Entity projectile = event.getEntity();

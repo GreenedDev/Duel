@@ -19,10 +19,8 @@ import java.util.List;
 public class ArenaInventoryHolder implements InventoryHolder {
     private static Inventory inventory;
     public static List<String> lore = new ArrayList<>();
-    Duels plugin;
 
     public ArenaInventoryHolder(Duels plugin, int size) {
-        this.plugin = plugin;
         inventory = plugin.getServer().createInventory(this, size, Chat.color(plugin.languageConfig.getString("arena-GUI.title")));
         int slot = 0;
         for (Arena arena : MemoryStorage.Arenas.values()) {
@@ -47,8 +45,9 @@ public class ArenaInventoryHolder implements InventoryHolder {
 
     @Override
     public Inventory getInventory() {
-        return this.inventory;
+        return inventory;
     }
+
     public static void createItem(Duels plugin, String arenaName, boolean availability, int slot) {
         String available = Chat.color(plugin.languageConfig.getString("arena-GUI.available"));
         String unavailable = Chat.color(plugin.languageConfig.getString("arena-GUI.unavailable"));

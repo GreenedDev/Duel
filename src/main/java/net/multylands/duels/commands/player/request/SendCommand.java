@@ -129,10 +129,10 @@ public class SendCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> tabCompleteStrings = new ArrayList<>();
-        Bukkit.getOnlinePlayers().stream().forEach(player -> {
+        Bukkit.getOnlinePlayers().forEach(player -> {
             String playerName = player.getName().toLowerCase();
             String args0 = args[0].toLowerCase();
-            if (playerName.startsWith(args0) && player.getName() != sender.getName()) {
+            if (playerName.startsWith(args0) && !player.getName().equals(sender.getName())) {
                 tabCompleteStrings.add(player.getName());
             }
         });

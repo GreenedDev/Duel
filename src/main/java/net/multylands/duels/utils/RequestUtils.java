@@ -44,7 +44,7 @@ public class RequestUtils {
         if (requestsThatWereAlreadyThereSenderToReceiver == null) {
             requestsThatWereAlreadyThereSenderToReceiver = new HashSet<>();
         } else {
-            //removing the old request that was in map. so that when you add a new one duplicate doesnt happen
+            //removing the old request that was in map. so that when you add a new one duplicate doesn't happen
             Iterator<DuelRequest> iterator = requestsThatWereAlreadyThereSenderToReceiver.iterator();
             while (iterator.hasNext()) {
                 DuelRequest request = iterator.next();

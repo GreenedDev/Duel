@@ -58,7 +58,7 @@ public class GameUtils {
                 String command = commandFromTheLoop
                         .replace("%winner%", winner.getName())
                         .replace("%loser%", loser.getName())
-                        .replace("%arena_name%", arenaName);;
+                        .replace("%arena_name%", arenaName);
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
             }
             return;
@@ -67,12 +67,12 @@ public class GameUtils {
             String command = commandFromTheLoop
                     .replace("%winner%", winner.getName())
                     .replace("%loser%", loser.getName())
-                    .replace("%arena_name%", arenaName);;
+                    .replace("%arena_name%", arenaName);
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         }
     }
 
-    public static void executeStartCommands(Duels plugin, DuelRestrictions restrictions,  Player senderPlayer, Player targetPlayer, String arenaName) {
+    public static void executeStartCommands(Duels plugin, DuelRestrictions restrictions, Player senderPlayer, Player targetPlayer, String arenaName) {
         if (restrictions.isInventorySavingEnabled()) {
             for (String commandFromTheLoop : plugin.getConfig().getStringList("game.commands.start.inventory-saving-enabled")) {
                 String command = commandFromTheLoop
@@ -87,7 +87,7 @@ public class GameUtils {
             String command = commandFromTheLoop
                     .replace("%player1%", senderPlayer.getName())
                     .replace("%player2%", targetPlayer.getName())
-                    .replace("%arena_name%", arenaName);;
+                    .replace("%arena_name%", arenaName);
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         }
     }
@@ -118,12 +118,14 @@ public class GameUtils {
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
         player.teleport(spawnLoc);
     }
+
     public static void applyInventorySavingIfEnabled(DuelRestrictions restrictions, Player player) {
         if (!restrictions.isInventorySavingEnabled()) {
             return;
         }
         SavingItems.saveAndClearInventoryIfEnabled(player);
     }
+
     public static void reverseInventorySavingIfEnabled(DuelRestrictions restrictions, Player player) {
         if (!restrictions.isInventorySavingEnabled()) {
             return;

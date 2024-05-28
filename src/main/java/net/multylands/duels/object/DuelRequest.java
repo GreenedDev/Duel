@@ -37,13 +37,6 @@ public class DuelRequest {
         return targetUUID;
     }
 
-    public void setSender(UUID player) {
-        this.senderUUID = player;
-    }
-
-    public void setTarget(UUID target) {
-        this.targetUUID = target;
-    }
 
     public void storeRequest(boolean justStarted) {
         Set<DuelRequest> requestsWithoutThisRequestSenderToReceiver = RequestUtils.getRequestsSenderToReceivers(senderUUID, targetUUID);
@@ -56,10 +49,10 @@ public class DuelRequest {
                 return;
             }
             removeStoreRequest(false);
-        }, plugin.getConfig().getInt("request-timeout") * 20).getTaskId();
+        }, plugin.getConfig().getInt("request-timeout") * 20L).getTaskId();
         taskIdForRequestTimeout.add(taskIDOfTheTimeout);
 
-        //do not move the below code up because the taskid will not be saved then
+        //do not move the below code up because the taskID will not be saved then
         requestsWithoutThisRequestSenderToReceiver.add(this);
         MemoryStorage.requestsSenderToReceivers.put(senderUUID, requestsWithoutThisRequestSenderToReceiver);
     }

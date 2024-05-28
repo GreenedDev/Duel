@@ -198,7 +198,7 @@ public class DuelGUIListener implements Listener {
             Duels.guiManager.openArenaInventory(player);
         } else if (slot == startSlot) {
             restrictions.setComplete(true);
-            //dont change position of player and target below
+            //don't change position of player and target below
             request = RequestUtils.getRequestForCommands(targetUUID, playerUUID);
             request.getGame().setRestrictions(restrictions);
 

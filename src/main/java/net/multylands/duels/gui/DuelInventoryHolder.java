@@ -1,7 +1,6 @@
 package net.multylands.duels.gui;
 
 import net.multylands.duels.Duels;
-import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.Module;
 import net.multylands.duels.utils.Chat;
@@ -20,13 +19,11 @@ public class DuelInventoryHolder implements InventoryHolder {
     int cancelSlot;
     private Inventory inventory;
     public List<String> lore = new ArrayList<>();
-    public DuelRequest request;
     Duels plugin;
 
     public DuelInventoryHolder(Duels plugin, int size, DuelRequest request) {
         this.plugin = plugin;
         cancelSlot = plugin.languageConfig.getInt("duel-GUI.cancel.slot");
-        this.request = request;
         this.inventory = plugin.getServer().createInventory(this, size, Chat.color(plugin.languageConfig.getString("duel-GUI.title")));
         addItemIfEnabled("toggle-bow", inventory, request.getGame().getRestrictions().isBowAllowed(), Module.RESTRICTION);
         addItemIfEnabled("toggle-totem", inventory, request.getGame().getRestrictions().isTotemAllowed(), Module.RESTRICTION);
@@ -63,15 +60,15 @@ public class DuelInventoryHolder implements InventoryHolder {
     public void addItemIfEnabled(String name, Inventory inventory, boolean toggled, Module module) {
         String nameWithoutToggle = name.replace("toggle-", "");
         if (module == Module.RESTRICTION) {
-            if (!plugin.getConfig().getBoolean("modules.restrictions." + nameWithoutToggle+".enabled")) {
+            if (!plugin.getConfig().getBoolean("modules.restrictions." + nameWithoutToggle + ".enabled")) {
                 return;
             }
         } else if (module == Module.ARENA_SELECTOR) {
             if (!(plugin.getConfig().getBoolean("modules." + nameWithoutToggle))) {
                 return;
             }
-        } else if (module == Module.OTHER){
-            if (!(plugin.getConfig().getBoolean("modules." + nameWithoutToggle+".enabled"))) {
+        } else if (module == Module.OTHER) {
+            if (!(plugin.getConfig().getBoolean("modules." + nameWithoutToggle + ".enabled"))) {
                 return;
             }
         }
