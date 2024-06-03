@@ -1,12 +1,12 @@
 package net.multylands.duels.gui.listeners;
 
 import net.multylands.duels.Duels;
-import net.multylands.duels.gui.ArenaInventoryHolder;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.storage.MemoryStorage;
 import net.multylands.duels.utils.storage.PersistentDataManager;
+import net.multylands.duels.utils.storage.config.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,8 +18,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class ArenaGUIListener implements Listener {
@@ -29,7 +28,6 @@ public class ArenaGUIListener implements Listener {
         this.plugin = plugin;
     }
 
-    public static List<String> lore = new ArrayList<>();
 
     @EventHandler
     public void onGuiClose(InventoryCloseEvent event) {
@@ -77,8 +75,8 @@ public class ArenaGUIListener implements Listener {
             inv.close();
         } else {
 
-            String not_selected = Chat.color(plugin.languageConfig.getString("arena-GUI.not-selected"));
-            String selected = Chat.color(plugin.languageConfig.getString("arena-GUI.selected"));
+            String not_selected = plugin.languageConfig.getString("arena-GUI.not-selected");
+            String selected = plugin.languageConfig.getString("arena-GUI.selected");
 
             String arenaName = PersistentDataManager.getArenaName(plugin, item);
             Arena arena = MemoryStorage.Arenas.get(arenaName);
@@ -88,22 +86,17 @@ public class ArenaGUIListener implements Listener {
                 Chat.sendMessage(player, plugin.languageConfig.getString("duel.arena-not-available"));
                 return;
             }
-
+            HashMap<String, String> replacements = new HashMap<>();
             if (MemoryStorage.selectedArenas.get(playerUUID) == null || !MemoryStorage.selectedArenas.get(playerUUID).getID().equals(arenaName)) {
-                for (String loreLine : plugin.languageConfig.getStringList("arena-GUI.format.lore")) {
-                    lore.add(Chat.color(loreLine.replace("%status%", selected)));
-                }
+                replacements.put("%status%", selected);
                 MemoryStorage.selectedArenas.put(playerUUID, arena);
                 updateSelected(plugin, inv, arenaName);
             } else {
-                for (String loreLine : plugin.languageConfig.getStringList("arena-GUI.format.lore")) {
-                    lore.add(Chat.color(loreLine.replace("%status%", not_selected)));
-                }
+                replacements.put("%status%", not_selected);
                 MemoryStorage.selectedArenas.put(playerUUID, null);
             }
-            meta.setLore(lore);
+            meta.lore(ItemUtils.getLoreComponents(plugin.languageConfig.getStringList("arena-GUI.format.lore"), replacements));
             item.setItemMeta(meta);
-            lore.clear();
         }
     }
 
@@ -118,11 +111,11 @@ public class ArenaGUIListener implements Listener {
             }
             String not_selected = Chat.color(plugin.languageConfig.getString("arena-GUI.not-selected"));
             ItemMeta itemMeta = item.getItemMeta();
-            for (String line : plugin.languageConfig.getStringList("arena-GUI.format.lore")) {
-                ArenaInventoryHolder.lore.add(Chat.color(line.replace("%status%", not_selected)));
-            }
-            itemMeta.setLore(ArenaInventoryHolder.lore);
-            ArenaInventoryHolder.lore.clear();
+            HashMap<String, String> replacements = new HashMap<>();
+            replacements.put("%status%", not_selected);
+
+            itemMeta.lore(ItemUtils.getLoreComponents(plugin.languageConfig.getStringList("arena-GUI.format.lore"), replacements));
+
             item.setItemMeta(itemMeta);
         }
     }

@@ -1,6 +1,7 @@
 package net.multylands.duels.commands.player.request;
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.commands.player.CheckPermissions;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.RequestUtils;
@@ -26,6 +27,10 @@ public class CancelCommand implements CommandExecutor {
             return false;
         }
         Player player = ((Player) sender).getPlayer();
+        if (!CheckPermissions.hasPermission(plugin.getConfig(), "cancel", "duel.commands.cancel", player)) {
+            Chat.sendMessageSender(sender, plugin.languageConfig.getString("no-perm"));
+            return true;
+        }
         UUID playerUUID = player.getUniqueId();
         if (args.length != 1) {
             Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " cancel player");

@@ -2,13 +2,14 @@ package net.multylands.duels.commands.player.request;
 
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.commands.player.CheckPermissions;
 import net.multylands.duels.gui.GUIManager;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.RequestUtils;
-import net.multylands.duels.utils.storage.ConfigUtils;
 import net.multylands.duels.utils.storage.MemoryStorage;
+import net.multylands.duels.utils.storage.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,6 +37,10 @@ public class SendCommand implements CommandExecutor, TabCompleter {
             return true;
         }
         Player player = (Player) sender;
+        if (!CheckPermissions.hasPermission(plugin.getConfig(), "send", "duel.commands.send", player)) {
+            Chat.sendMessageSender(sender, plugin.languageConfig.getString("no-perm"));
+            return true;
+        }
         UUID playerUUID = player.getUniqueId();
         if (!(args.length == 1 || args.length == 2 || args.length == 3)) {
             Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player bet(optional)");

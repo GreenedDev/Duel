@@ -1,6 +1,9 @@
 package net.multylands.duels.utils;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -54,5 +57,17 @@ public class Chat {
             return "&a";
         }
         return "";
+    }
+
+    public static Component parseLegacyOrModern(String text) {
+        if (text.startsWith("$")) {
+            return MiniMessage.miniMessage().deserialize(text);
+        } else {
+            if (text.contains("§")) {
+                return LegacyComponentSerializer.legacySection().deserialize(text).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+            } else {
+                return LegacyComponentSerializer.legacyAmpersand().deserialize(text).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+            }
+        }
     }
 }

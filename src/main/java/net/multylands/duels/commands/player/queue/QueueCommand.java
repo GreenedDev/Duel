@@ -1,6 +1,7 @@
 package net.multylands.duels.commands.player.queue;
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.commands.player.CheckPermissions;
 import net.multylands.duels.queue.QueueSystem;
 import net.multylands.duels.utils.Chat;
 import org.bukkit.command.Command;
@@ -25,6 +26,10 @@ public class QueueCommand implements CommandExecutor {
             return true;
         }
         Player player = ((Player) sender).getPlayer();
+        if (!CheckPermissions.hasPermission(plugin.getConfig(), "queue", "duel.commands.queue", player)) {
+            Chat.sendMessageSender(sender, plugin.languageConfig.getString("no-perm"));
+            return true;
+        }
         if (args.length != 0) {
             Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " queue");
             return true;

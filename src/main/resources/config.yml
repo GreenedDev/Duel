@@ -105,3 +105,13 @@ modules:
     ender-pearl:
       enabled: true
       toggled-by-default: true
+permissions:
+  #enable/disable permissions.
+  #duel.command.*
+  send: false
+  accept: false
+  deny: false
+  cancel: false
+  queue: false
+  ignore: false
+  spectate: false

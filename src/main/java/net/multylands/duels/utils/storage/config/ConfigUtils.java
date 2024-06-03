@@ -1,4 +1,4 @@
-package net.multylands.duels.utils.storage;
+package net.multylands.duels.utils.storage.config;
 
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRestrictions;

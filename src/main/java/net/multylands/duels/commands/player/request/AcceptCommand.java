@@ -1,6 +1,7 @@
 package net.multylands.duels.commands.player.request;
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.commands.player.CheckPermissions;
 import net.multylands.duels.object.Arena;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.ArenaUtils;
@@ -31,6 +32,10 @@ public class AcceptCommand implements CommandExecutor {
             return true;
         }
         Player player = ((Player) sender).getPlayer();
+        if (!CheckPermissions.hasPermission(plugin.getConfig(), "accept", "duel.commands.accept", player)) {
+            Chat.sendMessageSender(sender, plugin.languageConfig.getString("no-perm"));
+            return true;
+        }
         UUID playerUUID = player.getUniqueId();
         if (args.length != 1) {
             Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " accept player");
@@ -46,7 +51,7 @@ public class AcceptCommand implements CommandExecutor {
             if (arena.isAvailable()) {
                 continue;
             }
-            if (playerUUID.equals(arena.getSenderUUID()) || playerUUID.equals(arena.getTargetUUID())) {
+            if (targetUUID.equals(arena.getSenderUUID()) || targetUUID.equals(arena.getTargetUUID())) {
                 Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.accept.already-in-duel"));
                 return true;
             }

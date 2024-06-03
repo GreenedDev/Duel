@@ -66,6 +66,11 @@ public class Game implements Listener {
         if (request == null) {
             return;
         }
+        if (request.getGame().getIsAboutToTeleportedToSpawn()) {
+            if (playerUUID != request.getGame().getWinnerUUID()) {
+                return;
+            }
+        }
         String command = event.getMessage();
         boolean ifMatchesAny = false;
         for (String whitelisted_or_blacklisted_Command : plugin.getConfig().getStringList("game.commands.blocked-or-allowed-commands.commands")) {
@@ -89,27 +94,6 @@ public class Game implements Listener {
             return;
         }
         Chat.sendMessage(player, blockMessage);
-        event.setCancelled(true);
-    }
-
-    //anti command
-    @EventHandler(ignoreCancelled = true)
-    public void onCommandForWinner(PlayerCommandPreprocessEvent event) {
-        Player player = event.getPlayer();
-        UUID playerUUID = player.getUniqueId();
-
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
-        //do not check this with requestUtils.IsInGame() because when we run endGame method we set game as ended.
-        if (request == null) {
-            return;
-        }
-        if (!request.getGame().getIsAboutToTeleportedToSpawn()) {
-            return;
-        }
-        if (playerUUID != request.getGame().getWinnerUUID()) {
-            return;
-        }
-        Chat.sendMessage(player, plugin.languageConfig.getString("duel.this-command-blocked"));
         event.setCancelled(true);
     }
 
