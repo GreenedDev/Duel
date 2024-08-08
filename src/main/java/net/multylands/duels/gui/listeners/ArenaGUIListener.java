@@ -42,6 +42,10 @@ public class ArenaGUIListener implements Listener {
         }
         DuelRequest request = MemoryStorage.inventoryRequests.get(playerUUID);
         Player target = Bukkit.getPlayer(request.getOpponent(playerUUID));
+        if (target == null) {
+            request.removeStoreRequest(false);
+            return;
+        }
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             Duels.guiManager.openDuelInventory(player, target, request.getGame().getBet(), request.getGame().getRestrictions());
         }, 1L);

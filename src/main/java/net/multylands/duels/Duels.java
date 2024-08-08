@@ -151,7 +151,6 @@ public class Duels extends JavaPlugin {
         for (DuelRequest request : MemoryStorage.inGameDuels) {
             request.getGame().endGameRestart();
         }
-
         for (String arenaID : arenasConfig.getKeys(false)) {
             if (arenasConfig.getLocation(arenaID + ".pos1") == null
                     || arenasConfig.getLocation(arenaID + ".pos2") == null) {
@@ -167,5 +166,9 @@ public class Duels extends JavaPlugin {
     public void reloadLanguageConfig() {
         languageFile = new File(getDataFolder(), ConfigUtils.languageFileName);
         languageConfig = YamlConfiguration.loadConfiguration(languageFile);
+//        MemoryStorage.duelInventories.clear();
+//        MemoryStorage.inventoryRequests.clear();
+//        MemoryStorage.arenaInventories.clear();
+//        MemoryStorage.savedInventories.clear();
     }
 }

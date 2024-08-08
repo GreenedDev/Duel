@@ -93,13 +93,14 @@ public class AcceptCommand implements CommandExecutor {
         }
         Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.accept.you-accepted-request").replace("%player%", target.getDisplayName()));
         Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.accept.request-accepted").replace("%player%", player.getDisplayName()));
-        request.getGame().start(availableArena);
         //If player has sent the request to same player but the same player sent
         //another request to this player, and he accepted, we are removing first request
         if (RequestUtils.getRequestForCommands(targetUUID, playerUUID) != null) {
             DuelRequest oldRequestOfFirstPlayer = RequestUtils.getRequestForCommands(targetUUID, playerUUID);
             oldRequestOfFirstPlayer.removeStoreRequest(false);
         }
+
+        request.getGame().start(availableArena);
         return true;
     }
 }
