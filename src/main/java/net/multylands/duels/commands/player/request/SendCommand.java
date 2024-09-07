@@ -43,7 +43,7 @@ public class SendCommand implements CommandExecutor, TabCompleter {
         }
         UUID playerUUID = player.getUniqueId();
         if (!(args.length == 1 || args.length == 2 || args.length == 3)) {
-            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player bet(optional)");
+            Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " player");
             return true;
         }
         Player target = Bukkit.getPlayer(args[0]);

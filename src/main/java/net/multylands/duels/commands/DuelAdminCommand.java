@@ -23,7 +23,7 @@ public class DuelAdminCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0 || MemoryStorage.adminCommandExecutors.get(args[0]) == null) {
             for (String message : plugin.languageConfig.getStringList("admin.help")) {
-                sender.sendMessage(Chat.color(message));
+                Chat.sendMessageSender(sender, message);
             }
             return false;
         }

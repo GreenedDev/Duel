@@ -24,7 +24,7 @@ public class DuelsCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0 || MemoryStorage.playerCommandExecutors.get(args[0]) == null) {
             for (String message : plugin.languageConfig.getStringList("duel.commands.help")) {
-                sender.sendMessage(Chat.color(message));
+                Chat.sendMessageSender(sender, message);
             }
             return false;
         }
