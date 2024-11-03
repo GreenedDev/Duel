@@ -62,10 +62,10 @@ public class SendCommand implements CommandExecutor, TabCompleter {
                 continue;
             }
             if (request.getGame().getIsAboutToTeleportedToSpawn()) {
-                Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.target-already-in-duel").replace("%player%", target.getDisplayName()));
+                Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.target-already-in-duel").replace("%player%", target.getName()));
                 return true;
             }
-            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.request-already-sent").replace("%player%", target.getDisplayName()));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.request-already-sent").replace("%player%", target.getName()));
             return true;
         }
         //target already in duel check.
@@ -73,7 +73,7 @@ public class SendCommand implements CommandExecutor, TabCompleter {
             if (!(request.getTarget() == targetUUID || request.getSender() == targetUUID)) {
                 continue;
             }
-            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.target-already-in-duel").replace("%player%", target.getDisplayName()));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.duel.target-already-in-duel").replace("%player%", target.getName()));
             return true;
         }
         //ignore check

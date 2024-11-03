@@ -47,8 +47,8 @@ public class DenyCommand implements CommandExecutor {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.deny.target-hasnt-sent-request"));
             return false;
         }
-        Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.deny.you-denied-request").replace("%player%", target.getDisplayName()));
-        Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.deny.someone-denied-your-request").replace("%player%", player.getDisplayName()));
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.deny.you-denied-request").replace("%player%", target.getName()));
+        Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.deny.someone-denied-your-request").replace("%player%", player.getName()));
         request.removeStoreRequest(false);
         return false;
     }

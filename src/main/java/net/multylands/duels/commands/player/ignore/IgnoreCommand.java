@@ -44,7 +44,7 @@ public class IgnoreCommand implements CommandExecutor {
         String targetUUID = target.getUniqueId().toString();
         if (!plugin.ignoresConfig.getKeys(false).contains(playerUUID)) {
             List<String> uuids = new ArrayList<>(Collections.emptyList());
-            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.ignore.ignoring-on-player-enable").replace("%player%", target.getDisplayName()));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.ignore.ignoring-on-player-enable").replace("%player%", target.getName()));
             uuids.add(targetUUID);
             plugin.ignoresConfig.set(playerUUID, uuids);
             plugin.saveIgnoresConfig();
@@ -52,11 +52,11 @@ public class IgnoreCommand implements CommandExecutor {
         }
         List<String> uuids = plugin.ignoresConfig.getStringList(playerUUID);
         if (uuids.contains(targetUUID)) {
-            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.ignore.ignoring-on-player-disable").replace("%player%", target.getDisplayName()));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.ignore.ignoring-on-player-disable").replace("%player%", target.getName()));
             uuids.remove(targetUUID);
             plugin.ignoresConfig.set(playerUUID, null);
         } else {
-            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.ignore.ignoring-on-player-enable").replace("%player%", target.getDisplayName()));
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.ignore.ignoring-on-player-enable").replace("%player%", target.getName()));
             uuids.add(targetUUID);
             plugin.ignoresConfig.set(playerUUID, uuids);
         }

@@ -61,7 +61,7 @@ public class Chat {
 
     public static Component parseLegacyOrModern(String text) {
         if (text.startsWith("$")) {
-            return MiniMessage.miniMessage().deserialize(text);
+            return MiniMessage.miniMessage().deserialize(text.substring(1));
         } else {
             if (text.contains("§")) {
                 return LegacyComponentSerializer.legacySection().deserialize(text).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);

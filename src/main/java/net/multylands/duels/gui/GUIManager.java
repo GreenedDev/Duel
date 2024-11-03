@@ -1,5 +1,6 @@
 package net.multylands.duels.gui;
 
+import net.kyori.adventure.text.Component;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.object.DuelRestrictions;
@@ -24,7 +25,7 @@ public class GUIManager {
         this.plugin = plugin;
     }
 
-    public static List<String> lore = new ArrayList<>();
+    public static List<Component> lore = new ArrayList<>();
 
 
     public void openDuelInventory(Player sender, Player target, double bet, DuelRestrictions restrictions) {
@@ -68,15 +69,15 @@ public class GUIManager {
     public static void setStartItem(Duels plugin, Inventory inventory, String targetName) {
         ItemStack start = new ItemStack(Material.getMaterial(plugin.languageConfig.getString("duel-GUI.start.item")));
         ItemMeta startMeta = start.getItemMeta();
-        startMeta.setDisplayName(Chat.color(plugin.languageConfig.getString("duel-GUI.start.display-name")));
+        startMeta.displayName(Chat.parseLegacyOrModern(plugin.languageConfig.getString("duel-GUI.start.display-name")));
         for (String loreLine : plugin.languageConfig.getStringList("duel-GUI.start.lore")) {
-            lore.add(Chat.color(loreLine.replace("%player%", targetName)));
+            lore.add(Chat.parseLegacyOrModern(loreLine.replace("%player%", targetName)));
         }
         if (plugin.languageConfig.getBoolean("duel-GUI.start.glowing")) {
             start.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
             startMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
-        startMeta.setLore(lore);
+        startMeta.lore(lore);
         start.setItemMeta(startMeta);
         lore.clear();
         int startSlot = plugin.languageConfig.getInt("duel-GUI.start.slot");

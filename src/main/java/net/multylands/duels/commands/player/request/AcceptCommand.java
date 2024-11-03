@@ -91,8 +91,8 @@ public class AcceptCommand implements CommandExecutor {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.betting.bet-removed"));
             Chat.sendMessage(target, plugin.languageConfig.getString("duel.betting.bet-removed"));
         }
-        Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.accept.you-accepted-request").replace("%player%", target.getDisplayName()));
-        Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.accept.request-accepted").replace("%player%", player.getDisplayName()));
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.accept.you-accepted-request").replace("%player%", target.getName()));
+        Chat.sendMessage(target, plugin.languageConfig.getString("duel.commands.accept.request-accepted").replace("%player%", player.getName()));
         //If player has sent the request to same player but the same player sent
         //another request to this player, and he accepted, we are removing first request
         if (RequestUtils.getRequestForCommands(targetUUID, playerUUID) != null) {
