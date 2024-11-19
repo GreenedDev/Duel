@@ -1,6 +1,8 @@
 package net.multylands.duels.object;
 
 import net.multylands.duels.Duels;
+import net.multylands.duels.events.GameEndEvent;
+import net.multylands.duels.events.GameStartEvent;
 import net.multylands.duels.queue.QueueSystem;
 import net.multylands.duels.utils.BettingSystem;
 import net.multylands.duels.utils.Chat;
@@ -118,6 +120,8 @@ public class Game {
         GameUtils.startCounting(plugin, this, senderPlayer, targetPlayer);
 
         request.storeRequest(true);
+        GameStartEvent event = new GameStartEvent(this, senderPlayer, targetPlayer);
+        Bukkit.getPluginManager().callEvent(event);
     }
 
     public void endGameRanOutOfTime() {
@@ -207,6 +211,8 @@ public class Game {
             Chat.sendMessage(winner, plugin.languageConfig.getString("duel.betting.bet-added"));
         }
         MemoryStorage.playersWhoShouldBeTeleportedToSpawnAfterRespawn.add(loserUUID);
+        GameEndEvent event = new GameEndEvent(this, winner, loser);
+        Bukkit.getPluginManager().callEvent(event);
     }
 
     public UUID getOpponent(UUID someone) {
