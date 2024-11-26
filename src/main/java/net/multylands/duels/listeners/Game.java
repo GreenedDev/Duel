@@ -40,6 +40,32 @@ public class Game implements Listener {
         event.setCancelled(true);
     }
 
+    //prevent items getting damaged in duel if keepinv is on
+    @EventHandler(ignoreCancelled = true)
+    public void onMove(PlayerItemDamageEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
+        if (request == null) {
+            return;
+        }
+        if (!request.getGame().getIsStartingIn5Seconds()) {
+            return;
+        }
+        if (request.getGame().getRestrictions().isKeepInventoryEnabled()) {
+            if (!plugin.getConfig().getBoolean("modules.prevent-item-damage-during-duel")) {
+                return;
+            }
+            event.setCancelled(true);
+            return;
+        }
+        if (!plugin.getConfig().getBoolean("prevent-item-damage-during-duel")) {
+            return;
+        }
+        event.setCancelled(true);
+    }
+
     //anti leave
     @EventHandler(ignoreCancelled = true)
     public void onQuit(PlayerQuitEvent event) {
