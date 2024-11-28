@@ -79,6 +79,9 @@ public class Game implements Listener {
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
         playerWhoLeft.teleport(spawnLoc);
         request.getGame().endGame(winner);
+        if (request.getGame().getRestrictions().isKeepInventoryEnabled()) {
+            return;
+        }
         playerWhoLeft.setHealth(0);
     }
 

@@ -113,7 +113,7 @@ public class Game {
         senderPlayer.teleport(arena.getSecondLocation(plugin));
 
         GameUtils.disableFlying(senderPlayer, targetPlayer);
-        GameUtils.removeEffectsIfDisabled(restrictions, senderPlayer, targetPlayer);
+        GameUtils.removeEffects(senderPlayer, targetPlayer);
         GameUtils.disableShieldsIfDisabled(plugin, restrictions, senderPlayer, targetPlayer);
         saveAndRunRanOutOfTimeTask();
         GameUtils.executeStartCommands(plugin, restrictions, senderPlayer, targetPlayer, arena.getID());
@@ -133,6 +133,7 @@ public class Game {
 
 
         Chat.messagePlayers(sender, target, plugin.languageConfig.getString("duel.game.ran-out-of-time"));
+        setIsInGame(false);
         GameUtils.teleportToSpawn(plugin, sender);
         GameUtils.teleportToSpawn(plugin, target);
         request.removeStoreRequest(true);

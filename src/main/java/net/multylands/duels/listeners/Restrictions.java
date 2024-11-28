@@ -80,7 +80,6 @@ public class Restrictions implements Listener {
         Player player = (Player) event.getEntity();
         UUID playerUUID = player.getUniqueId();
 
-        UUID playerWhoUsedTotemUUID = player.getUniqueId();
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
@@ -88,9 +87,7 @@ public class Restrictions implements Listener {
         if (request.getGame().getRestrictions().isTotemAllowed()) {
             return;
         }
-        UUID winner = request.getOpponent(playerWhoUsedTotemUUID);
         event.setCancelled(true);
-        request.getGame().endGame(winner);
     }
 
     //anti elytra

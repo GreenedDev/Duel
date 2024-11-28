@@ -33,10 +33,7 @@ public class GameUtils {
         player.setShieldBlockingDelay(plugin.getConfig().getInt("default-shield-blocking-delay"));
     }
 
-    public static void removeEffectsIfDisabled(DuelRestrictions restrictions, Player sender, Player target) {
-        if (restrictions.isPotionAllowed()) {
-            return;
-        }
+    public static void removeEffects(Player sender, Player target) {
         for (PotionEffect effect : sender.getActivePotionEffects()) {
             sender.removePotionEffect(effect.getType());
         }
