@@ -131,7 +131,6 @@ public class Game {
         GameUtils.resetShieldsDelay(plugin, restrictions, sender);
         GameUtils.resetShieldsDelay(plugin, restrictions, target);
 
-
         Chat.messagePlayers(sender, target, plugin.languageConfig.getString("duel.game.ran-out-of-time"));
         setIsInGame(false);
         GameUtils.teleportToSpawn(plugin, sender);
@@ -174,6 +173,9 @@ public class Game {
     }
 
     public void endGame(UUID winnerUUIDFromMethod) {
+        if (!isInGame) { //check if game is already ended. maybe some of death-related events can happen at the same time.
+            return;
+        }
         GameUtils.removeSpectatorsFromGame(plugin, spectators);
         Player sender = Bukkit.getPlayer(senderUUID);
         Player target = Bukkit.getPlayer(targetUUID);
@@ -197,7 +199,9 @@ public class Game {
         if (loser != null) {
             Chat.sendMessage(loser, plugin.languageConfig.getString("duel.game.lost-duel"));
         }
+        winner.setHealth(20);
         Chat.sendMessage(winner, plugin.languageConfig.getString("duel.game.won-duel").replace("%number%", plugin.getConfig().getInt("game.time_to_pick_up_items") + ""));
+        GameUtils.teleportToSpawn(plugin, loser);
         Duels.scheduler.runTaskLater(plugin, () -> {
             GameUtils.teleportToSpawn(plugin, winner);
             arena.setAvailable(true);

@@ -8,7 +8,6 @@ import net.multylands.duels.utils.RequestUtils;
 import net.multylands.duels.utils.storage.MemoryStorage;
 import net.multylands.duels.utils.storage.SavingItems;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -76,13 +75,11 @@ public class Game implements Listener {
             return;
         }
         UUID winner = request.getOpponent(playerWhoLeftUUID);
-        Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
-        playerWhoLeft.teleport(spawnLoc);
-        request.getGame().endGame(winner);
         if (request.getGame().getRestrictions().isKeepInventoryEnabled()) {
             return;
         }
         playerWhoLeft.setHealth(0);
+        request.getGame().endGame(winner);
     }
 
     //anti command
@@ -132,12 +129,15 @@ public class Game implements Listener {
         Player dead = event.getEntity().getPlayer();
         UUID deadUUID = dead.getUniqueId();
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(deadUUID);
+
         if (!RequestUtils.isInGame(request)) {
             return;
         }
+        if (request.getGame().getRestrictions().isInventorySavingEnabled() || request.getGame().getRestrictions().isKeepInventoryEnabled()) {
+            event.getDrops().clear();
+        }
         if (request.getGame().getRestrictions().isKeepInventoryEnabled()) {
             event.setKeepInventory(true);
-            event.getDrops().clear();
             event.setKeepLevel(true);
             event.setDroppedExp(0);
         }
