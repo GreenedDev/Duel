@@ -110,7 +110,7 @@ modules:
       toggled-by-default: true
 permissions:
   #enable/disable permissions.
-  #duel.command.*
+  #duel.command.<cmdnamehere>
   send: false
   accept: false
   deny: false

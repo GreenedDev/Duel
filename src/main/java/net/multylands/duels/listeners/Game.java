@@ -76,6 +76,7 @@ public class Game implements Listener {
         }
         UUID winner = request.getOpponent(playerWhoLeftUUID);
         if (request.getGame().getRestrictions().isKeepInventoryEnabled()) {
+            request.getGame().endGame(winner);
             return;
         }
         playerWhoLeft.setHealth(0);
