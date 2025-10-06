@@ -1,5 +1,7 @@
 package net.multylands.duels.object;
 
+import net.multylands.duels.Duels;
+
 public class DuelRestrictions {
     boolean isComplete;
 
@@ -14,13 +16,15 @@ public class DuelRestrictions {
 
     boolean isKeepInventoryEnabled;
     boolean isInventorySavingEnabled;
+    Duels plugin;
 
 
-    public DuelRestrictions(boolean bowAllowed, boolean notchAllowed,
+    public DuelRestrictions(Duels plugin, boolean bowAllowed, boolean notchAllowed,
                             boolean potionsAllowed, boolean goldenAppleAllowed,
                             boolean shieldsAllowed, boolean totemsAllowed, boolean isElytraAllowed,
                             boolean isEnderPearlAllowed, boolean isComplete, boolean isKeepInventoryEnabled,
                             boolean isInventorySavingEnabled) {
+        this.plugin = plugin;
         this.isComplete = isComplete;
 
         this.isBowAllowed = bowAllowed;
@@ -75,6 +79,7 @@ public class DuelRestrictions {
     public boolean isTotemAllowed() {
         return isTotemAllowed;
     }
+
     public boolean isInventorySavingEnabled() {
         return isInventorySavingEnabled;
     }
@@ -82,9 +87,11 @@ public class DuelRestrictions {
     public void setInventorySaving(boolean inventorySavingEnabled) {
         isInventorySavingEnabled = inventorySavingEnabled;
     }
+
     public void setComplete(boolean yesOrNot) {
         isComplete = yesOrNot;
     }
+
     public void setBow(boolean yesOrNot) {
         isBowAllowed = yesOrNot;
     }
@@ -124,28 +131,28 @@ public class DuelRestrictions {
     public String getEnabled() {
         StringBuilder builder = new StringBuilder();
         if (isNotchAllowed) {
-            builder.append("Notch,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.enchanted-golden-apple"));
         }
         if (isPotionAllowed) {
-            builder.append("Potions,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.potion"));
         }
         if (isGoldenAppleAllowed) {
-            builder.append("Golden apple,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.golden-apple"));
         }
         if (isShieldAllowed) {
-            builder.append("Shields,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.shield"));
         }
         if (isTotemAllowed) {
-            builder.append("Totems,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.totem"));
         }
         if (isBowAllowed) {
-            builder.append("Bow,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.bow"));
         }
         if (isElytraAllowed) {
-            builder.append("Elytra,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.elytra"));
         }
         if (isEnderPearlAllowed) {
-            builder.append("Ender Pearl,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.ender-pearl"));
         }
         String finalString = builder.toString();
         if (finalString.isEmpty()) {
@@ -162,28 +169,28 @@ public class DuelRestrictions {
     public String getDisabled() {
         StringBuilder builder = new StringBuilder();
         if (!isNotchAllowed) {
-            builder.append("Notch,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.enchanted-golden-apple"));
         }
         if (!isPotionAllowed) {
-            builder.append("Potions,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.potion"));
         }
         if (!isGoldenAppleAllowed) {
-            builder.append("Golden apple,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.golden-apple"));
         }
         if (!isShieldAllowed) {
-            builder.append("Shields,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.shield"));
         }
         if (!isTotemAllowed) {
-            builder.append("Totems,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.totem"));
         }
         if (!isBowAllowed) {
-            builder.append("Bow,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.bow"));
         }
         if (!isElytraAllowed) {
-            builder.append("Elytra,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.elytra"));
         }
         if (!isEnderPearlAllowed) {
-            builder.append("Ender Pearl,");
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.ender-pearl"));
         }
         String finalString = builder.toString();
         if (finalString.isEmpty()) {
@@ -195,5 +202,9 @@ public class DuelRestrictions {
         } else {
             return null;
         }
+    }
+
+    public String getMessage(Duels plugin, String key) {
+        return plugin.languageConfig.getString(key) + ",";
     }
 }

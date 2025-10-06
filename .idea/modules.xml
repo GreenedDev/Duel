@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Duel.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Duel.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Duel.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Duel.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Duels.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Duels.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Duels.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Duels.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/IdeaProjects.Duels.main.iml" filepath="$PROJECT_DIR$/.idea/modules/IdeaProjects.Duels.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/IdeaProjects.Duels.test.iml" filepath="$PROJECT_DIR$/.idea/modules/IdeaProjects.Duels.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/net.multylands.duels.Duels.main.iml" filepath="$PROJECT_DIR$/.idea/modules/net.multylands.duels.Duels.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/net.multylands.duels.Duels.test.iml" filepath="$PROJECT_DIR$/.idea/modules/net.multylands.duels.Duels.test.iml" />
     </modules>
   </component>
 </project>

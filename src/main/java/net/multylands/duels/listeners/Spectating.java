@@ -68,10 +68,15 @@ public class Spectating implements Listener {
         UUID attackerUUID = attacker.getUniqueId();
 
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(victimUUID);
-        if (!RequestUtils.isInGame(request)) {
+        if (!RequestUtils.isInGame(request)) { //check if the victim is not in duel
+            if (request.getGame().getIsAboutToTeleportedToSpawn() && victimUUID == request.getGame().getWinnerUUID()) {
+                Chat.sendMessage(attacker, plugin.languageConfig.getString("duel.spectating.cannot-damage-in-duel"));
+                event.setCancelled(true);
+                return;
+            }
             return;
         }
-        if (request.getOpponent(victimUUID) == attackerUUID) {
+        if (request.getOpponent(attackerUUID) == victimUUID) { //pass the event if duel opponents are fighting each other
             return;
         }
         Chat.sendMessage(attacker, plugin.languageConfig.getString("duel.spectating.cannot-damage-in-duel"));

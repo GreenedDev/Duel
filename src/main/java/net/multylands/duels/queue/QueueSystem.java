@@ -32,7 +32,7 @@ public class QueueSystem {
                 Player player1 = Bukkit.getPlayer(twoPlayers.get(0));
                 Player player2 = Bukkit.getPlayer(twoPlayers.get(1));
                 //make them go in duel
-                DuelRestrictions restrictions = new DuelRestrictions(true, true, true, true, true, true, true, true, true, false, false);
+                DuelRestrictions restrictions = new DuelRestrictions(plugin, true, true, true, true, true, true, true, true, true, false, false);
                 DuelRequest request = new DuelRequest(player1.getUniqueId(), player2.getUniqueId(), restrictions, false, false, 0, plugin);
                 request.storeRequest(false);
 

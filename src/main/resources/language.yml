@@ -102,6 +102,15 @@ duel:
     restrictions: "&6Restrictions:"
     enabled-restrictions: " &aEnabled: &b"
     disabled-restrictions: " &aDisabled: &b"
+    modules:
+      ender-pearl: "Ender Pearl"
+      potion: "Potion"
+      golden-apple: "Golden Apple"
+      enchanted-golden-apple: "Enchanted Golden Apple"
+      bow: "Bow"
+      totem: "Totem"
+      shield: "Shields"
+      elytra: "Elytra"
     deny-message:
       arrow: "&cThe use of arrows is not allowed in this duel."
       potion: "&cUsage of potions is disabled in this duel."
@@ -134,7 +143,7 @@ arena-GUI:
     glowing: true
     slot: 53
     display-name: "&cBack"
-    lore: []
+    lore: [ ]
   format:
     item: MAP
     glowing: true

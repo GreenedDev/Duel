@@ -23,6 +23,7 @@ public class Game {
     UUID targetUUID;
 
     UUID winnerUUID;
+    UUID loserUUID;
     DuelRestrictions restrictions;
     boolean isInGame;
     boolean isAboutToBeTeleportedToSpawn = false;
@@ -68,6 +69,14 @@ public class Game {
 
     public void setWinnerUUID(UUID winner) {
         winnerUUID = winner;
+    }
+
+    public UUID getLoserUUID() {
+        return loserUUID;
+    }
+
+    public void setLoserUUID(UUID loser) {
+        loserUUID = loser;
     }
 
     public DuelRestrictions getRestrictions() {
@@ -185,6 +194,7 @@ public class Game {
         setIsInGame(false);
         setIsAboutToTeleportedToSpawn(true);
         setWinnerUUID(winnerUUIDFromMethod);
+        setLoserUUID(this.getOpponent(winnerUUIDFromMethod));
         request.storeRequest(false);
 
         Bukkit.getScheduler().cancelTask(MemoryStorage.tasksToCancel.get(senderUUID));

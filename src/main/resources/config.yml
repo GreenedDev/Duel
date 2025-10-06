@@ -57,7 +57,7 @@ spectator:
     mode: true
     commands:
       - /spawn
-      - /leavespectator
+      - /duels stopspectate
 placeholders:
   time:
     hours: "hours"

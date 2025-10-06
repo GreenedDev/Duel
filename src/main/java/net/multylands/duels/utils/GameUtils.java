@@ -3,6 +3,7 @@ package net.multylands.duels.utils;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.object.Game;
+import net.multylands.duels.utils.storage.PersistentDataUtils;
 import net.multylands.duels.utils.storage.SavingItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -113,7 +114,12 @@ public class GameUtils {
 
     public static void teleportToSpawn(Duels plugin, Player player) {
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
-        player.teleport(spawnLoc);
+        boolean result = player.teleport(spawnLoc);
+        if (!result) {
+            PersistentDataUtils.markPlayerAsQuitter(plugin, player);
+        } else {
+            PersistentDataUtils.unmarkPlayerAsQuitter(plugin, player);
+        }
     }
 
     public static void applyInventorySavingIfEnabled(DuelRestrictions restrictions, Player player) {

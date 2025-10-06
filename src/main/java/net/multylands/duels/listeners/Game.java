@@ -6,6 +6,7 @@ import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.GameUtils;
 import net.multylands.duels.utils.RequestUtils;
 import net.multylands.duels.utils.storage.MemoryStorage;
+import net.multylands.duels.utils.storage.PersistentDataUtils;
 import net.multylands.duels.utils.storage.SavingItems;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -75,12 +76,20 @@ public class Game implements Listener {
             return;
         }
         UUID winner = request.getOpponent(playerWhoLeftUUID);
-        if (request.getGame().getRestrictions().isKeepInventoryEnabled()) {
-            request.getGame().endGame(winner);
+        if (!request.getGame().getRestrictions().isKeepInventoryEnabled()) {
+            playerWhoLeft.setHealth(0);
+        }
+        request.getGame().endGame(winner);
+    }
+
+    //anti leave
+    @EventHandler(ignoreCancelled = true)
+    public void onJoin(PlayerJoinEvent event) {
+        Player playerWhoLeft = event.getPlayer();
+        if (!PersistentDataUtils.isPlayerQuitter(plugin, playerWhoLeft)) {
             return;
         }
-        playerWhoLeft.setHealth(0);
-        request.getGame().endGame(winner);
+        GameUtils.teleportToSpawn(plugin, playerWhoLeft);
     }
 
     //anti command

@@ -34,7 +34,7 @@ public class ConfigUtils {
         boolean enderPearlAllowed = getRestrictionToggledByDefault(plugin, "ender-pearl");
         boolean keep_inventory_enabled = getModuleToggledByDefault(plugin, "keep-inventory");
         boolean inventory_saving_enabled = getModuleToggledByDefault(plugin, "inventory-saving");
-        return new DuelRestrictions(bowAllowed, notchAllowed, potionAllowed, goldenAppleAllowed, shieldAllowed, totemAllowed, elytraAllowed, enderPearlAllowed, true, keep_inventory_enabled, inventory_saving_enabled);
+        return new DuelRestrictions(plugin, bowAllowed, notchAllowed, potionAllowed, goldenAppleAllowed, shieldAllowed, totemAllowed, elytraAllowed, enderPearlAllowed, true, keep_inventory_enabled, inventory_saving_enabled);
     }
 
     public static boolean getRestrictionToggledByDefault(Duels plugin, String name) {
