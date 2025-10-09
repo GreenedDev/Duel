@@ -69,6 +69,9 @@ public class Spectating implements Listener {
 
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(victimUUID);
         if (!RequestUtils.isInGame(request)) { //check if the victim is not in duel
+            if (request == null) {
+                return;
+            }
             if (request.getGame().getIsAboutToTeleportedToSpawn() && victimUUID == request.getGame().getWinnerUUID()) {
                 Chat.sendMessage(attacker, plugin.languageConfig.getString("duel.spectating.cannot-damage-in-duel"));
                 event.setCancelled(true);
