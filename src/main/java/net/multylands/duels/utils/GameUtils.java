@@ -7,6 +7,7 @@ import net.multylands.duels.utils.storage.PersistentDataUtils;
 import net.multylands.duels.utils.storage.SavingItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
@@ -114,11 +115,19 @@ public class GameUtils {
 
     public static void teleportToSpawn(Duels plugin, Player player) {
         Location spawnLoc = plugin.getConfig().getLocation("spawn_location");
+        GameUtils.clearPassengers(plugin, player);
         boolean result = player.teleport(spawnLoc);
         if (!result) {
             PersistentDataUtils.markPlayerAsQuitter(plugin, player);
         } else {
             PersistentDataUtils.unmarkPlayerAsQuitter(plugin, player);
+        }
+    }
+
+    public static void clearPassengers(Duels plugin, Player player) {
+        for (Entity passenger : player.getPassengers()) {
+            player.removePassenger(passenger);
+            passenger.remove();
         }
     }
 

@@ -4,7 +4,7 @@ import net.multylands.duels.Duels;
 
 public class DuelRestrictions {
     boolean isComplete;
-
+    //restrictions
     boolean isBowAllowed;
     boolean isNotchAllowed;
     boolean isPotionAllowed;
@@ -13,6 +13,8 @@ public class DuelRestrictions {
     boolean isTotemAllowed;
     boolean isElytraAllowed;
     boolean isEnderPearlAllowed;
+    boolean isExpEnabled;
+    boolean isMaceEnabled;
 
     boolean isKeepInventoryEnabled;
     boolean isInventorySavingEnabled;
@@ -22,7 +24,7 @@ public class DuelRestrictions {
     public DuelRestrictions(Duels plugin, boolean bowAllowed, boolean notchAllowed,
                             boolean potionsAllowed, boolean goldenAppleAllowed,
                             boolean shieldsAllowed, boolean totemsAllowed, boolean isElytraAllowed,
-                            boolean isEnderPearlAllowed, boolean isComplete, boolean isKeepInventoryEnabled,
+                            boolean isEnderPearlAllowed, boolean isExpEnabled, boolean isMaceEnabled, boolean isComplete, boolean isKeepInventoryEnabled,
                             boolean isInventorySavingEnabled) {
         this.plugin = plugin;
         this.isComplete = isComplete;
@@ -35,6 +37,8 @@ public class DuelRestrictions {
         this.isTotemAllowed = totemsAllowed;
         this.isElytraAllowed = isElytraAllowed;
         this.isEnderPearlAllowed = isEnderPearlAllowed;
+        this.isExpEnabled = isExpEnabled;
+        this.isMaceEnabled = isMaceEnabled;
 
         this.isKeepInventoryEnabled = isKeepInventoryEnabled;
         this.isInventorySavingEnabled = isInventorySavingEnabled;
@@ -50,6 +54,14 @@ public class DuelRestrictions {
 
     public boolean isEnderPearlAllowed() {
         return isEnderPearlAllowed;
+    }
+
+    public boolean isExpEnabled() {
+        return isExpEnabled;
+    }
+
+    public boolean isMaceEnabled() {
+        return isMaceEnabled;
     }
 
     public boolean isKeepInventoryEnabled() {
@@ -128,6 +140,14 @@ public class DuelRestrictions {
         isEnderPearlAllowed = yesOrNot;
     }
 
+    public void setExp(boolean yesOrNot) {
+        isExpEnabled = yesOrNot;
+    }
+
+    public void setMace(boolean yesOrNot) {
+        isMaceEnabled = yesOrNot;
+    }
+
     public String getEnabled() {
         StringBuilder builder = new StringBuilder();
         if (isNotchAllowed) {
@@ -153,6 +173,12 @@ public class DuelRestrictions {
         }
         if (isEnderPearlAllowed) {
             builder.append(getMessage(plugin, "duel.restrictions-modules.modules.ender-pearl"));
+        }
+        if (isExpEnabled) {
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.exp-bottle"));
+        }
+        if (isMaceEnabled) {
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.mace"));
         }
         String finalString = builder.toString();
         if (finalString.isEmpty()) {
@@ -191,6 +217,12 @@ public class DuelRestrictions {
         }
         if (!isEnderPearlAllowed) {
             builder.append(getMessage(plugin, "duel.restrictions-modules.modules.ender-pearl"));
+        }
+        if (!isExpEnabled) {
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.exp-bottle"));
+        }
+        if (!isMaceEnabled) {
+            builder.append(getMessage(plugin, "duel.restrictions-modules.modules.mace"));
         }
         String finalString = builder.toString();
         if (finalString.isEmpty()) {

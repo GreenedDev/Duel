@@ -30,6 +30,9 @@ public class DuelInventoryHolder implements InventoryHolder {
         addItemIfEnabled("toggle-shield", inventory, request.getGame().getRestrictions().isShieldAllowed(), Module.RESTRICTION);
         addItemIfEnabled("toggle-elytra", inventory, request.getGame().getRestrictions().isElytraAllowed(), Module.RESTRICTION);
         addItemIfEnabled("toggle-ender-pearl", inventory, request.getGame().getRestrictions().isEnderPearlAllowed(), Module.RESTRICTION);
+        addItemIfEnabled("toggle-exp-bottle", inventory, request.getGame().getRestrictions().isEnderPearlAllowed(), Module.RESTRICTION);
+        addItemIfEnabled("toggle-mace", inventory, request.getGame().getRestrictions().isEnderPearlAllowed(), Module.RESTRICTION);
+        
         addItemIfEnabled("toggle-keep-inventory", inventory, request.getGame().getRestrictions().isKeepInventoryEnabled(), Module.OTHER);
         addItemIfEnabled("toggle-inventory-saving", inventory, request.getGame().getRestrictions().isInventorySavingEnabled(), Module.OTHER);
         addItemIfEnabled("arena-selector", inventory, true, Module.ARENA_SELECTOR);

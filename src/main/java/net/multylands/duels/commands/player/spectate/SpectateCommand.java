@@ -24,11 +24,10 @@ public class SpectateCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             Chat.sendMessageSender(sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
-        Player player = ((Player) sender).getPlayer();
         if (!CheckPermissions.hasPermission(plugin.getConfig(), "spectate", "duel.commands.spectate", player)) {
             Chat.sendMessageSender(sender, plugin.languageConfig.getString("no-perm"));
             return true;
@@ -47,6 +46,10 @@ public class SpectateCommand implements CommandExecutor {
         UUID toSpectateUUID = toSpectate.getUniqueId();
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectateUUID);
         if (request == null) {
+            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.spectate.is-not-in-duel").replace("%player%", toSpectateName));
+            return false;
+        }
+        if (request.getGame().getIsAboutToTeleportedToSpawn()) {
             Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.spectate.is-not-in-duel").replace("%player%", toSpectateName));
             return false;
         }

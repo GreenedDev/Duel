@@ -21,28 +21,44 @@ public class QueueCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             Chat.sendMessageSender(sender, plugin.languageConfig.getString("only-player-command"));
             return true;
         }
-        Player player = ((Player) sender).getPlayer();
         if (!CheckPermissions.hasPermission(plugin.getConfig(), "queue", "duel.commands.queue", player)) {
             Chat.sendMessageSender(sender, plugin.languageConfig.getString("no-perm"));
             return true;
         }
+        UUID playerUUID = player.getUniqueId();
         if (args.length != 0) {
+            if (args.length == 1) {
+                if (args[0].equalsIgnoreCase("leave")) {
+                    removeFromQueue(plugin, player, playerUUID);
+                    return true;
+                } else if (args[0].equalsIgnoreCase("join")) {
+                    addQueue(plugin, player, playerUUID);
+                    return true;
+                }
+            }
             Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " queue");
             return true;
         }
-        UUID playerUUID = player.getUniqueId();
         if (QueueSystem.playersInQueue.contains(playerUUID)) {
-            QueueSystem.playersInQueue.remove(playerUUID);
-            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.queue.removed"));
+            removeFromQueue(plugin, player, playerUUID);
         } else {
-            QueueSystem.playersInQueue.add(playerUUID);
-            QueueSystem.checkQueue(plugin);
-            Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.queue.added"));
+            addQueue(plugin, player, playerUUID);
         }
         return true;
+    }
+
+    public static void removeFromQueue(Duels plugin, Player player, UUID playerUUID) {
+        QueueSystem.playersInQueue.remove(playerUUID);
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.queue.removed"));
+    }
+
+    public static void addQueue(Duels plugin, Player player, UUID playerUUID) {
+        QueueSystem.playersInQueue.add(playerUUID);
+        QueueSystem.checkQueue(plugin);
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.commands.queue.added"));
     }
 }

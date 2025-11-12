@@ -7,7 +7,8 @@ import net.multylands.duels.object.DuelRestrictions;
 import net.multylands.duels.utils.Chat;
 import net.multylands.duels.utils.storage.MemoryStorage;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -74,7 +75,7 @@ public class GUIManager {
             lore.add(Chat.parseLegacyOrModern(loreLine.replace("%player%", targetName)));
         }
         if (plugin.languageConfig.getBoolean("duel-GUI.start.glowing")) {
-            start.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
+            start.addEnchantment(Registry.ENCHANTMENT.get(NamespacedKey.minecraft("power")), 1);
             startMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
         startMeta.lore(lore);

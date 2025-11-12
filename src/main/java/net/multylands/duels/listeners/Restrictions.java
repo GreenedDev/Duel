@@ -11,12 +11,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityResurrectEvent;
-import org.bukkit.event.entity.EntityToggleGlideEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.UUID;
 
@@ -47,6 +46,26 @@ public class Restrictions implements Listener {
         event.setCancelled(true);
     }
 
+    //anti gp
+    @EventHandler(ignoreCancelled = true)
+    public void onGoldenAppleEat(PlayerItemConsumeEvent event) {
+        if (event.getItem().getType() != Material.GOLDEN_APPLE) {
+            return;
+        }
+        Player player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
+        if (!RequestUtils.isInGame(request)) {
+            return;
+        }
+        if (request.getGame().getRestrictions().isGoldenAppleAllowed()) {
+            return;
+        }
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.restrictions-modules.deny-message.golden-apple"));
+        event.setCancelled(true);
+    }
+
     //anti-bow
     @EventHandler(ignoreCancelled = true)
     public void arrowLaunch(ProjectileLaunchEvent event) {
@@ -54,10 +73,9 @@ public class Restrictions implements Listener {
         if (!(projectile instanceof Arrow)) {
             return;
         }
-        if (!(event.getEntity().getShooter() instanceof Player)) {
+        if (!(event.getEntity().getShooter() instanceof Player player)) {
             return;
         }
-        Player player = (Player) event.getEntity().getShooter();
         UUID playerUUID = player.getUniqueId();
 
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
@@ -71,13 +89,30 @@ public class Restrictions implements Listener {
         event.setCancelled(true);
     }
 
+    //not let player who is in 10 second spawn tp period launch projectiles for example ender pearl and stay in the arena
+    @EventHandler(ignoreCancelled = true)
+    public void onProjectileLaunch(ProjectileLaunchEvent event) {
+        if (!(event.getEntity().getShooter() instanceof Player player)) {
+            return;
+        }
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
+        if (request == null) {
+            return;
+        }
+        if (!request.getGame().getIsAboutToTeleportedToSpawn()) {
+            return;
+        }
+        event.setCancelled(true);
+    }
+
     //anti totem
     @EventHandler(ignoreCancelled = true)
     public void onTotemUse(EntityResurrectEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
+        if (!(event.getEntity() instanceof Player player)) {
             return;
         }
-        Player player = (Player) event.getEntity();
         UUID playerUUID = player.getUniqueId();
 
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
@@ -94,10 +129,9 @@ public class Restrictions implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onGliding(EntityToggleGlideEvent event) {
         Entity entity = event.getEntity();
-        if (!(entity instanceof Player)) {
+        if (!(entity instanceof Player player)) {
             return;
         }
-        Player player = ((Player) entity).getPlayer();
         UUID playerUUID = player.getUniqueId();
 
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
@@ -108,30 +142,6 @@ public class Restrictions implements Listener {
             return;
         }
         Chat.sendMessage(player, plugin.languageConfig.getString("duel.restrictions-modules.deny-message.elytra"));
-        event.setCancelled(true);
-    }
-
-    //anti pearl
-    @EventHandler(ignoreCancelled = true)
-    public void enderPearlLaunch(ProjectileLaunchEvent event) {
-        Entity projectile = event.getEntity();
-        if (!(projectile instanceof EnderPearl)) {
-            return;
-        }
-        if (!(event.getEntity().getShooter() instanceof Player)) {
-            return;
-        }
-        Player player = (Player) event.getEntity().getShooter();
-        UUID playerUUID = player.getUniqueId();
-
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
-        if (!RequestUtils.isInGame(request)) {
-            return;
-        }
-        if (request.getGame().getRestrictions().isEnderPearlAllowed()) {
-            return;
-        }
-        Chat.sendMessage(player, plugin.languageConfig.getString("duel.restrictions-modules.deny-message.ender-pearl"));
         event.setCancelled(true);
     }
 
@@ -158,41 +168,67 @@ public class Restrictions implements Listener {
     //anti potion splash
     @EventHandler(ignoreCancelled = true)
     public void onPotionSplash(PotionSplashEvent event) {
-        if (!(event.getEntity().getShooter() instanceof Player)) {
+        if (!(event.getEntity().getShooter() instanceof Player shooter)) {
             return;
         }
-        Player player = (Player) event.getEntity().getShooter();
-        UUID playerUUID = player.getUniqueId();
+        UUID shooterUUID = shooter.getUniqueId();
 
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(shooterUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
         if (request.getGame().getRestrictions().isPotionAllowed()) {
             return;
         }
-        player.getWorld().dropItem(player.getLocation(), event.getPotion().getItem());
-        Chat.sendMessage(player, plugin.languageConfig.getString("duel.restrictions-modules.deny-message.potion"));
+        shooter.getWorld().dropItem(shooter.getLocation(), event.getPotion().getItem());
+        Chat.sendMessage(shooter, plugin.languageConfig.getString("duel.restrictions-modules.deny-message.potion"));
         event.setCancelled(true);
     }
 
-    //anti gp
+    //anti pearl
     @EventHandler(ignoreCancelled = true)
-    public void onGoldenAppleEat(PlayerItemConsumeEvent event) {
-        if (event.getItem().getType() != Material.GOLDEN_APPLE) {
+    public void enderPearlLaunch(ProjectileLaunchEvent event) {
+        Entity projectile = event.getEntity();
+        if (!(projectile instanceof EnderPearl)) {
             return;
         }
-        Player player = event.getPlayer();
+        if (!(event.getEntity().getShooter() instanceof Player player)) {
+            return;
+        }
         UUID playerUUID = player.getUniqueId();
 
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (request.getGame().getRestrictions().isGoldenAppleAllowed()) {
+        if (request.getGame().getRestrictions().isEnderPearlAllowed()) {
             return;
         }
-        Chat.sendMessage(player, plugin.languageConfig.getString("duel.restrictions-modules.deny-message.golden-apple"));
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.restrictions-modules.deny-message.ender-pearl"));
+        event.setCancelled(true);
+    }
+
+    //anti mace
+    @EventHandler(ignoreCancelled = true)
+    public void onMace(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player player)) {
+            return;
+        }
+
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
+        if (!RequestUtils.isInGame(request)) {
+            return;
+        }
+        if (player.getInventory().getItemInMainHand().getType() != Material.MACE) {
+            return;
+        }
+        if (request.getGame().getRestrictions().isMaceEnabled()) {
+            return;
+        }
+
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.restrictions-modules.deny-message.mace"));
         event.setCancelled(true);
     }
 
@@ -212,6 +248,46 @@ public class Restrictions implements Listener {
         if (request.getGame().getRestrictions().isEnderPearlAllowed()) {
             return;
         }
+
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.restrictions-modules.deny-message.ender-pearl"));
         event.setCancelled(true);
     }
+
+    //anti exp
+    @EventHandler(ignoreCancelled = true)
+    public void onExpBottleLand(ExpBottleEvent event) {
+        ProjectileSource source = event.getEntity().getShooter();
+        if (!(source instanceof Player player)) {
+            return;
+        }
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
+        if (!RequestUtils.isInGame(request)) {
+            return;
+        }
+        if (request.getGame().getRestrictions().isExpEnabled()) {
+            return;
+        }
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.restrictions-modules.deny-message.exp-bottle"));
+        event.setCancelled(true);
+    }
+
+    //anti exp by spectators
+    @EventHandler(ignoreCancelled = true)
+    public void onExpLevelChange(PlayerExpChangeEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
+        if (!RequestUtils.isInGame(request)) {
+            return;
+        }
+        if (request.getGame().getRestrictions().isExpEnabled()) {
+            return;
+        }
+        Chat.sendMessage(player, plugin.languageConfig.getString("duel.restrictions-modules.deny-message.exp-bottle"));
+        event.setAmount(0);
+    }
+
 }

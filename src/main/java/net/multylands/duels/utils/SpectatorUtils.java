@@ -20,7 +20,7 @@ public class SpectatorUtils {
         Player firstPlayer = Bukkit.getPlayer(request.getTarget());
         Player opponent = Bukkit.getPlayer(request.getSender());
 
-        player.teleport(spawnLoc);
+        GameUtils.teleportToSpawn(plugin, player);
         player.setAllowFlight(false);
         if (firstPlayer != null) {
             firstPlayer.showPlayer(plugin, player);
@@ -41,7 +41,7 @@ public class SpectatorUtils {
         MemoryStorage.spectators.remove(playerUUID);
         Player firstPlayer = Bukkit.getPlayer(request.getTarget());
         Player opponent = Bukkit.getPlayer(request.getSender());
-        player.teleport(spawnLoc);
+        GameUtils.teleportToSpawn(plugin, player);
         player.setAllowFlight(false);
         if (firstPlayer != null) {
             firstPlayer.showPlayer(plugin, player);
@@ -56,6 +56,7 @@ public class SpectatorUtils {
         UUID playerUUID = player.getUniqueId();
 
         //the teleport needs to be first here
+        GameUtils.clearPassengers(plugin, player);
         player.teleport(toSpectate);
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(toSpectateUUID);
         Player opponent = Bukkit.getPlayer(request.getOpponent(toSpectateUUID));

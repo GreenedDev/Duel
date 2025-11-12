@@ -3,21 +3,18 @@ package net.multylands.duels.listeners;
 import net.multylands.duels.Duels;
 import net.multylands.duels.object.DuelRequest;
 import net.multylands.duels.utils.Chat;
+import net.multylands.duels.utils.GameUtils;
 import net.multylands.duels.utils.RequestUtils;
 import net.multylands.duels.utils.SpectatorUtils;
 import net.multylands.duels.utils.storage.MemoryStorage;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.UUID;
@@ -38,6 +35,11 @@ public class Spectating implements Listener {
             return;
         }
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(MemoryStorage.spectators.get(uuid));
+        if (request == null) {
+            SpectatorUtils.endSpectating(playerWhoMoved, plugin);
+            event.setCancelled(true);
+            return;
+        }
         Location loc1 = request.getGame().getArena().getFirstLocation(plugin);
         if (playerWhoMoved.getLocation().distance(loc1) < 50) {
             return;
@@ -47,42 +49,8 @@ public class Spectating implements Listener {
         if (playerWhoMoved.getLocation().distance(loc2) < 50) {
             return;
         }
+        GameUtils.clearPassengers(plugin, playerWhoMoved);
         playerWhoMoved.teleport(loc1);
-        event.setCancelled(true);
-    }
-
-    //blocks damage from spectator to spectated player
-    @EventHandler(ignoreCancelled = true)
-    public void onPlayerDamage(EntityDamageByEntityEvent event) {
-        Entity entity = event.getEntity();
-        Entity attackerEntity = event.getDamager();
-        if (!(entity instanceof Player)) {
-            return;
-        }
-        if (!(attackerEntity instanceof Player)) {
-            return;
-        }
-        Player victim = ((Player) entity).getPlayer();
-        Player attacker = ((Player) attackerEntity).getPlayer();
-        UUID victimUUID = victim.getUniqueId();
-        UUID attackerUUID = attacker.getUniqueId();
-
-        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(victimUUID);
-        if (!RequestUtils.isInGame(request)) { //check if the victim is not in duel
-            if (request == null) {
-                return;
-            }
-            if (request.getGame().getIsAboutToTeleportedToSpawn() && victimUUID == request.getGame().getWinnerUUID()) {
-                Chat.sendMessage(attacker, plugin.languageConfig.getString("duel.spectating.cannot-damage-in-duel"));
-                event.setCancelled(true);
-                return;
-            }
-            return;
-        }
-        if (request.getOpponent(attackerUUID) == victimUUID) { //pass the event if duel opponents are fighting each other
-            return;
-        }
-        Chat.sendMessage(attacker, plugin.languageConfig.getString("duel.spectating.cannot-damage-in-duel"));
         event.setCancelled(true);
     }
 
@@ -95,6 +63,30 @@ public class Spectating implements Listener {
             return;
         }
         SpectatorUtils.endSpectating(playerWhoLeft, plugin);
+    }
+
+    //anti item pickup by spectator
+    @EventHandler(ignoreCancelled = true)
+    public void onItemPickup(PlayerAttemptPickupItemEvent event) {
+        Player spectator = event.getPlayer();
+        UUID spectatorUUID = spectator.getUniqueId();
+        if (!MemoryStorage.spectators.containsKey(spectatorUUID)) {
+            return;
+        }
+        event.setCancelled(true);
+        Chat.sendMessage(spectator, plugin.languageConfig.getString("duel.spectating.cannot-pickup-in-spectator"));
+    }
+
+    //anti item drop by spectator
+    @EventHandler(ignoreCancelled = true)
+    public void onItemDrop(PlayerDropItemEvent event) {
+        Player spectator = event.getPlayer();
+        UUID spectatorUUID = spectator.getUniqueId();
+        if (!MemoryStorage.spectators.containsKey(spectatorUUID)) {
+            return;
+        }
+        event.setCancelled(true);
+        Chat.sendMessage(spectator, plugin.languageConfig.getString("duel.spectating.cannot-drop-in-spectator"));
     }
 
     //anti command
@@ -133,12 +125,26 @@ public class Spectating implements Listener {
 
     //preventing death of spectator
     @EventHandler(ignoreCancelled = true)
-    public void onDamage(EntityDamageEvent event) {
+    public void onSpectatorsDamage(EntityDamageEvent event) {
         UUID damagedUUID = event.getEntity().getUniqueId();
         if (!MemoryStorage.spectators.containsKey(damagedUUID)) {
             return;
         }
         event.setCancelled(true);
+    }
+
+    //prevent spectator from hurting anyone
+    @EventHandler(ignoreCancelled = true)
+    public void onSpectatorDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player damager)) {
+            return;
+        }
+        UUID damagerUUID = damager.getUniqueId();
+        if (!MemoryStorage.spectators.containsKey(damagerUUID)) {
+            return;
+        }
+        event.setCancelled(true);
+        Chat.sendMessage(damager, plugin.languageConfig.getString("duel.spectating.cannot-damage-in-duel"));
     }
 
     //anti teleport
@@ -155,12 +161,11 @@ public class Spectating implements Listener {
 
     //prevent projectile damage from spectator
     @EventHandler(ignoreCancelled = true)
-    public void onTeleport(ProjectileLaunchEvent event) {
+    public void onProjectile(ProjectileLaunchEvent event) {
         ProjectileSource shooterEntity = event.getEntity().getShooter();
-        if (!(shooterEntity instanceof Player)) {
+        if (!(shooterEntity instanceof Player player)) {
             return;
         }
-        Player player = ((Player) shooterEntity).getPlayer();
         UUID playerUUID = player.getUniqueId();
         if (!MemoryStorage.spectators.containsKey(playerUUID)) {
             return;
@@ -168,4 +173,5 @@ public class Spectating implements Listener {
         event.setCancelled(true);
         Chat.sendMessage(player, plugin.languageConfig.getString("duel.spectating.cannot-damage-in-duel"));
     }
+
 }

@@ -32,9 +32,13 @@ public class ConfigUtils {
         boolean totemAllowed = getRestrictionToggledByDefault(plugin, "totem");
         boolean elytraAllowed = getRestrictionToggledByDefault(plugin, "elytra");
         boolean enderPearlAllowed = getRestrictionToggledByDefault(plugin, "ender-pearl");
+        boolean exp_enabled = getModuleToggledByDefault(plugin, "exp-bottle");
+
+        boolean mace_enabled = getModuleToggledByDefault(plugin, "mace");
+
         boolean keep_inventory_enabled = getModuleToggledByDefault(plugin, "keep-inventory");
         boolean inventory_saving_enabled = getModuleToggledByDefault(plugin, "inventory-saving");
-        return new DuelRestrictions(plugin, bowAllowed, notchAllowed, potionAllowed, goldenAppleAllowed, shieldAllowed, totemAllowed, elytraAllowed, enderPearlAllowed, true, keep_inventory_enabled, inventory_saving_enabled);
+        return new DuelRestrictions(plugin, bowAllowed, notchAllowed, potionAllowed, goldenAppleAllowed, shieldAllowed, totemAllowed, elytraAllowed, enderPearlAllowed, exp_enabled, mace_enabled, true, keep_inventory_enabled, inventory_saving_enabled);
     }
 
     public static boolean getRestrictionToggledByDefault(Duels plugin, String name) {

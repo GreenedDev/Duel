@@ -9,19 +9,78 @@ import net.multylands.duels.utils.storage.MemoryStorage;
 import net.multylands.duels.utils.storage.PersistentDataUtils;
 import net.multylands.duels.utils.storage.SavingItems;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class Game implements Listener {
     Duels plugin;
 
     public Game(Duels plugin) {
         this.plugin = plugin;
+    }
+
+    public Player getActualDamager(Entity attackerEntity) {
+        if (attackerEntity instanceof Player attackerPlayer) {
+            return attackerPlayer;
+        } else if (attackerEntity instanceof Projectile projectile) {
+            ProjectileSource shooterEntity = projectile.getShooter();
+            if (shooterEntity instanceof Player shooter) {
+                return shooter;
+            } else {
+                return null;
+            }
+        }
+    }
+
+    //blocks damage to duel-player from non duel-players
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerDamage(EntityDamageByEntityEvent event) {
+        Entity entity = event.getEntity();
+        Entity attackerEntity = event.getDamager();
+        if (!(entity instanceof Player victim)) {
+            return;
+        }
+        UUID victimUUID = victim.getUniqueId();
+
+        //allow damage if player isn't in duel
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(victimUUID);
+        if (!RequestUtils.isInGame(request)) {
+            if (request == null) {
+                return;
+            }
+            if (!request.getGame().getIsAboutToTeleportedToSpawn()) {
+                return;
+            }
+        }
+        //at this point we are sure that damaged entity is a player and is in a duel or at least in the duel arena
+        Player attacker = getActualDamager(attackerEntity);
+        if (attacker == null) {
+            plugin.getLogger().log(Level.SEVERE, "unimplemented damage type: " + event.getDamageSource().getDamageType());
+            event.setCancelled(true);
+            return;
+        }
+        UUID attackerUUID = attacker.getUniqueId();
+        //check if victim is getting damaged in the 10 seconds item pickup period
+        if (request.getGame().getIsAboutToTeleportedToSpawn() && victimUUID == request.getGame().getWinnerUUID()) {
+            Chat.sendMessage(attacker, plugin.languageConfig.getString("duel.spectating.cannot-damage-in-duel"));
+            event.setCancelled(true);
+            return;
+        }
+        if (request.getOpponent(attackerUUID) == victimUUID) { //pass the event if duel opponents are fighting each other
+            return;
+        }
+        Chat.sendMessage(attacker, plugin.languageConfig.getString("duel.spectating.cannot-damage-in-duel"));
+        event.setCancelled(true);
     }
 
     //prevent moving for during countdown
@@ -42,31 +101,24 @@ public class Game implements Listener {
 
     //prevent items getting damaged in duel if keepinv is on
     @EventHandler(ignoreCancelled = true)
-    public void onMove(PlayerItemDamageEvent event) {
+    public void onItemDamage(PlayerItemDamageEvent event) {
         Player player = event.getPlayer();
         UUID playerUUID = player.getUniqueId();
 
         DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(playerUUID);
-        if (request == null) {
+        if (!RequestUtils.isInGame(request)) {
             return;
         }
-        if (!request.getGame().getIsStartingIn5Seconds()) {
+        if (!request.getGame().getRestrictions().isKeepInventoryEnabled()) {
             return;
         }
-        if (request.getGame().getRestrictions().isKeepInventoryEnabled()) {
-            if (!plugin.getConfig().getBoolean("modules.prevent-item-damage-during-duel")) {
-                return;
-            }
-            event.setCancelled(true);
-            return;
-        }
-        if (!plugin.getConfig().getBoolean("prevent-item-damage-during-duel")) {
+        if (!plugin.getConfig().getBoolean("modules.prevent-item-damage-during-duel")) {
             return;
         }
         event.setCancelled(true);
     }
 
-    //anti leave
+    //handle duel player quitting the game
     @EventHandler(ignoreCancelled = true)
     public void onQuit(PlayerQuitEvent event) {
         Player playerWhoLeft = event.getPlayer();
@@ -75,20 +127,22 @@ public class Game implements Listener {
         if (request == null) {
             return;
         }
+        PersistentDataUtils.markPlayerAsQuitter(plugin, playerWhoLeft);
         UUID winner = request.getOpponent(playerWhoLeftUUID);
         if (!request.getGame().getRestrictions().isKeepInventoryEnabled()) {
             playerWhoLeft.setHealth(0);
         }
-        request.getGame().endGame(winner);
+        request.getGame().endGame(winner, true);
     }
 
-    //anti leave
+    //anti arena stayer
     @EventHandler(ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent event) {
         Player playerWhoLeft = event.getPlayer();
         if (!PersistentDataUtils.isPlayerQuitter(plugin, playerWhoLeft)) {
             return;
         }
+        SavingItems.giveItemsBackIfAvailable(playerWhoLeft);
         GameUtils.teleportToSpawn(plugin, playerWhoLeft);
     }
 
@@ -152,10 +206,29 @@ public class Game implements Listener {
             event.setDroppedExp(0);
         }
         UUID winnerUUID = request.getOpponent(deadUUID);
-        request.getGame().endGame(winnerUUID);
+        request.getGame().endGame(winnerUUID, false);
     }
 
-    //anti teleport
+    //anti item pickup of items thrown by non-duel players. this is just in case someone gains access to the arena.
+    @EventHandler(ignoreCancelled = true)
+    public void onItemPickup(PlayerAttemptPickupItemEvent event) {
+        Player pickupPlayer = event.getPlayer();
+        UUID pickupPlayerUUID = pickupPlayer.getUniqueId();
+        DuelRequest request = RequestUtils.getRequestOfTheDuelPlayerIsIn(pickupPlayerUUID);
+        if (!RequestUtils.isInGame(request)) {
+            return;
+        }
+        UUID throwerUUID = event.getItem().getThrower();
+
+        //if item isn't thrown by players involved in this duel, duel players cant pick up this item
+        if (pickupPlayer.getUniqueId() != throwerUUID && request.getOpponent(pickupPlayerUUID) != throwerUUID) {
+            Chat.sendMessage(pickupPlayer, plugin.languageConfig.getString("duel.game.deny-pickup-of-other-items"));
+            event.setCancelled(true);
+            return;
+        }
+    }
+
+    //anti teleport for in duel players
     @EventHandler(ignoreCancelled = true)
     public void onTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
@@ -164,7 +237,6 @@ public class Game implements Listener {
         if (!RequestUtils.isInGame(request)) {
             return;
         }
-        //ender pearl restriction moved to Restrictions.java
         if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
             return;
         }

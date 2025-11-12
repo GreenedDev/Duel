@@ -32,11 +32,10 @@ public class SendCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             Chat.sendMessageSender(sender, plugin.languageConfig.getString("only-player-command"));
             return true;
         }
-        Player player = (Player) sender;
         if (!CheckPermissions.hasPermission(plugin.getConfig(), "send", "duel.commands.send", player)) {
             Chat.sendMessageSender(sender, plugin.languageConfig.getString("no-perm"));
             return true;

@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Duels.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Duels.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Duels.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Duels.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/net.multylands.duels.Duels.main.iml" filepath="$PROJECT_DIR$/.idea/modules/net.multylands.duels.Duels.main.iml" />
     </modules>
   </component>
 </project>

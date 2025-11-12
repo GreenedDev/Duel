@@ -19,11 +19,10 @@ public class StopSpectateCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             Chat.sendMessageSender(sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
-        Player player = ((Player) sender).getPlayer();
         if (!CheckPermissions.hasPermission(plugin.getConfig(), "spectate", "duel.commands.spectate", player)) {
             Chat.sendMessageSender(sender, plugin.languageConfig.getString("no-perm"));
             return true;

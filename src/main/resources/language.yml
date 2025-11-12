@@ -98,6 +98,8 @@ duel:
   spectating:
     cannot-damage-in-duel: "&cYou can't damage players when they are in duel."
     no-commands: "&cYou cannot use that command in the Spectating mode!"
+    cannot-pickup-in-spectator: "&cYou can't pickup items in spectator mode."
+    cannot-drop-in-spectator: "&cYou can't drop items in spectator mode."
   restrictions-modules:
     restrictions: "&6Restrictions:"
     enabled-restrictions: " &aEnabled: &b"
@@ -111,6 +113,8 @@ duel:
       totem: "Totem"
       shield: "Shields"
       elytra: "Elytra"
+      exp-bottle: "Exp Bottle"
+      mace: "Mace"
     deny-message:
       arrow: "&cThe use of arrows is not allowed in this duel."
       potion: "&cUsage of potions is disabled in this duel."
@@ -118,6 +122,8 @@ duel:
       enchanted-golden-apple: "&cUsage of enchanted golden apples is disabled in this duel."
       elytra: "&cUsage of elytra is disabled in this duel."
       ender-pearl: "&cUsage of ender pearl is disabled in this duel."
+      exp-bottle: "&cUsage of experience bottles is disabled in this duel."
+      mace: "&cUsage of maces is disabled in this duel."
   other-modules:
     keep-inventory: " &aKeep-Inventory: &b%toggled%"
     inventory-saving: " &aInventory-Saving: &b%toggled%"
@@ -128,6 +134,8 @@ duel:
     duel-countdown: "&aDuel is starting in %color+countdown%s&a."
 
     ran-out-of-time: "&cYou ran out of time so you have teleported to the spawn."
+
+    deny-pickup-of-other-items: "&cYou can't pick up items dropped by non-duel players."
 
     won-duel: "&aYou won the duel! You will be teleported to spawn in &b%number% &aseconds. Pick up their items."
     lost-duel: "&cYou lost the duel."
@@ -243,6 +251,28 @@ duel-GUI:
       - "&7Toggle Ender Pearl usage in the duel."
       - "&7Disabling this will prevent both"
       - "&7players from using Ender Pearl."
+      - ""
+      - "&eClick to toggle!"
+  toggle-exp-bottle:
+    slot: 8
+    item: EXPERIENCE_BOTTLE
+    glowing: true
+    display-name: "&aToggle Exp Bottles %toggled%"
+    lore:
+      - "&7Toggle Exp bottle usage in the duel."
+      - "&7Disabling this will prevent both"
+      - "&7players from using Exp Bottles."
+      - ""
+      - "&eClick to toggle!"
+  toggle-mace:
+    slot: 9
+    item: MACE
+    glowing: true
+    display-name: "&aToggle Mace %toggled%"
+    lore:
+      - "&7Toggle Mace usage in the duel."
+      - "&7Disabling this will prevent both"
+      - "&7players from using Maces."
       - ""
       - "&eClick to toggle!"
   toggle-keep-inventory:

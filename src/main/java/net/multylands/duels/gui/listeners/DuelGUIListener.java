@@ -93,7 +93,10 @@ public class DuelGUIListener implements Listener {
         int potionsSlot = plugin.languageConfig.getInt("duel-GUI.toggle-potion.slot");
         int shieldsSlot = plugin.languageConfig.getInt("duel-GUI.toggle-shield.slot");
         int elytraSlot = plugin.languageConfig.getInt("duel-GUI.toggle-elytra.slot");
-        int enderpearlSlot = plugin.languageConfig.getInt("duel-GUI.toggle-ender-pearl.slot");
+        int ender_pearlSlot = plugin.languageConfig.getInt("duel-GUI.toggle-ender-pearl.slot");
+        int expbottleSlot = plugin.languageConfig.getInt("duel-GUI.toggle-exp-bottle.slot");
+        int maceSlot = plugin.languageConfig.getInt("duel-GUI.toggle-mace.slot");
+
         int keepInventorySlot = plugin.languageConfig.getInt("duel-GUI.toggle-keep-inventory.slot");
         int inventorySavingSlot = plugin.languageConfig.getInt("duel-GUI.toggle-inventory-saving.slot");
         int arenaSelectorSlot = plugin.languageConfig.getInt("duel-GUI.arena-selector.slot");
@@ -165,13 +168,31 @@ public class DuelGUIListener implements Listener {
                 meta.displayName(Chat.parseLegacyOrModern(plugin.languageConfig.getString("duel-GUI.toggle-elytra.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
-        } else if (slot == enderpearlSlot) {
+        } else if (slot == ender_pearlSlot) {
             restrictions.setEnderPearl(!restrictions.isEnderPearlAllowed());
             if (restrictions.isEnderPearlAllowed()) {
                 meta.displayName(Chat.parseLegacyOrModern(plugin.languageConfig.getString("duel-GUI.toggle-ender-pearl.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
                 item.setItemMeta(meta);
             } else {
                 meta.displayName(Chat.parseLegacyOrModern(plugin.languageConfig.getString("duel-GUI.toggle-ender-pearl.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                item.setItemMeta(meta);
+            }
+        } else if (slot == expbottleSlot) {
+            restrictions.setExp(!restrictions.isExpEnabled());
+            if (restrictions.isExpEnabled()) {
+                meta.displayName(Chat.parseLegacyOrModern(plugin.languageConfig.getString("duel-GUI.toggle-exp-bottle.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                item.setItemMeta(meta);
+            } else {
+                meta.displayName(Chat.parseLegacyOrModern(plugin.languageConfig.getString("duel-GUI.toggle-exp-bottle.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
+                item.setItemMeta(meta);
+            }
+        } else if (slot == maceSlot) {
+            restrictions.setMace(!restrictions.isMaceEnabled());
+            if (restrictions.isMaceEnabled()) {
+                meta.displayName(Chat.parseLegacyOrModern(plugin.languageConfig.getString("duel-GUI.toggle-mace.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-enabled"))));
+                item.setItemMeta(meta);
+            } else {
+                meta.displayName(Chat.parseLegacyOrModern(plugin.languageConfig.getString("duel-GUI.toggle-mace.display-name").replace("%toggled%", plugin.languageConfig.getString("duel-GUI.restriction-disabled"))));
                 item.setItemMeta(meta);
             }
         } else if (keepInventorySlot == slot) {

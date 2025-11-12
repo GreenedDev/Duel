@@ -118,6 +118,8 @@ public class Game {
         GameUtils.applyInventorySavingIfEnabled(restrictions, senderPlayer);
         GameUtils.applyInventorySavingIfEnabled(restrictions, targetPlayer);
 
+        GameUtils.clearPassengers(plugin, targetPlayer);
+        GameUtils.clearPassengers(plugin, senderPlayer);
         targetPlayer.teleport(arena.getFirstLocation(plugin));
         senderPlayer.teleport(arena.getSecondLocation(plugin));
 
@@ -134,6 +136,9 @@ public class Game {
     }
 
     public void endGameRanOutOfTime() {
+        if (!isInGame) { //check if game is already ended. maybe some of death-related events can happen at the same time.
+            return;
+        }
         GameUtils.removeSpectatorsFromGame(plugin, spectators);
         Player sender = Bukkit.getPlayer(senderUUID);
         Player target = Bukkit.getPlayer(targetUUID);
@@ -157,6 +162,9 @@ public class Game {
     }
 
     public void endGameRestart() {
+        if (!isInGame) { //check if game is already ended. maybe some of death-related events can happen at the same time.
+            return;
+        }
         GameUtils.removeSpectatorsFromGame(plugin, spectators);
         Player sender = Bukkit.getPlayer(senderUUID);
         Player target = Bukkit.getPlayer(targetUUID);
@@ -181,7 +189,7 @@ public class Game {
         }
     }
 
-    public void endGame(UUID winnerUUIDFromMethod) {
+    public void endGame(UUID winnerUUIDFromMethod, boolean did_looser_quit) {
         if (!isInGame) { //check if game is already ended. maybe some of death-related events can happen at the same time.
             return;
         }
@@ -211,7 +219,10 @@ public class Game {
         }
         winner.setHealth(20);
         Chat.sendMessage(winner, plugin.languageConfig.getString("duel.game.won-duel").replace("%number%", plugin.getConfig().getInt("game.time_to_pick_up_items") + ""));
-        GameUtils.teleportToSpawn(plugin, loser);
+        if (!did_looser_quit) {
+            //we have separate handling for this after player joins. you cant tp an offline player
+            GameUtils.teleportToSpawn(plugin, loser);
+        }
         Duels.scheduler.runTaskLater(plugin, () -> {
             GameUtils.teleportToSpawn(plugin, winner);
             arena.setAvailable(true);

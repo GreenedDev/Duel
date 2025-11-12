@@ -108,6 +108,12 @@ modules:
     ender-pearl:
       enabled: true
       toggled-by-default: true
+    exp-bottle:
+      enabled: true
+      toggled-by-default: true
+    mace:
+      enabled: true
+      toggled-by-default: true
 permissions:
   #enable/disable permissions.
   #duel.command.<cmdnamehere>

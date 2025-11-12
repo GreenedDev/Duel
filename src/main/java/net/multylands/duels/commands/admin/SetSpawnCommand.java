@@ -20,11 +20,10 @@ public class SetSpawnCommand implements CommandExecutor {
             Chat.sendMessageSender(sender, plugin.languageConfig.getString("no-perm"));
             return false;
         }
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             Chat.sendMessageSender(sender, plugin.languageConfig.getString("only-player-command"));
             return false;
         }
-        Player player = ((Player) sender).getPlayer();
         if (args.length != 0) {
             Chat.sendMessage(player, plugin.languageConfig.getString("command-usage").replace("%command%", label) + " setspawn");
             return false;
